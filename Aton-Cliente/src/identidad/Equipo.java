@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package identidad;
 
 import ejecucion.Ejecutar;
+import ejecucion.Funciones;
 import ejecucion.Orden;
 import java.io.IOException;
 import java.io.Serializable;
@@ -22,6 +18,7 @@ public class Equipo implements Serializable {
     protected int numero;
     protected static String mac;
     protected static String ip;
+    protected static String hostname;
     protected boolean enUso;
     private Usuario usuario;
     public boolean NOUSADO = false;
@@ -31,7 +28,9 @@ public class Equipo implements Serializable {
     public static String obtenerIP() {
         if (Usuario.esRoot() & (ip == null | ip.equals(""))) {
             try {
-                ip = Ejecutar.ejecutar(new Orden("ifconfig eth0 2>/dev/null|awk '/Direc. inet:/ {print $2}'|sed 's/inet://'"));
+                Orden orden = new Orden(Funciones.ORDENIP);
+                Ejecutar.ejecutar(orden);
+                ip = orden.getResultado();
                 // Si la terminal está en inglés:
                 //Ejecutar.ejecutar("ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'");
             } catch (IOException | InterruptedException ex) {
@@ -45,39 +44,40 @@ public class Equipo implements Serializable {
     public static String obtenerMAC() {
         if (Usuario.esRoot() & (mac == null | mac.equals(""))) {
             try {
-                mac = Ejecutar.ejecutar(new Orden("ifconfig eth0 2>/dev/null|awk '/direcciónHW/ {print $5}'"));
+                Orden orden = new Orden(Funciones.ORDENMAC);
+                Ejecutar.ejecutar(orden);
+                mac = orden.getResultado();
             } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(Equipo.class.getName()).log(Level.SEVERE, null, ex);
                 CreadorLog.agregarALog(CreadorLog.ERROR, "Error al buscar la MAC del equipo");
+                return null;
             }
         }
+        return mac;
     }
 
     public static String obtenerHostName() {
-
+        try {
+            Orden orden = new Orden(Funciones.ORDENHOST);
+            Ejecutar.ejecutar(orden);
+            hostname = orden.getResultado();
+        } catch (IOException ex) {
+            Logger.getLogger(Equipo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Equipo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return hostname;
     }
 
-    public static void asignarHostName() {
-
+    public static void asignarHostName(String hostname) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public Usuario obtenerUsuario() {
         return usuario;
     }
 
-    public void asignarUsuario(Usuario usuario) {
-
-    }
-
     public void asignarIP(String ip) {
-
-    }
-
-    public void asignarMAC(String mac) {
-
-    }
-
-    public void asignarNombre(String nombre) {
-
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

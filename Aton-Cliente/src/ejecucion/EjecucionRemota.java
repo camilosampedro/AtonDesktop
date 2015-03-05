@@ -1,8 +1,10 @@
 package ejecucion;
 
+import comunicacion.Cliente_Servidor;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logs.CreadorLog;
 
 /**
  *
@@ -18,11 +20,6 @@ public class EjecucionRemota extends Thread {
     public static final boolean SUDO = true;
     public boolean USER = false;
 
-    /**
-     * Resultado de la ejecución.
-     */
-    protected String resultado = null;
-
     public EjecucionRemota(Orden orden) {
         this.orden = orden;
     }
@@ -33,18 +30,31 @@ public class EjecucionRemota extends Thread {
     @Override
     public void run() {
         try {
-            resultado = Ejecutar.ejecutar(orden);
+            Ejecutar.ejecutar(orden);
+            try {
+                Cliente_Servidor.enviarObjeto(orden);
+            } catch (IOException ex) {
+                CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo al enviar el resultado de la orden.");
+                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException | InterruptedException ex) {
+            CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo un error en la ejecución de la orden.");
             Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                Cliente_Servidor.enviarObjeto("ERROR");
+            } catch (IOException ex1) {
+                CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo un error al enviar el resultado de la orden, cuando ya había un error.");
+                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
-        Cliente.
+
     }
 
     /**
      * @return resultado de la ejecución.
      */
     public String obtenerResultado() {
-        return resultado;
+        return orden.getResultado();
     }
 
 }

@@ -13,31 +13,72 @@ import java.io.Serializable;
  */
 public class Orden implements Serializable{
 
-    protected String orden;
-    protected boolean interrumpida;
-    protected int estadoSalida;
+    private String orden;
+    private boolean interrumpida;
+    private int estadoSalida;
+    private String resultado;
 
     public Orden(String orden) {
         this.orden = orden;
     }
 
-    public void interrumpir() {
-        interrumpida = true;
-    }
-
-    public boolean estaInterrumpida() {
-        return interrumpida;
-    }
-
-    public String obtenerOrden() {
+    /**
+     * @return the orden
+     */
+    public String getOrden() {
         return orden;
     }
 
-    public void asignarEstadoSalida(int estado) {
-        estadoSalida = estado;
+    /**
+     * @param orden the orden to set
+     */
+    public void setOrden(String orden) {
+        this.orden = orden;
     }
 
-    public int obtenerEstadoSalida() {
+    /**
+     * @return the interrumpida
+     */
+    public boolean isInterrumpida() {
+        return interrumpida;
+    }
+
+    /**
+     * @param interrumpida the interrumpida to set
+     */
+    public void interrumpir(boolean interrumpida) {
+        this.interrumpida = interrumpida;
+    }
+
+    /**
+     * @return the estadoSalida
+     */
+    public int getEstadoSalida() {
         return estadoSalida;
     }
+
+    /**
+     * @param estadoSalida the estadoSalida to set
+     */
+    public void setEstadoSalida(int estadoSalida) {
+        this.estadoSalida = estadoSalida;
+    }
+
+    /**
+     * @return the resultado
+     */
+    public String getResultado() {
+        return resultado;
+    }
+
+    /**
+     * @param resultado the resultado to set
+     */
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
+    }
+
+    
+    
+    
 }
