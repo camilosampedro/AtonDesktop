@@ -24,7 +24,7 @@ public class Usuario implements Serializable {
     /**
      * Contiene información de si el usuario es root o no.
      */
-    private static boolean esRoot = false;
+    private static boolean esRoot;
     /**
      * Previene la verificación de root múltiple, si ya está verificada.
      */
