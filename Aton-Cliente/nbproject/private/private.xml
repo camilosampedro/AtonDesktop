@@ -3,15 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/comunicacion/Cliente_Servidor.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/ejecucion/EjecucionRemota.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/ejecucion/Orden.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/identidad/Usuario.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/ejecucion/Ejecutar.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/ejecucion/Solicitud.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/identidad/Equipo.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/principal/Principal.java</file>
-            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/ejecucion/Funciones.java</file>
+            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/identidad/UsuarioCliente.java</file>
+            <file>file:/home/camilo/git/Aton/Aton/Aton-Cliente/src/identidad/EquipoCliente.java</file>
         </group>
     </open-files>
 </project-private>

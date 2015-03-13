@@ -21,31 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package principal;
+package informacion;
 
-import comunicacion.ClienteServidor;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import identidad.EquipoCliente;
+import identidad.UsuarioCliente;
 
 /**
  *
  * @author Camilo Sampedro
+ * @version 0.1.0
  */
-public class Principal {
+public class Informacion {
+
+    private static UsuarioCliente usuario;
+    private static EquipoCliente equipo;
 
     /**
-     * @param args the command line arguments
+     * @return the usuario
      */
-    public static void main(String[] args) {
-        try {
-            ClienteServidor.inicializar("127.0.0.1", 5901);
-            ClienteServidor.despertar();
-        } catch (IOException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static UsuarioCliente getUsuario() {
+        return usuario;
     }
-    
+
+    /**
+     * @param aUsuario the usuario to set
+     */
+    public static void setUsuario(UsuarioCliente aUsuario) {
+        usuario = aUsuario;
+    }
+
+    /**
+     * @return the equipo
+     */
+    public static EquipoCliente getEquipo() {
+        return equipo;
+    }
+
+    /**
+     * @param aEquipo the equipo to set
+     */
+    public static void setEquipo(EquipoCliente aEquipo) {
+        equipo = aEquipo;
+    }
+
 }
