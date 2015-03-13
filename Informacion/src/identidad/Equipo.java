@@ -26,14 +26,10 @@ package identidad;
 
 /**
  *
- * @author camilo
+ * @author Camilo Sampedro
  * @version 0.1.0
  */
 public interface Equipo {
-
-    public boolean NOUSADO = false;
-    public boolean ENCENDIDO = true;
-    public boolean NOENCENDIDO = false;
 
     public String obtenerIP();
 

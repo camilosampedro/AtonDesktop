@@ -30,11 +30,11 @@ package identidad;
  */
 public interface Salon {
 
-	public void encender ();
+    public void encender();
 
-	public void apagar ();
+    public void apagar();
 
-	public void notificar (String mensaje);
-        
-        public void agregarSala(Sala sala);
+    public void notificar(String mensaje);
+
+    public void agregarSala(Sala sala);
 }

@@ -29,6 +29,7 @@ package identidad;
  * @version 0.1.0
  */
 public interface Sala {
+
     public Fila obtenerFila(int numeroFila);
 
     public String obtenerNombre();
@@ -37,7 +38,7 @@ public interface Sala {
 
     public void agregarEquipo(int fila, Equipo equipo);
 
-    public void agregarFila();
+    public void agregarFila(boolean esHorizontal);
 
     public void apagarEquipo(int numeroEquipo);
 
@@ -51,5 +52,5 @@ public interface Sala {
 
     public void encenderEquipo(int numeroEquipo);
 
-    public Equipo buscarEquipo(Equipo numeroEquipo);
+    public Fila buscarFilaEquipo(int numeroEquipo);
 }

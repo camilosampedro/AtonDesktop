@@ -39,4 +39,12 @@ public final class Funciones {
     public static final String ORDENUSUARIO = "whoamai";
     public static final String ORDEN_APAGAR = "shutdown -h now";
     public static final String ORDEN_OBTENER_IP = "ifconfig eth0 2>/dev/null|awk '/Direc. inet:/ {print $2}'|sed 's/inet://'";
+
+    public static final String ORDENDESPERTAREQUIPO(int sufijoIPSala, String mac) {
+        return "wakeonlan -i 192.168." + sufijoIPSala + ".255 " + mac;
+    }
+
+    public static String ORDENNOTIFICACION(String mensaje) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -8,6 +8,7 @@ package exception;
 /**
  *
  * @author Camilo Sampedro
+ * @version 0.1.0
  */
 public class EquipoNoEncontradoException extends Exception {
 

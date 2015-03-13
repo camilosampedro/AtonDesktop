@@ -23,59 +23,95 @@
  */
 package identidad;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.0
  */
-public class FilaServidor implements Fila {
+public class EquipoServidor implements Equipo {
 
-    private ArrayList<EquipoServidor> equipos;
-    private boolean esHorizontal;
-
-    public FilaServidor(boolean esHorizontal) {
-        equipos = new ArrayList();
-        this.esHorizontal = esHorizontal;
-    }
-
-    @Override
-    public Equipo obtenerEquipo(int numeroEquipo) {
-        return equipos.get(numeroEquipo);
-    }
+    public static final boolean OCUPADO = true;
+    public static final boolean LIBRE = false;
+    public static final boolean ENCENDIDO = true;
+    public static final boolean NOENCENDIDO = false;
+    private boolean estadoUso;
+    private boolean estadoPoder;
+    private int numeroEquipo;
 
     @Override
-    public void notificar(String mensaje) {
-    }
-
-    @Override
-    public void agregarEquipo(Equipo equipo) {
+    public String obtenerIP() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void encenderTodo() {
+    public String obtenerMAC() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void apagarTodo() {
+    public String obtenerHostName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean contieneEquipo(int numeroEquipo) {
+    public Usuario obtenerUsuario() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public ArrayList<EquipoServidor> getEquipos() {
-        return equipos;
     }
 
     @Override
-    public boolean esHorizontal() {
+    public void asignarUsuario(Usuario usuario) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void asignarIP(String ip) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void asignarMAC(String mac) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * @return the estadoUso
+     */
+    public boolean esUsado() {
+        return estadoUso;
+    }
+
+    /**
+     * @param estadoUso the estadoUso to set
+     */
+    public void setEstadoUso(boolean estadoUso) {
+        this.estadoUso = estadoUso;
+    }
+
+    /**
+     * @return the estadoPoder
+     */
+    public boolean estaEncendido() {
+        return estadoPoder;
+    }
+
+    /**
+     * @param estadoPoder the estadoPoder to set
+     */
+    public void setEstadoPoder(boolean estadoPoder) {
+        this.estadoPoder = estadoPoder;
+    }
+
+    /**
+     * @return the numeroEquipo
+     */
+    public int getNumeroEquipo() {
+        return numeroEquipo;
+    }
+
+    /**
+     * @param numeroEquipo the numeroEquipo to set
+     */
+    public void setNumeroEquipo(int numeroEquipo) {
+        this.numeroEquipo = numeroEquipo;
     }
 
 }

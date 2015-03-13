@@ -33,6 +33,7 @@ import logs.CreadorLog;
 
 /**
  * Implementación de la clase Equipo ubicada en los clientes.
+ *
  * @author Camilo Sampedro
  * @version 0.1.0
  */

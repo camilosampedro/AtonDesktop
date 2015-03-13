@@ -29,13 +29,18 @@ package identidad;
  * @version 0.1.0
  */
 public interface Fila {
+
     public Equipo obtenerEquipo(int numeroEquipo);
 
     public void notificar(String mensaje);
 
     public void agregarEquipo(Equipo equipo);
 
-    public void encender();
+    public void encenderTodo();
 
-    public void apagar();
+    public void apagarTodo();
+    
+    public boolean contieneEquipo(int numeroEquipo);
+    
+    public boolean esHorizontal();
 }
