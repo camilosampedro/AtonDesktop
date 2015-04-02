@@ -23,8 +23,10 @@
  */
 package ejecucion;
 
-import comunicacion.ClienteServidor;
+import comunicacion.Comunicacion;
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import logs.CreadorLog;
@@ -55,19 +57,15 @@ public class EjecucionRemota extends Thread {
     public void run() {
         try {
             Ejecutar.ejecutar(orden);
-            try {
-                ClienteServidor.enviarObjeto(orden);
-            } catch (IOException ex) {
-                CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo al enviar el resultado de la orden.");
-                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Comunicacion.enviarObjeto(orden);
         } catch (IOException | InterruptedException ex) {
             CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo un error en la ejecución de la orden.");
             Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex);
             try {
-                ClienteServidor.enviarObjeto("ERROR");
-            } catch (IOException ex1) {
-                CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo un error al enviar el resultado de la orden, cuando ya había un error.");
+                Comunicacion.enviarObjeto(new Resultado("ERROR"));
+            } catch (UnknownHostException ex1) {
+                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (SocketException ex1) {
                 Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }

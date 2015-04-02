@@ -23,7 +23,9 @@
  */
 package principal;
 
-import comunicacion.ClienteServidor;
+import comunicacion.Comunicacion;
+import identidad.UsuarioCliente;
+import informacion.Informacion;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,13 +41,12 @@ public class Principal {
      */
     public static void main(String[] args) {
         try {
-            ClienteServidor.inicializar("127.0.0.1", 5901);
-            ClienteServidor.despertar();
+            Informacion.inicializar();
         } catch (IOException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

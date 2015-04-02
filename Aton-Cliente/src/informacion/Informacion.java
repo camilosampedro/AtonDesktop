@@ -23,8 +23,10 @@
  */
 package informacion;
 
+import comunicacion.Comunicacion;
 import identidad.EquipoCliente;
 import identidad.UsuarioCliente;
+import java.io.IOException;
 
 /**
  *
@@ -62,6 +64,16 @@ public class Informacion {
      */
     public static void setEquipo(EquipoCliente aEquipo) {
         equipo = aEquipo;
+    }
+
+    public static void inicializar() throws IOException, ClassNotFoundException {
+        if (!UsuarioCliente.esRoot()) {
+            System.err.println("El usuario que ejecutó el servicio no es root.");
+            System.err.println("Se debe ser root para ejecutar el servicio.");
+            System.exit(1);
+        }
+        Comunicacion.inicializar("192.168.30.250", 5901);
+        Comunicacion.despertar();
     }
 
 }
