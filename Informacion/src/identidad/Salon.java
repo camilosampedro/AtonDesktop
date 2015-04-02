@@ -37,4 +37,6 @@ public interface Salon {
     public void notificar(String mensaje);
 
     public void agregarSala(Sala sala);
+    
+    public String getNombre();
 }

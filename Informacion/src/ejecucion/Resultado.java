@@ -21,27 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
-import exception.NoEncontrado;
+package ejecucion;
+
+import comunicacion.Enviable;
 
 /**
  *
- * @author camilo
+ * @author Camilo Sampedro
  * @version 0.1.0
  */
-public interface Fila {
+public class Resultado implements Enviable {
 
-    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado;
+    private final String resultado;
 
-    public void notificar(String mensaje);
+    public Resultado(String resultado) {
+        this.resultado = resultado;
+    }
 
-    public void agregarEquipo(Equipo equipo);
+    @Override
+    public String obtenerCuerpo() {
+        return INICIOCUERPO + resultado + FINCUERPO;
+    }
 
-    public void encenderTodo();
+    @Override
+    public Class obtenerClase() {
+        return Resultado.class;
+    }
 
-    public void apagarTodo();
-    
-    public boolean contieneEquipo(int numeroEquipo);
-    
-    public boolean esHorizontal();
+    @Override
+    public Object construirObjeto(String informacion) {
+        int i = informacion.indexOf(INICIOCUERPO);
+        int j = informacion.indexOf(FINCUERPO);
+        String info = informacion.substring(i, j);
+        return new Resultado(info);
+    }
+
+    @Override
+    public String generarCadena() {
+        return obtenerCabecera() + obtenerCuerpo();
+    }
+
+    @Override
+    public String obtenerCabecera() {
+        return INICIOCABECERA + "RESULTADO" + FINCABECERA;
+    }
+
 }

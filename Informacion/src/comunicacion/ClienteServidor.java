@@ -21,27 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
-import exception.NoEncontrado;
+package comunicacion;
+
+import java.net.SocketException;
 
 /**
  *
- * @author camilo
- * @version 0.1.0
+ * @author Camilo Sampedro
  */
-public interface Fila {
+public interface ClienteServidor {
 
-    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado;
-
-    public void notificar(String mensaje);
-
-    public void agregarEquipo(Equipo equipo);
-
-    public void encenderTodo();
-
-    public void apagarTodo();
-    
-    public boolean contieneEquipo(int numeroEquipo);
-    
-    public boolean esHorizontal();
+    public String escuchar() throws SocketException;
 }

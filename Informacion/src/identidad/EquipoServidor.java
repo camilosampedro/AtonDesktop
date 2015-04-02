@@ -23,11 +23,20 @@
  */
 package identidad;
 
+import comunicacion.Enviable;
+import ejecucion.Ejecutar;
+import ejecucion.Funciones;
+import ejecucion.Orden;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Camilo Sampedro
+ * @version 0.1.5
  */
-public class EquipoServidor implements Equipo {
+public class EquipoServidor implements Equipo, Enviable {
 
     public static final boolean OCUPADO = true;
     public static final boolean LIBRE = false;
@@ -36,40 +45,53 @@ public class EquipoServidor implements Equipo {
     private boolean estadoUso;
     private boolean estadoPoder;
     private int numeroEquipo;
+    private String ip;
+    private String mac;
+    private String hostname;
+    private Usuario usuario;
+    private SalaServidor sala;
+    
+    public EquipoServidor(SalaServidor padre){
+        sala = padre;
+    }
 
     @Override
     public String obtenerIP() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.ip;
     }
 
     @Override
     public String obtenerMAC() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.mac;
     }
 
     @Override
     public String obtenerHostName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.hostname;
     }
 
     @Override
     public Usuario obtenerUsuario() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (esUsado()) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        } else {
+            return (this.usuario);
+        }
     }
 
     @Override
     public void asignarUsuario(Usuario usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.usuario = usuario;
     }
 
     @Override
     public void asignarIP(String ip) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.ip = ip;
     }
 
     @Override
     public void asignarMAC(String mac) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mac = mac;
     }
 
     /**
@@ -112,6 +134,44 @@ public class EquipoServidor implements Equipo {
      */
     public void setNumeroEquipo(int numeroEquipo) {
         this.numeroEquipo = numeroEquipo;
+    }
+    
+    public boolean encenderEquipo() {
+        Orden orden = new Orden(Funciones.ORDENDESPERTAREQUIPO(sala.obtenerSufijoSala(), this.mac));
+        try {
+            Ejecutar.ejecutar(orden);
+            return orden.esExitoso();
+        } catch (IOException ex) {
+            Logger.getLogger(EquipoServidor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(EquipoServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    @Override
+    public String obtenerCabecera() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String obtenerCuerpo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Class obtenerClase() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object construirObjeto(String informacion) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String generarCadena() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

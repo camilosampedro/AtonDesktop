@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class FilaServidor implements Fila {
 
@@ -51,7 +51,7 @@ public class FilaServidor implements Fila {
 
     @Override
     public void agregarEquipo(Equipo equipo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        equipos.add((EquipoServidor) equipo);
     }
 
     @Override
@@ -66,7 +66,12 @@ public class FilaServidor implements Fila {
 
     @Override
     public boolean contieneEquipo(int numeroEquipo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (EquipoServidor equipo : equipos) {
+            if (equipo.getNumeroEquipo() == numeroEquipo) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<EquipoServidor> getEquipos() {
@@ -75,7 +80,7 @@ public class FilaServidor implements Fila {
 
     @Override
     public boolean esHorizontal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return esHorizontal;
     }
 
 }

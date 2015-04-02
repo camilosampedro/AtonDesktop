@@ -23,6 +23,8 @@
  */
 package identidad;
 
+import exception.NoEncontrado;
+
 /**
  *
  * @author Camilo Sampedro
@@ -30,27 +32,27 @@ package identidad;
  */
 public interface Sala {
 
-    public Fila obtenerFila(int numeroFila);
+    public Fila obtenerFila(int numeroFila) throws NoEncontrado;
 
     public String obtenerNombre();
 
-    public Equipo obtenerEquipo(int numeroEquipo);
+    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado;
 
     public void agregarEquipo(int fila, Equipo equipo);
 
     public void agregarFila(boolean esHorizontal);
 
-    public void apagarEquipo(int numeroEquipo);
+    public void apagarEquipo(int numeroEquipo) throws NoEncontrado;
 
     public void apagarTodo();
 
     public void notificar(String mensaje);
 
-    public void cambiarEstado(int numeroEquipo, boolean estado);
+    public void cambiarEstado(int numeroEquipo, boolean estado) throws NoEncontrado;
 
     public void encenderTodo();
 
-    public void encenderEquipo(int numeroEquipo);
+    public void encenderEquipo(int numeroEquipo) throws NoEncontrado;
 
-    public Fila buscarFilaEquipo(int numeroEquipo);
+    public Fila buscarFilaEquipo(int numeroEquipo) throws NoEncontrado;
 }

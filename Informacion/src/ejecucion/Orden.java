@@ -23,6 +23,7 @@
  */
 package ejecucion;
 
+import comunicacion.Enviable;
 import java.io.Serializable;
 
 /**
@@ -30,9 +31,9 @@ import java.io.Serializable;
  * de salida.
  *
  * @author Camilo Sampedro
- * @version 0.1.0
+ * @version 0.1.5
  */
-public class Orden implements Serializable {
+public class Orden implements Serializable, Enviable {
 
     private String orden;
     private boolean interrumpida;
@@ -92,11 +93,46 @@ public class Orden implements Serializable {
         return resultado;
     }
 
+    
     /**
      * @param resultado the resultado to set
      */
     public void setResultado(String resultado) {
         this.resultado = resultado;
+    }
+    
+    public boolean esExitoso() {
+        switch (estadoSalida) {
+            case 0:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public String obtenerCabecera() {
+        return INICIOCABECERA + "ORDEN" + FINCABECERA;
+    }
+
+    @Override
+    public String obtenerCuerpo() {
+        return INICIOCUERPO + this.orden + FINCUERPO;
+    }
+
+    @Override
+    public Class obtenerClase() {
+        return Orden.class;
+    }
+
+    @Override
+    public Object construirObjeto(String informacion) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String generarCadena() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

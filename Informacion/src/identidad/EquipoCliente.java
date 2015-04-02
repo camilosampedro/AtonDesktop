@@ -23,6 +23,7 @@
  */
 package identidad;
 
+import comunicacion.Enviable;
 import ejecucion.Ejecutar;
 import ejecucion.Funciones;
 import ejecucion.Orden;
@@ -37,7 +38,7 @@ import logs.CreadorLog;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class EquipoCliente implements Equipo {
+public class EquipoCliente implements Equipo, Enviable {
 
     protected int numero;
     protected String mac;
@@ -115,6 +116,31 @@ public class EquipoCliente implements Equipo {
     @Override
     public void asignarMAC(String mac) {
         this.mac = mac;
+    }
+
+    @Override
+    public String obtenerCabecera() {
+        return "#[EQUIPOCLIENTE]";
+    }
+
+    @Override
+    public String obtenerCuerpo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object construirObjeto(String enviable) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String generarCadena() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Class obtenerClase() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

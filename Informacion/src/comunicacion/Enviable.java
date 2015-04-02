@@ -21,27 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
-import exception.NoEncontrado;
+package comunicacion;
 
 /**
  *
- * @author camilo
- * @version 0.1.0
+ * @author Camilo Sampedro
  */
-public interface Fila {
+public interface Enviable {
 
-    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado;
+    public static final String INICIOCUERPO = "*¡*{";
+    public static final String FINCUERPO = "}*!*";
+    public static final String INICIOCABECERA = "*[";
+    public static final String FINCABECERA = "]*";
 
-    public void notificar(String mensaje);
+    public static final int TAMAÑOPAQUETE = 2048;
 
-    public void agregarEquipo(Equipo equipo);
+    public String obtenerCabecera();
 
-    public void encenderTodo();
+    public String obtenerCuerpo();
 
-    public void apagarTodo();
-    
-    public boolean contieneEquipo(int numeroEquipo);
-    
-    public boolean esHorizontal();
+    public abstract Class obtenerClase();
+
+    public abstract Object construirObjeto(String informacion);
+
+    public String generarCadena();
+
 }

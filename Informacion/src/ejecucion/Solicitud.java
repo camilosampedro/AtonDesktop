@@ -23,6 +23,7 @@
  */
 package ejecucion;
 
+import comunicacion.Enviable;
 import java.io.Serializable;
 
 /**
@@ -32,16 +33,15 @@ import java.io.Serializable;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class Solicitud implements Serializable {
+public class Solicitud implements Serializable, Enviable {
 
     private final byte solicitud;
 
-    public static final byte CONECCION_ROOT = 0;
-    public static final byte CONECCION_USUARIO = 1;
-    public static final byte IP = 2;
-    public static final byte MAC = 3;
-    public static final byte HOST = 4;
-    public static final byte USUARIO = 5;
+    public static final byte CONEXION = 0;
+    public static final byte IP = 1;
+    public static final byte MAC = 2;
+    public static final byte HOST = 3;
+    public static final byte USUARIO = 4;
 
     public Solicitud(byte tipo) {
         this.solicitud = tipo;
@@ -49,5 +49,33 @@ public class Solicitud implements Serializable {
 
     public byte getTipo() {
         return solicitud;
+    }
+
+    @Override
+    public String obtenerCabecera() {
+        return INICIOCABECERA + "SOLICITUD" + FINCABECERA;
+    }
+
+    @Override
+    public String obtenerCuerpo() {
+        return INICIOCUERPO + solicitud + FINCUERPO;
+    }
+
+    @Override
+    public String generarCadena() {
+        return obtenerCabecera() + obtenerCuerpo();
+    }
+
+    @Override
+    public Object construirObjeto(String informacion) {
+        int i = informacion.indexOf(INICIOCUERPO);
+        int j = informacion.indexOf(FINCUERPO);
+        String info = informacion.substring(i, j);
+        return new Solicitud(Byte.parseByte(info));
+    }
+
+    @Override
+    public Class obtenerClase() {
+        return Solicitud.class;
     }
 }

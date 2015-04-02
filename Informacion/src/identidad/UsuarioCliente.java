@@ -23,6 +23,7 @@
  */
 package identidad;
 
+import comunicacion.Enviable;
 import ejecucion.Ejecutar;
 import ejecucion.Funciones;
 import ejecucion.Orden;
@@ -35,15 +36,15 @@ import logs.CreadorLog;
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.0
+ * @version 0.1.2
  */
-public class UsuarioCliente implements Usuario, Serializable {
+public class UsuarioCliente implements Usuario, Serializable, Enviable {
 
     // I. Variables generales.
     /**
      * Nombre del usuario que está ejecutando el servicio.
      */
-    protected String nombreDeUsuario;
+    private String nombreDeUsuario;
     /**
      * Contiene información de si el usuario es root o no.
      */
@@ -61,6 +62,7 @@ public class UsuarioCliente implements Usuario, Serializable {
      * Previene la verificación de baneo múltiple, si ya está verificada.
      */
     protected boolean estaVerificadoBaneo;
+    private String grupo;
 
     public UsuarioCliente() {
         estaVerificadoRoot = false;
@@ -75,17 +77,12 @@ public class UsuarioCliente implements Usuario, Serializable {
      *
      * @return True: El usuario es root. False: El usuario no es root.
      */
-    public boolean esRoot() {
-        // Si ya fue calculado anteriormente, no se calcula de nuevo.
-        if (estaVerificadoRoot) {
-            return esRoot;
-        }
+    public static boolean esRoot() {
         try {
             //"id - u" retorna 0 si el usuario es root.
             Orden orden = new Orden(Funciones.ORDENVERIFICACIONROOT);
             Ejecutar.ejecutar(orden);
             boolean esRoot2 = orden.getResultado().equals("0");
-            estaVerificadoRoot = true;
             return esRoot2;
         } catch (IOException ex) {
             System.err.println("Ocurrió n error intentando verificar si se es root: I/O");
@@ -102,29 +99,26 @@ public class UsuarioCliente implements Usuario, Serializable {
      *
      * @return String con el nombre del usuario.
      */
-    @Override
-    public String obtenerNombreDeUsuario() {
+    public static String obtenerNombreDeUsuarioEjecutor() {
         // Si ya fue calculado anteriormente, no se calcula de nuevo.
-        if (nombreDeUsuario == null | nombreDeUsuario.equals("")) {
-            try {
-                Orden orden = new Orden(Funciones.ORDENUSUARIO);
-                Ejecutar.ejecutar(orden);
-                nombreDeUsuario = orden.getResultado();
-                return nombreDeUsuario;
+        try {
+            Orden orden = new Orden(Funciones.ORDENUSUARIO);
+            Ejecutar.ejecutar(orden);
+            return orden.getResultado();
 
-            } catch (IOException | InterruptedException ex) {
-                Logger.getLogger(UsuarioCliente.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
-            System.err.println("Ocurrió un error obteniendo el nombre del usuario");
-            CreadorLog.agregarALog(CreadorLog.ERROR, "Ocurrió un error intentando obtener el nombre del usuario");
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(UsuarioCliente.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
-        return nombreDeUsuario;
+        System.err.println("Ocurrió un error obteniendo el nombre del usuario");
+        CreadorLog.agregarALog(CreadorLog.ERROR, "Ocurrió un error intentando obtener el nombre del usuario");
+
+        return "";
     }
 
     @Override
     public boolean isEqual(Usuario usuario) {
-        return (nombreDeUsuario.endsWith(usuario.obtenerNombreDeUsuario()));
+        return (getNombreDeUsuario().endsWith(usuario.obtenerNombreDeUsuario()));
     }
 
     @Override
@@ -134,6 +128,72 @@ public class UsuarioCliente implements Usuario, Serializable {
 
     private boolean verificarBaneo() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String obtenerNombreDeUsuario() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String obtenerCabecera() {
+        return INICIOCABECERA + "USUARIO" + FINCABECERA;
+    }
+
+    @Override
+    public String obtenerCuerpo() {
+        return INICIOCUERPO + this.getNombreDeUsuario() + "|" + this.getGrupo() + FINCUERPO;
+    }
+
+    @Override
+    public Class obtenerClase() {
+        return UsuarioCliente.class;
+    }
+
+    @Override
+    public Object construirObjeto(String informacion) {
+        int i = informacion.indexOf(INICIOCUERPO);
+        int j = informacion.indexOf(FINCUERPO);
+        int k = informacion.indexOf("|");
+        String usuario = informacion.substring(i, k);
+        String grupon = informacion.substring(k, j);
+        UsuarioCliente usuarion = new UsuarioCliente();
+        usuarion.setNombreDeUsuario(nombreDeUsuario);
+        usuarion.setGrupo(grupon);
+        return new UsuarioCliente();
+    }
+
+    @Override
+    public String generarCadena() {
+        return obtenerCabecera() + obtenerCuerpo();
+    }
+
+    /**
+     * @return the nombreDeUsuario
+     */
+    public String getNombreDeUsuario() {
+        return nombreDeUsuario;
+    }
+
+    /**
+     * @param nombreDeUsuario the nombreDeUsuario to set
+     */
+    public void setNombreDeUsuario(String nombreDeUsuario) {
+        this.nombreDeUsuario = nombreDeUsuario;
+    }
+
+    /**
+     * @return the grupo
+     */
+    public String getGrupo() {
+        return grupo;
+    }
+
+    /**
+     * @param grupo the grupo to set
+     */
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
     }
 
 }

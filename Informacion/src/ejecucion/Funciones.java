@@ -23,6 +23,8 @@
  */
 package ejecucion;
 
+import identidad.Usuario;
+
 /**
  *
  * Clase con todas las funciones necesarias y usadas por diferentes clases.
@@ -46,5 +48,9 @@ public final class Funciones {
 
     public static String ORDENNOTIFICACION(String mensaje) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public static String GENERARORDEN(Usuario usuario, String orden){
+        return "sudo -u " + usuario.obtenerNombreDeUsuario() + " DISPLAY=:0.0 " + orden;
     }
 }

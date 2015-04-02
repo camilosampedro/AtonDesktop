@@ -22,26 +22,47 @@
  * THE SOFTWARE.
  */
 package identidad;
-import exception.NoEncontrado;
+
+import java.util.ArrayList;
 
 /**
  *
- * @author camilo
+ * @author Camilo Sampedro
  * @version 0.1.0
  */
-public interface Fila {
+public class SalonServidor implements Salon {
 
-    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado;
+    public ArrayList<Sala> salas;
+    private String nombre;
 
-    public void notificar(String mensaje);
+    public SalonServidor(String nombre) {
+        salas = new ArrayList();
+        this.nombre = nombre;
+    }
 
-    public void agregarEquipo(Equipo equipo);
+    @Override
+    public void encender() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    public void encenderTodo();
+    @Override
+    public void apagar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    public void apagarTodo();
-    
-    public boolean contieneEquipo(int numeroEquipo);
-    
-    public boolean esHorizontal();
+    @Override
+    public void notificar(String mensaje) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void agregarSala(Sala sala) {
+        salas.add(sala);
+    }
+
+    @Override
+    public String getNombre() {
+        return nombre;
+    }
+
 }

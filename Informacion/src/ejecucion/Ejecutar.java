@@ -50,6 +50,7 @@ public class Ejecutar {
         // Ejecución de la orden.
         Process p = Runtime.getRuntime().exec(orden.getOrden());
         p.waitFor();
+        
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String line;
 
@@ -58,15 +59,20 @@ public class Ejecutar {
             // CADA LÍNEA DEBERÍA SER ENVIADA DE NUEVO AL EJECUTOR.
             output.append(line).append("\n");
         }
+        String salida = output.toString();
 
-        orden.setResultado(output.toString());
+        orden.setResultado(salida);
 
-        // Lectura del estado de salida.
-        p = Runtime.getRuntime().exec("echo $?");
-        p.waitFor();
-        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        line = reader.readLine();
+//        // Lectura del estado de salida.
+//        p = Runtime.getRuntime().exec("echo $?");
+//        p.waitFor();
+//        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//        line = reader.readLine();
+//        
+//        System.out.println("Hola" + line);
+//        
+//        line = reader.readLine();
 
-        orden.setEstadoSalida(Integer.parseInt(line));
+        orden.setEstadoSalida(p.exitValue());
     }
 }

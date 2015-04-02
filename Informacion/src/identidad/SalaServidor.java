@@ -26,6 +26,7 @@ package identidad;
 import ejecucion.Ejecutar;
 import ejecucion.Funciones;
 import ejecucion.Orden;
+import exception.NoEncontrado;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -41,13 +42,15 @@ public class SalaServidor implements Sala {
     protected ArrayList<FilaServidor> filas;
     protected String nombre;
     protected int sufijoIPSala;
+    protected boolean esHorizontal;
 
-    public SalaServidor() {
+    public SalaServidor(boolean esHorizontal) {
         filas = new ArrayList();
+        this.esHorizontal = esHorizontal;
     }
 
     @Override
-    public Fila obtenerFila(int numeroFila) {
+    public Fila obtenerFila(int numeroFila) throws NoEncontrado {
         return (Fila) filas.get(numeroFila);
     }
 
@@ -57,10 +60,10 @@ public class SalaServidor implements Sala {
     }
 
     @Override
-    public Equipo obtenerEquipo(int numeroEquipo) {
+    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado {
         Fila fila = this.buscarFilaEquipo(numeroEquipo);
         if (fila == null) {
-            return null;
+            throw new exception.NoEncontrado(exception.NoEncontrado.EQUIPO, "obtenerEquipo");
         } else {
             return fila.obtenerEquipo(numeroEquipo);
         }
@@ -77,7 +80,7 @@ public class SalaServidor implements Sala {
     }
 
     @Override
-    public void apagarEquipo(int numeroEquipo) {
+    public void apagarEquipo(int numeroEquipo) throws NoEncontrado {
         Fila fila = this.buscarFilaEquipo(numeroEquipo);
         if (fila != null) {
             String mac = fila.obtenerEquipo(numeroEquipo).obtenerMAC();
@@ -134,4 +137,7 @@ public class SalaServidor implements Sala {
         return null;
     }
 
+    public int obtenerSufijoSala() {
+        return this.sufijoIPSala;
+    }
 }
