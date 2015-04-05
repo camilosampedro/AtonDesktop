@@ -24,17 +24,21 @@
 package identidad;
 
 import comunicacion.Enviable;
+import static comunicacion.Enviable.FINCUERPO;
+import static comunicacion.Enviable.INICIOCUERPO;
 import ejecucion.Ejecutar;
 import ejecucion.Funciones;
 import ejecucion.Orden;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.5
+ * @version 0.1.6
  */
 public class EquipoServidor implements Equipo, Enviable {
 
@@ -49,10 +53,58 @@ public class EquipoServidor implements Equipo, Enviable {
     private String mac;
     private String hostname;
     private Usuario usuario;
-    private SalaServidor sala;
-    
-    public EquipoServidor(SalaServidor padre){
+    private ArrayList<String[]> resultados;
+    private Orden ordenActual;
+
+    /**
+     * Get the value of resultados
+     *
+     * @return the value of resultados
+     */
+    public ArrayList<String[]> getResultados() {
+        return (ArrayList<String[]>) resultados.clone();
+    }
+
+    /**
+     * Add the value of resultados
+     *
+     * @param resultados new value of resultados
+     */
+    public void addResultado(String[] resultados) {
+        this.resultados.add(resultados);
+    }
+
+    /**
+     * Get the value of ordenActual
+     *
+     * @return the value of ordenActual
+     */
+    public Orden getOrdenActual() {
+        return ordenActual;
+    }
+
+    /**
+     * Set the value of ordenActual
+     *
+     * @param ordenActual new value of ordenActual
+     */
+    public void setOrdenActual(Orden ordenActual) {
+        this.ordenActual = ordenActual;
+    }
+
+    private Sala sala;
+
+    public EquipoServidor(Sala padre) {
         sala = padre;
+    }
+
+    public EquipoServidor(String ip, String mac, int numeroEquipo, boolean estadoPoder, boolean estadoUso, Sala sala) {
+        this.ip = ip;
+        this.mac = mac;
+        this.numeroEquipo = numeroEquipo;
+        this.estadoPoder = estadoPoder;
+        this.estadoUso = estadoUso;
+        this.sala = sala;
     }
 
     @Override
@@ -66,7 +118,7 @@ public class EquipoServidor implements Equipo, Enviable {
     }
 
     @Override
-    public String obtenerHostName() {
+    public String obtenerHostname() {
         return this.hostname;
     }
 
@@ -135,7 +187,7 @@ public class EquipoServidor implements Equipo, Enviable {
     public void setNumeroEquipo(int numeroEquipo) {
         this.numeroEquipo = numeroEquipo;
     }
-    
+
     public boolean encenderEquipo() {
         Orden orden = new Orden(Funciones.ORDENDESPERTAREQUIPO(sala.obtenerSufijoSala(), this.mac));
         try {
@@ -151,27 +203,40 @@ public class EquipoServidor implements Equipo, Enviable {
 
     @Override
     public String obtenerCabecera() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return INICIOCABECERA + TIPO[EQUIPOSERVIDOR] + FINCABECERA;
     }
 
     @Override
     public String obtenerCuerpo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return INICIOCUERPO + ip + SEPARADOR + mac + SEPARADOR + numeroEquipo + SEPARADOR + estadoPoder + SEPARADOR + estadoUso + SEPARADOR + sala.obtenerNombre() + SEPARADOR + sala.esHorizontal + FINCUERPO;
     }
 
     @Override
     public Class obtenerClase() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return EquipoServidor.class;
     }
 
-    @Override
-    public Object construirObjeto(String informacion) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static EquipoServidor construirObjeto(String informacion) {
+        int i = informacion.indexOf(INICIOCUERPO);
+        int j = informacion.indexOf(FINCUERPO);
+        String info = informacion.substring(i, j);
+        StringTokenizer tokens = new StringTokenizer(info, SEPARADOR);
+        //Probar
+        return new EquipoServidor(tokens.nextToken(), tokens.nextToken(), Integer.parseInt(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), new Sala(tokens.nextToken(), Boolean.parseBoolean(tokens.nextToken())));
     }
 
     @Override
     public String generarCadena() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return obtenerCabecera() + obtenerCuerpo();
+    }
+
+    public void copiarInformacion(EquipoCliente equipo) {
+        this.estadoUso = equipo.enUso;
+        this.mac = equipo.mac;
+    }
+
+    public void asignarHostname(String hostname) {
+        this.hostname = hostname;
     }
 
 }

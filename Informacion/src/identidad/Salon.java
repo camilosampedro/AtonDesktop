@@ -23,20 +23,56 @@
  */
 package identidad;
 
+import exception.NoEncontrado;
+import java.util.ArrayList;
+
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public interface Salon {
+public class Salon {
 
-    public void encender();
+    private ArrayList<Sala> salas;
+    private String nombre;
 
-    public void apagar();
+    public Salon(String nombre) {
+        salas = new ArrayList();
+        this.nombre = nombre;
+    }
 
-    public void notificar(String mensaje);
+    public void encender() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    public void agregarSala(Sala sala);
+    public void apagar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void notificar(String mensaje) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void agregarSala(Sala sala) {
+        salas.add(sala);
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public EquipoServidor buscarPorIP(String ip) {
+        EquipoServidor equipo;
+        for (Sala sala : salas) {
+            equipo = sala.buscarPorIP(ip);
+            if (equipo != null){
+                return equipo;
+            }
+        }
+        return null;
+    }
     
-    public String getNombre();
+    public ArrayList<Sala> getSalas(){
+        return (ArrayList<Sala>) salas.clone();
+    }
 }

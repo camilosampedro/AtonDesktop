@@ -24,10 +24,14 @@
 package identidad;
 
 import comunicacion.Enviable;
+import static comunicacion.Enviable.FINCUERPO;
+import static comunicacion.Enviable.INICIOCUERPO;
+import static comunicacion.Enviable.SEPARADOR;
 import ejecucion.Ejecutar;
 import ejecucion.Funciones;
 import ejecucion.Orden;
 import java.io.IOException;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import logs.CreadorLog;
@@ -36,7 +40,7 @@ import logs.CreadorLog;
  * Implementación de la clase Equipo ubicada en los clientes.
  *
  * @author Camilo Sampedro
- * @version 0.1.0
+ * @version 0.1.5
  */
 public class EquipoCliente implements Equipo, Enviable {
 
@@ -53,7 +57,7 @@ public class EquipoCliente implements Equipo, Enviable {
             try {
                 Orden orden = new Orden(Funciones.ORDENIP);
                 Ejecutar.ejecutar(orden);
-                ip = orden.getResultado();
+                ip = orden.getResultado().getResultado();
                 // Si la terminal está en inglés:
                 //Ejecutar.ejecutar("ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'");
             } catch (IOException | InterruptedException ex) {
@@ -70,7 +74,7 @@ public class EquipoCliente implements Equipo, Enviable {
             try {
                 Orden orden = new Orden(Funciones.ORDENMAC);
                 Ejecutar.ejecutar(orden);
-                mac = orden.getResultado();
+                mac = orden.getResultado().getResultado();
             } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(EquipoCliente.class.getName()).log(Level.SEVERE, null, ex);
                 CreadorLog.agregarALog(CreadorLog.ERROR, "Error al buscar la MAC del equipo");
@@ -81,11 +85,11 @@ public class EquipoCliente implements Equipo, Enviable {
     }
 
     @Override
-    public String obtenerHostName() {
+    public String obtenerHostname() {
         try {
             Orden orden = new Orden(Funciones.ORDENHOST);
             Ejecutar.ejecutar(orden);
-            hostname = orden.getResultado();
+            hostname = orden.getResultado().getResultado();
         } catch (IOException ex) {
             Logger.getLogger(EquipoCliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
@@ -95,7 +99,7 @@ public class EquipoCliente implements Equipo, Enviable {
     }
 
     public void asignarHostName(String hostname) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.hostname = hostname;
     }
 
     @Override
@@ -120,17 +124,20 @@ public class EquipoCliente implements Equipo, Enviable {
 
     @Override
     public String obtenerCabecera() {
-        return "#[EQUIPOCLIENTE]";
+        return INICIOCABECERA + TIPO[EQUIPOCLIENTE] + FINCABECERA;
     }
 
     @Override
     public String obtenerCuerpo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return INICIOCUERPO + this.mac + SEPARADOR + this.ip + SEPARADOR + this.hostname + SEPARADOR + this.enUso + SEPARADOR + this.usuario.getNombreDeUsuario() + FINCUERPO;
     }
 
-    @Override
-    public Object construirObjeto(String enviable) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static EquipoCliente construirObjeto(String informacion) {
+        int i = informacion.indexOf(INICIOCUERPO);
+        int j = informacion.indexOf(FINCUERPO);
+        String info = informacion.substring(i, j);
+        StringTokenizer tokens = new StringTokenizer(info, SEPARADOR);
+        return new EquipoCliente(tokens.nextToken(), tokens.nextToken(), tokens.nextToken(), Boolean.parseBoolean(tokens.nextToken()), new UsuarioCliente(tokens.nextToken()));
     }
 
     @Override
@@ -141,6 +148,14 @@ public class EquipoCliente implements Equipo, Enviable {
     @Override
     public Class obtenerClase() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public EquipoCliente(String mac, String ip, String hostname, boolean enUso, UsuarioCliente usuario) {
+        this.mac = mac;
+        this.ip = ip;
+        this.hostname = hostname;
+        this.enUso = enUso;
+        this.usuario = usuario;
     }
 
 }

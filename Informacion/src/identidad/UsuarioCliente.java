@@ -71,6 +71,11 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
         estaBaneado = verificarBaneo();
     }
 
+    public UsuarioCliente(String nombreDeUsuario) {
+        esRoot = nombreDeUsuario.endsWith("root");
+        this.nombreDeUsuario = nombreDeUsuario;
+    }
+
     // II. Métodos.
     /**
      * Verifica si el usuario que ejecutó el programa es root o no.
@@ -104,7 +109,7 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
         try {
             Orden orden = new Orden(Funciones.ORDENUSUARIO);
             Ejecutar.ejecutar(orden);
-            return orden.getResultado();
+            return orden.getResultado().getResultado();
 
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(UsuarioCliente.class
@@ -137,12 +142,12 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
 
     @Override
     public String obtenerCabecera() {
-        return INICIOCABECERA + "USUARIO" + FINCABECERA;
+        return INICIOCABECERA + TIPO[USUARIOCLIENTE] + FINCABECERA;
     }
 
     @Override
     public String obtenerCuerpo() {
-        return INICIOCUERPO + this.getNombreDeUsuario() + "|" + this.getGrupo() + FINCUERPO;
+        return INICIOCUERPO + this.getNombreDeUsuario() + SEPARADOR + this.getGrupo() + FINCUERPO;
     }
 
     @Override
@@ -150,15 +155,14 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
         return UsuarioCliente.class;
     }
 
-    @Override
-    public Object construirObjeto(String informacion) {
+    public static UsuarioCliente construirObjeto(String informacion) {
         int i = informacion.indexOf(INICIOCUERPO);
         int j = informacion.indexOf(FINCUERPO);
-        int k = informacion.indexOf("|");
+        int k = informacion.indexOf(SEPARADOR);
         String usuario = informacion.substring(i, k);
         String grupon = informacion.substring(k, j);
         UsuarioCliente usuarion = new UsuarioCliente();
-        usuarion.setNombreDeUsuario(nombreDeUsuario);
+        usuarion.setNombreDeUsuario(usuario);
         usuarion.setGrupo(grupon);
         return new UsuarioCliente();
     }

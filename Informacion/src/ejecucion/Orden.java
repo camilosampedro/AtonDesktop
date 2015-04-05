@@ -24,7 +24,11 @@
 package ejecucion;
 
 import comunicacion.Enviable;
+import static comunicacion.Enviable.FINCUERPO;
+import static comunicacion.Enviable.INICIOCUERPO;
+import static comunicacion.Enviable.SEPARADOR;
 import java.io.Serializable;
+import java.util.StringTokenizer;
 
 /**
  * Clase que contiene la información de una orden: Comando, resultado y estado
@@ -38,10 +42,16 @@ public class Orden implements Serializable, Enviable {
     private String orden;
     private boolean interrumpida;
     private int estadoSalida;
-    private String resultado;
+    private Resultado resultado;
 
     public Orden(String orden) {
         this.orden = orden;
+    }
+
+    public Orden(String orden, int estadoSalida, Resultado resultado) {
+        this.orden = orden;
+        this.estadoSalida = estadoSalida;
+        this.resultado = resultado;
     }
 
     /**
@@ -89,18 +99,17 @@ public class Orden implements Serializable, Enviable {
     /**
      * @return the resultado
      */
-    public String getResultado() {
+    public Resultado getResultado() {
         return resultado;
     }
 
-    
     /**
      * @param resultado the resultado to set
      */
-    public void setResultado(String resultado) {
+    public void setResultado(Resultado resultado) {
         this.resultado = resultado;
     }
-    
+
     public boolean esExitoso() {
         switch (estadoSalida) {
             case 0:
@@ -112,12 +121,12 @@ public class Orden implements Serializable, Enviable {
 
     @Override
     public String obtenerCabecera() {
-        return INICIOCABECERA + "ORDEN" + FINCABECERA;
+        return INICIOCABECERA + TIPO[ORDEN] + FINCABECERA;
     }
 
     @Override
     public String obtenerCuerpo() {
-        return INICIOCUERPO + this.orden + FINCUERPO;
+        return INICIOCUERPO + this.orden + SEPARADOR + this.estadoSalida + SEPARADOR + this.resultado + FINCUERPO;
     }
 
     @Override
@@ -125,14 +134,17 @@ public class Orden implements Serializable, Enviable {
         return Orden.class;
     }
 
-    @Override
-    public Object construirObjeto(String informacion) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static Orden construirObjeto(String informacion) {
+        int i = informacion.indexOf(INICIOCUERPO);
+        int j = informacion.indexOf(FINCUERPO);
+        String info = informacion.substring(i, j);
+        StringTokenizer tokens = new StringTokenizer(info, SEPARADOR);
+        return new Orden(tokens.nextToken(), Integer.parseInt(tokens.nextToken()), new Resultado(tokens.nextToken()));
     }
 
     @Override
     public String generarCadena() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return obtenerCabecera() + obtenerCuerpo();
     }
 
 }

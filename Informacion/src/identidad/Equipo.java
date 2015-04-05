@@ -35,7 +35,7 @@ public interface Equipo {
 
     public String obtenerMAC();
 
-    public String obtenerHostName();
+    public String obtenerHostname();
 
     public Usuario obtenerUsuario();
 

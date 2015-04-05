@@ -48,8 +48,7 @@ public class Resultado implements Enviable {
         return Resultado.class;
     }
 
-    @Override
-    public Object construirObjeto(String informacion) {
+    public static Resultado construirObjeto(String informacion) {
         int i = informacion.indexOf(INICIOCUERPO);
         int j = informacion.indexOf(FINCUERPO);
         String info = informacion.substring(i, j);
@@ -63,7 +62,10 @@ public class Resultado implements Enviable {
 
     @Override
     public String obtenerCabecera() {
-        return INICIOCABECERA + "RESULTADO" + FINCABECERA;
+        return INICIOCABECERA + TIPO[RESULTADO] + FINCABECERA;
     }
 
+    public String getResultado() {
+        return resultado;
+    }
 }

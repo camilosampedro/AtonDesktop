@@ -38,10 +38,9 @@ public class Solicitud implements Serializable, Enviable {
     private final byte solicitud;
 
     public static final byte CONEXION = 0;
-    public static final byte IP = 1;
-    public static final byte MAC = 2;
-    public static final byte HOST = 3;
-    public static final byte USUARIO = 4;
+    public static final byte MAC = 1;
+    public static final byte HOST = 2;
+    public static final byte USUARIO = 3;
 
     public Solicitud(byte tipo) {
         this.solicitud = tipo;
@@ -53,7 +52,7 @@ public class Solicitud implements Serializable, Enviable {
 
     @Override
     public String obtenerCabecera() {
-        return INICIOCABECERA + "SOLICITUD" + FINCABECERA;
+        return INICIOCABECERA + TIPO[SOLICITUD] + FINCABECERA;
     }
 
     @Override
@@ -66,8 +65,7 @@ public class Solicitud implements Serializable, Enviable {
         return obtenerCabecera() + obtenerCuerpo();
     }
 
-    @Override
-    public Object construirObjeto(String informacion) {
+    public static Solicitud construirObjeto(String informacion) {
         int i = informacion.indexOf(INICIOCUERPO);
         int j = informacion.indexOf(FINCUERPO);
         String info = informacion.substring(i, j);

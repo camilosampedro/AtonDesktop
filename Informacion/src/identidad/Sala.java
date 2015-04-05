@@ -23,36 +23,129 @@
  */
 package identidad;
 
+import ejecucion.Ejecutar;
+import ejecucion.Funciones;
+import ejecucion.Orden;
 import exception.NoEncontrado;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public interface Sala {
+public class Sala {
 
-    public Fila obtenerFila(int numeroFila) throws NoEncontrado;
+    protected ArrayList<Fila> filas;
+    protected String nombre;
+    protected int sufijoIPSala;
+    protected boolean esHorizontal;
 
-    public String obtenerNombre();
+    public Sala(String nombre, boolean esHorizontal) {
+        filas = new ArrayList();
+        this.esHorizontal = esHorizontal;
+        this.nombre = nombre;
+    }
 
-    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado;
+    public Fila obtenerFila(int numeroFila) throws NoEncontrado {
+        return (Fila) filas.get(numeroFila);
+    }
 
-    public void agregarEquipo(int fila, Equipo equipo);
+    public String obtenerNombre() {
+        return nombre;
+    }
 
-    public void agregarFila(boolean esHorizontal);
+    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado {
+        Fila fila = this.buscarFilaEquipo(numeroEquipo);
+        if (fila == null) {
+            throw new exception.NoEncontrado(exception.NoEncontrado.EQUIPO, "obtenerEquipo");
+        } else {
+            return fila.obtenerEquipo(numeroEquipo);
+        }
+    }
 
-    public void apagarEquipo(int numeroEquipo) throws NoEncontrado;
+    public void agregarEquipo(int fila, Equipo equipo) {
+        filas.get(fila).agregarEquipo(equipo);
+    }
 
-    public void apagarTodo();
+    public void agregarFila(boolean esHorizontal) {
+        filas.add(new Fila(esHorizontal));
+    }
 
-    public void notificar(String mensaje);
+    public void apagarEquipo(int numeroEquipo) throws NoEncontrado {
+        Fila fila = this.buscarFilaEquipo(numeroEquipo);
+        if (fila != null) {
+            String mac = fila.obtenerEquipo(numeroEquipo).obtenerMAC();
+            Orden orden = new Orden(Funciones.ORDENDESPERTAREQUIPO(sufijoIPSala, mac));
+            try {
+                Ejecutar.ejecutar(orden);
+            } catch (IOException ex) {
+                Logger.getLogger(Sala.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Sala.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
-    public void cambiarEstado(int numeroEquipo, boolean estado) throws NoEncontrado;
+    public void apagarTodo() {
+        for (Fila fila : filas) {
+            fila.apagarTodo();
+        }
+    }
 
-    public void encenderTodo();
+    public void notificar(String mensaje) {
+        for (Fila fila : filas) {
+            fila.notificar(mensaje);
+        }
+    }
 
-    public void encenderEquipo(int numeroEquipo) throws NoEncontrado;
+    public void cambiarEstado(int numeroEquipo, boolean estado) {
+        Fila fila = (Fila) buscarFilaEquipo(numeroEquipo);
+        if (fila != null) {
+            EquipoServidor equipo = (EquipoServidor) fila.obtenerEquipo(numeroEquipo);
+        }
+    }
 
-    public Fila buscarFilaEquipo(int numeroEquipo) throws NoEncontrado;
+    public void encenderTodo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void encenderEquipo(int numeroEquipo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Fila buscarFilaEquipo(int numeroEquipo) {
+        for (Fila fila : filas) {
+            if (fila.contieneEquipo(numeroEquipo)) {
+                return fila;
+            }
+        }
+        return null;
+    }
+
+    public int obtenerSufijoSala() {
+        return this.sufijoIPSala;
+    }
+
+    public EquipoServidor buscarPorIP(String ip) {
+        EquipoServidor equipo;
+        for (Fila fila : filas) {
+            equipo = fila.buscarPorIP(ip);
+            if (equipo != null) {
+                return equipo;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Fila> getFilas() {
+        return (ArrayList<Fila>) filas.clone();
+    }
+
+    public boolean esHorizontal() {
+        return esHorizontal;
+    }
 }

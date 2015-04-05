@@ -22,26 +22,66 @@
  * THE SOFTWARE.
  */
 package identidad;
-import exception.NoEncontrado;
+
+import java.util.ArrayList;
 
 /**
  *
  * @author camilo
  * @version 0.1.0
  */
-public interface Fila {
+public class Fila {
 
-    public Equipo obtenerEquipo(int numeroEquipo) throws NoEncontrado;
+    private ArrayList<EquipoServidor> equipos;
+    private boolean esHorizontal;
 
-    public void notificar(String mensaje);
+    public Fila(boolean esHorizontal) {
+        equipos = new ArrayList();
+        this.esHorizontal = esHorizontal;
+    }
 
-    public void agregarEquipo(Equipo equipo);
+    public Equipo obtenerEquipo(int numeroEquipo) {
+        return equipos.get(numeroEquipo);
+    }
 
-    public void encenderTodo();
+    public void notificar(String mensaje) {
+    }
 
-    public void apagarTodo();
-    
-    public boolean contieneEquipo(int numeroEquipo);
-    
-    public boolean esHorizontal();
+    public void agregarEquipo(Equipo equipo) {
+        equipos.add((EquipoServidor) equipo);
+    }
+
+    public void encenderTodo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void apagarTodo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean contieneEquipo(int numeroEquipo) {
+        for (EquipoServidor equipo : equipos) {
+            if (equipo.getNumeroEquipo() == numeroEquipo) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<EquipoServidor> getEquipos() {
+        return equipos;
+    }
+
+    public boolean esHorizontal() {
+        return esHorizontal;
+    }
+
+    public EquipoServidor buscarPorIP(String ip) {
+        for (EquipoServidor equipo : equipos){
+            if (equipo.obtenerIP().equals(ip)){
+                return equipo;
+            }
+        }
+        return null;
+    }
 }

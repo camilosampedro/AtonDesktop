@@ -26,23 +26,33 @@ package comunicacion;
 /**
  *
  * @author Camilo Sampedro
+ * @version 0.1.3
  */
 public interface Enviable {
 
+    //Constantes globales
     public static final String INICIOCUERPO = "*¡*{";
     public static final String FINCUERPO = "}*!*";
     public static final String INICIOCABECERA = "*[";
     public static final String FINCABECERA = "]*";
-
+    public static final String SEPARADOR = "*(/)*";
     public static final int TAMAÑOPAQUETE = 2048;
+    
+    //Tipos de enviable
+    public static final byte RESULTADO = 0;
+    public static final byte EQUIPOSERVIDOR = 1;
+    public static final byte ORDEN = 2;
+    public static final byte SOLICITUD = 3;
+    public static final byte USUARIOCLIENTE = 4;
+    public static final byte EQUIPOCLIENTE = 5;
+
+    public static final String TIPO[] = {"RESULTADO", "EQUIPOSERVIDOR", "ORDEN", "SOLICITUD", "USUARIOCLIENTE", "EQUIPOCLIENTE"};
 
     public String obtenerCabecera();
 
     public String obtenerCuerpo();
 
     public abstract Class obtenerClase();
-
-    public abstract Object construirObjeto(String informacion);
 
     public String generarCadena();
 

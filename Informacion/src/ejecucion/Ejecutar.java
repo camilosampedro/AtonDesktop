@@ -50,7 +50,7 @@ public class Ejecutar {
         // Ejecución de la orden.
         Process p = Runtime.getRuntime().exec(orden.getOrden());
         p.waitFor();
-        
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String line;
 
@@ -61,7 +61,7 @@ public class Ejecutar {
         }
         String salida = output.toString();
 
-        orden.setResultado(salida);
+        orden.setResultado(new Resultado(salida));
 
 //        // Lectura del estado de salida.
 //        p = Runtime.getRuntime().exec("echo $?");
@@ -72,7 +72,6 @@ public class Ejecutar {
 //        System.out.println("Hola" + line);
 //        
 //        line = reader.readLine();
-
         orden.setEstadoSalida(p.exitValue());
     }
 }
