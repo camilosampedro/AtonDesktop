@@ -23,6 +23,9 @@
  */
 package interfaz;
 
+import identidad.Fila;
+import identidad.Sala;
+
 /**
  *
  * @author Camilo Sampedro
@@ -30,11 +33,30 @@ package interfaz;
  */
 public class JIFFSala extends javax.swing.JInternalFrame {
 
+    private Sala sala;
     /**
      * Creates new form JIFFSala
      */
-    public JIFFSala() {
+    private JIFFSala() {
         initComponents();
+    }
+    
+    public JIFFSala(Sala sala){
+        initComponents();
+        if(sala.esHorizontal()){
+            getContentPane().setLayout(new java.awt.GridLayout(0, 1));
+        } else {
+            getContentPane().setLayout(new java.awt.GridLayout());
+        }
+        pack();
+        this.sala = sala;
+        this.setTitle(sala.obtenerNombre());
+        for (Fila fila : sala.getFilas()){
+            PanelFila panel = new PanelFila(fila);
+            panel.setVisible(true);
+            this.add(panel);
+        }
+        this.paintAll(this.getGraphics());
     }
 
     /**
@@ -46,16 +68,7 @@ public class JIFFSala extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
-        );
+        getContentPane().setLayout(new java.awt.GridLayout());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

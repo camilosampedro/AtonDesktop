@@ -30,6 +30,7 @@ import identidad.EquipoServidor;
 import identidad.Fila;
 import identidad.Sala;
 import identidad.Salon;
+import interfaz.InterfazSalon;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.SocketException;
@@ -55,7 +56,7 @@ public class Informacion extends Thread {
     private static ArrayList<EquipoServidor> equiposConectados;
     private static ArrayList<Salon> salones;
 
-    private static String rutaInformacion = "salones.xml";
+    private static String rutaInformacion = "informacion.xml";
 
     /**
      * Get the value of rutaInformacion
@@ -143,12 +144,19 @@ public class Informacion extends Thread {
     }
 
     public static void inicializar(boolean modo) {
+        salones = new ArrayList();
         Informacion.modo = modo;
-        Comunicacion.inicializar(5901);
-        Comunicacion.despertar();
+        Comunicacion.inicializar(5978);
+        leerDatos();
         if (!Informacion.modo) {
-            leerDatos();
+            for(Salon salon : salones){
+                InterfazSalon interfaz = new InterfazSalon(salon);
+                interfaz.setVisible(true);
+            }
         }
+        Comunicacion.despertar();
+        
+        
     }
 
     public static void generarXML() {
@@ -209,7 +217,7 @@ public class Informacion extends Thread {
                 Salon salon = new Salon(salone.getAttributeValue("Nombre"));
                 List<Element> elementosSala = salone.getChildren("Sala");
                 for (Element salae : elementosSala) {
-                    Sala sala = new Sala(salae.getAttributeValue("Nombre"), Boolean.parseBoolean(salae.getAttributeValue("Horizontal")));
+                    Sala sala = new Sala(salae.getAttributeValue("Nombre"), Boolean.parseBoolean(salae.getAttributeValue("Horizontal")), Integer.parseInt(salae.getAttributeValue("SufijoIP")));
                     List<Element> elementosFila = salae.getChildren("Fila");
                     for (Element filae : elementosFila) {
                         Fila fila = new Fila(sala.esHorizontal());
@@ -225,8 +233,11 @@ public class Informacion extends Thread {
                                 String[] resultado = {ejecucione.getAttributeValue("Orden"), ejecucione.getAttributeValue("Resultado")};
                                 equipo.addResultado(resultado);
                             }
+                            fila.agregarEquipo(equipo);
                         }
+                        sala.agregarFila(fila);
                     }
+                    salon.agregarSala(sala);
                 }
                 salones.add(salon);
             }

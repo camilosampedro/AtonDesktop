@@ -25,6 +25,7 @@ package interfaz;
 
 import identidad.EquipoServidor;
 import identidad.Fila;
+import java.util.ArrayList;
 
 /**
  *
@@ -34,6 +35,7 @@ import identidad.Fila;
 public class PanelFila extends javax.swing.JPanel {
 
     private Fila fila;
+    private ArrayList<PanelEquipo> paneles;
 
     /**
      * Creates new form PanelFila
@@ -43,9 +45,16 @@ public class PanelFila extends javax.swing.JPanel {
     }
 
     public PanelFila(Fila fila) {
+        paneles = new ArrayList();
         this.fila = fila;
         initComponents();
+        if(fila.esHorizontal()){
+            setLayout(new java.awt.GridLayout());
+        } else {
+            setLayout(new java.awt.GridLayout(0, 1));
+        }
         generarPaneles();
+        this.updateUI();
     }
 
     /**
@@ -57,16 +66,7 @@ public class PanelFila extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 90, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.GridLayout());
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -76,6 +76,7 @@ public class PanelFila extends javax.swing.JPanel {
         for (EquipoServidor equipo : fila.getEquipos()) {
             PanelEquipo panel = new PanelEquipo(equipo);
             panel.setVisible(true);
+            paneles.add(panel);
             this.add(panel);
         }
     }

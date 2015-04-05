@@ -23,6 +23,7 @@
  */
 package interfaz;
 
+import identidad.Sala;
 import identidad.Salon;
 
 /**
@@ -41,6 +42,13 @@ public class InterfazSalon extends javax.swing.JFrame {
     
     public InterfazSalon(Salon salon){
         this.salon = salon;
+        initComponents();
+        for(Sala sala : salon.getSalas()){
+            JIFFSala subventana = new JIFFSala(sala);
+            subventana.setVisible(true);
+            this.add(subventana);
+        }
+        this.paintAll(this.getGraphics());
     }
 
     /**
@@ -54,17 +62,7 @@ public class InterfazSalon extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(salon.getNombre());
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        getContentPane().setLayout(new java.awt.GridLayout());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

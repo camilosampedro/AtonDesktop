@@ -59,6 +59,7 @@ public class PanelEquipo extends javax.swing.JPanel {
     private void initComponents() {
 
         btnEquipo = new javax.swing.JButton();
+        cbSeleccion = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
@@ -69,6 +70,18 @@ public class PanelEquipo extends javax.swing.JPanel {
         btnEquipo.setMargin(new java.awt.Insets(2, 4, 2, 4));
         btnEquipo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         btnEquipo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnEquipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEquipoActionPerformed(evt);
+            }
+        });
+
+        cbSeleccion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cbSeleccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSeleccionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -76,21 +89,36 @@ public class PanelEquipo extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbSeleccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbSeleccion)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEquipoActionPerformed
+        // TODO add your handling code here:
+        InterfazEquipo interfaz = new InterfazEquipo(this.equipo);
+        interfaz.setVisible(true);
+    }//GEN-LAST:event_btnEquipoActionPerformed
+
+    private void cbSeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSeleccionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbSeleccionActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEquipo;
+    private javax.swing.JCheckBox cbSeleccion;
     // End of variables declaration//GEN-END:variables
 
     private void asignarIcono() {
@@ -103,5 +131,9 @@ public class PanelEquipo extends javax.swing.JPanel {
         } else {
             icono = new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoPC-00.png"));
         }
+    }
+    
+    public boolean estaCheckeado(){
+        return cbSeleccion.isSelected();
     }
 }

@@ -23,20 +23,27 @@
  */
 package interfaz;
 
+import identidad.EquipoServidor;
+
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.1
  */
 public class InterfazEquipo extends javax.swing.JFrame {
+    private EquipoServidor equipo;
 
     /**
      * Creates new form InterfazEquipo
      */
-    public InterfazEquipo() {
+    private InterfazEquipo() {
         initComponents();
     }
 
+    public InterfazEquipo(EquipoServidor equipo){
+        this.equipo = equipo;
+        initComponents();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,14 +54,14 @@ public class InterfazEquipo extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        panelGeneral = new javax.swing.JPanel();
+        panelEstado = new javax.swing.JPanel();
         jlIP = new javax.swing.JLabel();
         jlMac = new javax.swing.JLabel();
         jlPoder = new javax.swing.JLabel();
         jlEstado = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
+        panelUsuarios = new javax.swing.JPanel();
+        panelOrdenar = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -63,51 +70,64 @@ public class InterfazEquipo extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
+        panelGeneral.setLayout(panelGeneralLayout);
+        panelGeneralLayout.setHorizontalGroup(
+            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 348, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelGeneralLayout.setVerticalGroup(
+            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 160, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("General", jPanel1);
+        jTabbedPane1.addTab("General", panelGeneral);
 
-        jPanel2.setBackground(new java.awt.Color(255, 231, 197));
-        jPanel2.setLayout(new java.awt.GridLayout(0, 2, 10, 0));
+        panelEstado.setBackground(new java.awt.Color(255, 231, 197));
+        panelEstado.setLayout(new java.awt.GridLayout(0, 2, 10, 0));
 
-        jlIP.setText("Ip: 192.168.30.19");
+        jlIP.setText("IP: " + equipo.obtenerIP());
         jlIP.setInheritsPopupMenu(false);
-        jPanel2.add(jlIP);
+        panelEstado.add(jlIP);
 
-        jlMac.setText("Mac: 2e:15:45:1A:30");
-        jPanel2.add(jlMac);
+        jlMac.setText("Mac: " + equipo.obtenerMAC());
+        panelEstado.add(jlMac);
 
-        jlPoder.setText("Poder: Encendido");
-        jPanel2.add(jlPoder);
+        String encendido;
+        if(equipo.estaEncendido()){
+            encendido = "Encendido";
+        } else {
+            encendido = "Apagado";
+        }
+        jlPoder.setText("Poder: " + encendido);
+        panelEstado.add(jlPoder);
 
-        jlEstado.setText("Estado: Disponible");
-        jPanel2.add(jlEstado);
+        String estado;
 
-        jTabbedPane1.addTab("Estado", jPanel2);
+        if(equipo.esUsado()){
+            estado = "En uso";
+        } else {
+            estado = "Disponible";
+        }
+        jlEstado.setText("Estado: " + estado);
+        panelEstado.add(jlEstado);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jTabbedPane1.addTab("Estado", panelEstado);
+
+        javax.swing.GroupLayout panelUsuariosLayout = new javax.swing.GroupLayout(panelUsuarios);
+        panelUsuarios.setLayout(panelUsuariosLayout);
+        panelUsuariosLayout.setHorizontalGroup(
+            panelUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 348, Short.MAX_VALUE)
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelUsuariosLayout.setVerticalGroup(
+            panelUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 160, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Usuarios", jPanel3);
+        jTabbedPane1.addTab("Usuarios", panelUsuarios);
 
         jButton1.setText("Enviar archivo Bash");
 
@@ -123,31 +143,31 @@ public class InterfazEquipo extends javax.swing.JFrame {
 
         jButton5.setText("Notificar");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelOrdenarLayout = new javax.swing.GroupLayout(panelOrdenar);
+        panelOrdenar.setLayout(panelOrdenarLayout);
+        panelOrdenarLayout.setHorizontalGroup(
+            panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenarLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOrdenarLayout.createSequentialGroup()
                         .addComponent(jTextField1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2))
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        panelOrdenarLayout.setVerticalGroup(
+            panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOrdenarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -155,7 +175,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Ordenar", jPanel4);
+        jTabbedPane1.addTab("Ordenar", panelOrdenar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -170,7 +190,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
 
@@ -219,10 +239,6 @@ public class InterfazEquipo extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
@@ -230,5 +246,9 @@ public class InterfazEquipo extends javax.swing.JFrame {
     private javax.swing.JLabel jlIP;
     private javax.swing.JLabel jlMac;
     private javax.swing.JLabel jlPoder;
+    private javax.swing.JPanel panelEstado;
+    private javax.swing.JPanel panelGeneral;
+    private javax.swing.JPanel panelOrdenar;
+    private javax.swing.JPanel panelUsuarios;
     // End of variables declaration//GEN-END:variables
 }
