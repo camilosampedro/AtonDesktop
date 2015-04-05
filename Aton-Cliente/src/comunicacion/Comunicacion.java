@@ -27,20 +27,9 @@ import ejecucion.Solicitud;
 import ejecucion.EjecucionRemota;
 import ejecucion.Orden;
 import ejecucion.Resultado;
-import identidad.UsuarioCliente;
 import informacion.Informacion;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -51,17 +40,13 @@ import java.util.logging.Logger;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class Comunicacion extends Thread implements ClienteServidor {
+public class Comunicacion extends ClienteServidor {
 
-    protected static Orden ordenActual;
     protected static ServerSocket serverSocket;
-    protected static Socket socket;
-    protected static int puerto;
     protected static String servidor;
     protected static EjecucionRemota ejecucionActual;
     protected static Solicitud solicitudActual;
     protected static Comunicacion cliente_servidor;
-    private static boolean conectado;
 
     public static void inicializar(String server, int port) {
         servidor = server;
@@ -69,85 +54,21 @@ public class Comunicacion extends Thread implements ClienteServidor {
         cliente_servidor = new Comunicacion();
     }
 
-    private static boolean esAccesible() throws UnknownHostException, IOException {
-        return InetAddress.getByName(servidor).isReachable(100);
-    }
-
-//    private static boolean puertoDisponible() {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                while (!esAccesible()) {
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                escuchar();
-            } catch (IOException ex) {
-                Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
     public static void despertar() throws IOException, ClassNotFoundException {
-        cliente_servidor.enviar(new Solicitud(Solicitud.CONEXION));
+        Comunicacion.enviarObjeto(new Solicitud(Solicitud.CONEXION));
         cliente_servidor.escuchar();
-        cliente_servidor.enviar(Informacion.getEquipo());
+        Comunicacion.enviarObjeto(Informacion.getEquipo());
         cliente_servidor.start();
     }
 
-    @Override
-    public String escuchar() throws SocketException {
-        DatagramPacket packet;
-        DatagramSocket socketEscucha;
-        byte[] data;    // Para los datos ser enviados en paquetes
-        int clientPort;
-        int packetSize = Enviable.TAMAÑOPAQUETE;
-        InetAddress address;
-        String str;
-
-        socketEscucha = new DatagramSocket(puerto);
-        data = new byte[packetSize];
-
-        // Crea paquetes para recibir el mensaje
-        packet = new DatagramPacket(data, packetSize);
-        //System.out.println("Esperando para recibir los paquetes");
-
-        try {
-
-            // Esperar indefinidamente a que el paquete llegue
-            socketEscucha.receive(packet);
-
-        } catch (IOException ie) {
-            System.out.println(" No pudo recibir :" + ie.getMessage());
-            System.exit(0);
-        }
-
-        // Obtener datos del cliente para poder hacer echo a los datos
-        address = packet.getAddress();
-        clientPort = packet.getPort();
-
-        // Imprime en pantalla la cadena que fue recibida en la consola del server
-        str = new String(data, 0, packet.getLength());
-        if (!address.getHostName().equals(servidor)) {
-            return "";
-        }
-        return str;
-    }
-
-    public static void ejecutarOrden() {
+    public static void ejecutarOrden(Orden ordenActual) {
         ejecucionActual = new EjecucionRemota(ordenActual);
         ejecucionActual.start();
     }
 
     public static void enviarResultado(Resultado resultado) {
         try {
-            cliente_servidor.enviar(resultado);
+            Comunicacion.enviarObjeto(resultado);
         } catch (UnknownHostException ex) {
             Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SocketException ex) {
@@ -155,44 +76,21 @@ public class Comunicacion extends Thread implements ClienteServidor {
         }
     }
 
-    private void enviar(Enviable o) throws UnknownHostException, SocketException {
-        DatagramSocket socket; // Como se envian los paquetes
-        DatagramPacket packet; // Lo que se envia en los paquetes
-        InetAddress address;   // A donde se envian los paquetes
-        String messageSend;    // Mensaje a ser enviado
-        String messageReturn;  // Lo que se obtiene del Server
-        int packetSize = Enviable.TAMAÑOPAQUETE;
-        byte[] data;
-
-        // Obtener la direccion IP del  Server
-        address = InetAddress.getByName(servidor);
-        socket = new DatagramSocket();
-
-        //data = new byte[packetSize];
-        messageSend = o.generarCadena();
-        data = messageSend.getBytes();
-        // messageSend.getBytes(0, messageSend.length(), data, 0);
-        if (data.length > packetSize) {
-            return;
-        }
-
-        // recordar a los datagramas guardar los bytes
-        packet = new DatagramPacket(data, data.length, address, puerto);
-        System.out.println(" Tratando de enviar el paquete ");
-
-        try {
-            // envia el paquete
-
-            socket.send(packet);
-
-        } catch (IOException ie) {
-            System.out.println("No pudo ser enviado  :" + ie.getMessage());
-            System.exit(0);
-        }
+    public static void enviarObjeto(Enviable o) throws UnknownHostException, SocketException {
+        enviarObjeto(o, servidor);
     }
 
-    public static void enviarObjeto(Enviable o) throws UnknownHostException, SocketException {
-        cliente_servidor.enviar(o);
+    @Override
+    protected void abrirCanal() throws SocketException {
+        Object[] objetoRecibido = escuchar();
+        if (objetoRecibido[1] instanceof Orden) {
+            Procesador.procesarOrden((String) objetoRecibido[0], (Orden) objetoRecibido[1]);
+            return;
+        }
+        if (objetoRecibido[1] instanceof Solicitud) {
+            Procesador.procesarSolicitud((String) objetoRecibido[0], (Solicitud) objetoRecibido[1]);
+            return;
+        }
     }
 
 }

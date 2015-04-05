@@ -23,8 +23,6 @@
  */
 package principal;
 
-import comunicacion.Comunicacion;
-import identidad.UsuarioCliente;
 import informacion.Informacion;
 import java.io.IOException;
 import java.util.logging.Level;

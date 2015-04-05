@@ -57,7 +57,7 @@ public class EjecucionRemota extends Thread {
     public void run() {
         try {
             Ejecutar.ejecutar(orden);
-            Comunicacion.enviarObjeto(orden);
+            Comunicacion.enviarObjeto(orden.getResultado());
         } catch (IOException | InterruptedException ex) {
             CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo un error en la ejecución de la orden.");
             Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex);
@@ -75,7 +75,7 @@ public class EjecucionRemota extends Thread {
     /**
      * @return resultado de la ejecución.
      */
-    public String obtenerResultado() {
+    public Resultado obtenerResultado() {
         return orden.getResultado();
     }
 

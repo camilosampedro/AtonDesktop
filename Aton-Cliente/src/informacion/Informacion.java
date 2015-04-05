@@ -66,7 +66,7 @@ public class Informacion {
         equipo = aEquipo;
     }
 
-    public static void inicializar() throws IOException, ClassNotFoundException {
+    public static void inicializar() throws IOException, ClassNotFoundException {   
         if (!UsuarioCliente.esRoot()) {
             System.err.println("El usuario que ejecutó el servicio no es root.");
             System.err.println("Se debe ser root para ejecutar el servicio.");
