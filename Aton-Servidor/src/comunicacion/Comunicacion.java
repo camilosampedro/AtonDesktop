@@ -23,126 +23,48 @@
  */
 package comunicacion;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import ejecucion.Resultado;
+import ejecucion.Solicitud;
+import identidad.EquipoCliente;
+import identidad.UsuarioCliente;
 import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Camilo Sampedro
+ * @version 0.2.0
  */
-public class Comunicacion extends Thread implements ClienteServidor {
+public class Comunicacion extends ClienteServidor {
 
-    static int serverPort;
-    static String ipServidor;
+    private static Comunicacion cliente_servidor;
 
-    public Comunicacion(int puerto, String servidor) {
-        serverPort = puerto;
-        ipServidor = servidor;
+    public static void inicializar(int puerto) {
+        Comunicacion.puerto = puerto;
+        cliente_servidor = new Comunicacion();
+    }
+
+    public static void despertar() {
+        cliente_servidor.start();
     }
 
     @Override
-    public String escuchar() throws SocketException {
-        DatagramPacket packet;
-        DatagramSocket socket;
-        byte[] data;    // Para los datos ser enviados en paquetes
-        int clientPort;
-        int packetSize = Enviable.TAMAÑOPAQUETE;
-        InetAddress address;
-        String str;
-
-        socket = new DatagramSocket(serverPort);
-        data = new byte[packetSize];
-
-        // Crea paquetes para recibir el mensaje
-        packet = new DatagramPacket(data, packetSize);
-        System.out.println("Esperando para recibir los paquetes");
-
-        try {
-
-            // Esperar indefinidamente a que el paquete llegue
-            socket.receive(packet);
-
-        } catch (IOException ie) {
-            System.out.println(" No pudo recibir :" + ie.getMessage());
-            System.exit(0);
+    protected void abrirCanal() throws SocketException {
+        Object[] objetoRecibido = escuchar();
+        if (objetoRecibido[1] instanceof Resultado) {
+            Procesador.procesarResultado((String) objetoRecibido[0], (Resultado) objetoRecibido[1]);
+            return;
         }
-
-        // Obtener datos del cliente para poder hacer echo a los datos
-        address = packet.getAddress();
-        clientPort = packet.getPort();
-
-        // Imprime en pantalla la cadena que fue recibida en la consola del server
-        str = new String(data, 0, 0, packet.getLength());
-        return str;
-    }
-
-    public void enviarObjeto(Enviable objeto) throws UnknownHostException, SocketException {
-        DatagramSocket socket; // Como se envian los paquetes
-        DatagramPacket packet; // Lo que se envia en los paquetes
-        InetAddress address;   // A donde se envian los paquetes
-        String messageSend;    // Mensaje a ser enviado
-        String messageReturn;  // Lo que se obtiene del Server
-        int packetSize = Enviable.TAMAÑOPAQUETE;
-        byte[] data;
-
-        // Obtener la direccion IP del  Server
-        address = InetAddress.getByName(ipServidor);
-        socket = new DatagramSocket();
-
-        data = new byte[packetSize];
-        messageSend = objeto.generarCadena();
-        messageSend.getBytes(0, messageSend.length(), data, 0);
-
-        // recordar a los datagramas guardar los bytes
-        packet = new DatagramPacket(data, data.length, address, serverPort);
-        System.out.println(" Tratando de enviar el paquete ");
-
-        try {
-            // envia el paquete
-
-            socket.send(packet);
-
-        } catch (IOException ie) {
-            System.out.println("No pudo ser enviado  :" + ie.getMessage());
-            System.exit(0);
+        if (objetoRecibido[1] instanceof Solicitud) {
+            Procesador.procesarSolicitud((String) objetoRecibido[0], (Solicitud) objetoRecibido[1]);
+            return;
         }
-
-        //El paquete es reinicializado para usarlo para recibir
-        packet = new DatagramPacket(data, data.length);
-
-        try {
-            // Recibe el paquete del server
-
-            socket.receive(packet);
-
-        } catch (IOException iee) {
-            System.out.println("No lo pudo recibir  : " + iee.getMessage());
-            System.exit(0);
+        if (objetoRecibido[1] instanceof EquipoCliente) {
+            Procesador.procesarEquipo((String) objetoRecibido[0], (EquipoCliente) objetoRecibido[1]);
+            return;
         }
-
-        // mostrar el mensaje recibido
-        messageReturn = new String(packet.getData(), 0);
-        System.out.println("Mensaje devuelto : " + messageReturn.trim());
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                escuchar();
-            } catch (SocketException ex) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex1) {
-                    Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
+        if (objetoRecibido[1] instanceof UsuarioCliente) {
+            Procesador.procesarUsuario((String) objetoRecibido[0], (UsuarioCliente) objetoRecibido[1]);
+            return;
         }
     }
 

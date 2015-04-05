@@ -24,7 +24,7 @@
 package interfaz;
 
 import identidad.EquipoServidor;
-import identidad.FilaServidor;
+import identidad.Fila;
 
 /**
  *
@@ -33,7 +33,7 @@ import identidad.FilaServidor;
  */
 public class PanelFila extends javax.swing.JPanel {
 
-    private FilaServidor fila;
+    private Fila fila;
 
     /**
      * Creates new form PanelFila
@@ -42,7 +42,7 @@ public class PanelFila extends javax.swing.JPanel {
         initComponents();
     }
 
-    public PanelFila(FilaServidor fila) {
+    public PanelFila(Fila fila) {
         this.fila = fila;
         initComponents();
         generarPaneles();
