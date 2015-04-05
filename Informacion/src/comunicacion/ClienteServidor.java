@@ -29,10 +29,14 @@ import ejecucion.Solicitud;
 import identidad.EquipoCliente;
 import identidad.EquipoServidor;
 import identidad.UsuarioCliente;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -45,40 +49,46 @@ import java.util.logging.Logger;
 public abstract class ClienteServidor extends Thread {
 
     protected static int puerto;
+    protected static ServerSocket serverSocket;
 
-    public Object[] escuchar() throws SocketException {
-        DatagramPacket packet;
-        DatagramSocket socket;
-        byte[] data;    // Para los datos ser enviados en paquetes
-        int clientPort;
-        int packetSize = Enviable.TAMAÑOPAQUETE;
-        InetAddress address;
-        String str;
+    public Object[] escuchar() throws SocketException, IOException {
+        System.out.println("Servidor de escucha abierto, esperando mensajes...");
+        Socket socket = serverSocket.accept();
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        InetAddress IPRemitente = socket.getInetAddress();
+        String mensaje = in.readLine();
+        System.out.println("Cliente " + IPRemitente + " : " + mensaje);
+//        DatagramPacket packet;
+//        DatagramSocket socket;
+//        byte[] data;    // Para los datos ser enviados en paquetes
+//        int clientPort;
+//        int packetSize = Enviable.TAMAÑOPAQUETE;
+//        InetAddress address;
+//        String str;
+//
+//        socket = new DatagramSocket(puerto);
+//        data = new byte[packetSize];
+//
+//        // Crea paquetes para recibir el mensaje
+//        packet = new DatagramPacket(data, packetSize);
+//
+//        try {
+//            // Esperar indefinidamente a que el paquete llegue
+//            socket.receive(packet);
+//        } catch (IOException ie) {
+//            System.out.println(" No pudo recibir :" + ie.getMessage());
+//            System.exit(0);
+//        }
+//
+//        System.out.println("Llegó un paquete");
+//        // Obtener datos del cliente para poder hacer echo a los datos
+//        address = packet.getAddress();
+//        clientPort = packet.getPort();
 
-        socket = new DatagramSocket(puerto);
-        data = new byte[packetSize];
-
-        // Crea paquetes para recibir el mensaje
-        packet = new DatagramPacket(data, packetSize);
-        System.out.println("Esperando para recibir los paquetes");
-
-        try {
-
-            // Esperar indefinidamente a que el paquete llegue
-            socket.receive(packet);
-
-        } catch (IOException ie) {
-            System.out.println(" No pudo recibir :" + ie.getMessage());
-            System.exit(0);
-        }
-
-        // Obtener datos del cliente para poder hacer echo a los datos
-        address = packet.getAddress();
-        clientPort = packet.getPort();
-
-        // Creación del String
-        str = new String(data, packet.getOffset(), packet.getLength());
-        Object[] retorno = {address, recuperarEnviable(str)};
+//        // Creación del String
+//        str = new String(data, packet.getOffset(), packet.getLength());
+        Object[] retorno = {IPRemitente, recuperarEnviable(mensaje)};
 
         return retorno;
     }
@@ -106,55 +116,70 @@ public abstract class ClienteServidor extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                abrirCanal();
-            } catch (SocketException ex) {
+        try {
+            serverSocket = new ServerSocket(puerto);
+            while (true) {
                 try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex1) {
-                    Logger.getLogger(ClienteServidor.class.getName()).log(Level.SEVERE, null, ex1);
+                    abrirCanal();
+                } catch (SocketException ex) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex1) {
+                        Logger.getLogger(ClienteServidor.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
                 }
             }
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     protected abstract void abrirCanal() throws SocketException;
 
-    public static void enviarObjeto(Enviable o, String ipDestino) throws UnknownHostException, SocketException {
-        DatagramSocket socket; // Como se envian los paquetes
-        DatagramPacket packet; // Lo que se envia en los paquetes
-        InetAddress address;   // A donde se envian los paquetes
-        String messageSend;    // Mensaje a ser enviado
-        String messageReturn;  // Lo que se obtiene del Server
-        int packetSize = Enviable.TAMAÑOPAQUETE;
-        byte[] data;
-
-        // Obtener la direccion IP del  Server
-        address = InetAddress.getByName(ipDestino);
-        socket = new DatagramSocket();
-
-        //data = new byte[packetSize];
-        messageSend = o.generarCadena();
-        data = messageSend.getBytes();
-        // messageSend.getBytes(0, messageSend.length(), data, 0);
-        if (data.length > packetSize) {
-            return;
-        }
-
-        // recordar a los datagramas guardar los bytes
-        packet = new DatagramPacket(data, data.length, address, puerto);
-        System.out.println(" Tratando de enviar el paquete ");
-
-        try {
-            // envia el paquete
-
-            socket.send(packet);
-
-        } catch (IOException ie) {
-            System.out.println("No pudo ser enviado  :" + ie.getMessage());
-            System.exit(0);
-        }
+    public static void enviarObjeto(Enviable o, String ipDestino) throws UnknownHostException, SocketException, IOException, ConnectException {
+        Socket socket = new Socket(ipDestino, puerto);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in
+                = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
+        String mensaje = o.generarCadena();
+        System.out.println("Mensaje: " + mensaje);
+        out.println(mensaje);
+//        
+////        DatagramSocket socket; // Como se envian los paquetes
+////        DatagramPacket packet; // Lo que se envia en los paquetes
+////        InetAddress address;   // A donde se envian los paquetes
+////        String messageSend;    // Mensaje a ser enviado
+////        String messageReturn;  // Lo que se obtiene del Server
+////        int packetSize = Enviable.TAMAÑOPAQUETE;
+////        byte[] data;
+////
+////        // Obtener la direccion IP del  Server
+////        address = InetAddress.getByName(ipDestino);
+////        socket = new DatagramSocket();
+//
+//        //data = new byte[packetSize];
+////        messageSend = o.generarCadena();
+////        data = messageSend.getBytes();
+//        // messageSend.getBytes(0, messageSend.length(), data, 0);
+//        if (data.length > packetSize) {
+//            return;
+//        }
+//
+//        // recordar a los datagramas guardar los bytes
+//        packet = new DatagramPacket(data, data.length, address, puerto);
+//        System.out.println(" Tratando de enviar el paquete a " + ipDestino);
+//
+//        try {
+//            // envia el paquete
+//
+//            socket.send(packet);
+//            System.out.println("Paquete enviado.");
+//
+//        } catch (IOException ie) {
+//            System.out.println("No pudo ser enviado  :" + ie.getMessage());
+//            System.exit(1);
+//        }
     }
 
     public static boolean esAccesible(String ip) throws UnknownHostException, IOException {

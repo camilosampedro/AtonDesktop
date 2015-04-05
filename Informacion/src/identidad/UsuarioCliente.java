@@ -24,11 +24,13 @@
 package identidad;
 
 import comunicacion.Enviable;
-import ejecucion.Ejecutar;
+import ejecucion.Ejecucion;
 import ejecucion.Funciones;
 import ejecucion.Orden;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import logs.CreadorLog;
@@ -86,8 +88,9 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
         try {
             //"id - u" retorna 0 si el usuario es root.
             Orden orden = new Orden(Funciones.ORDENVERIFICACIONROOT);
-            Ejecutar.ejecutar(orden);
-            boolean esRoot2 = orden.getResultado().equals("0");
+            Ejecucion.ejecutar(orden);
+            String resultado = orden.getResultado().getResultado().replace("\n", "").replace("\r", "");
+            boolean esRoot2 = resultado.equals("0");
             return esRoot2;
         } catch (IOException ex) {
             System.err.println("Ocurrió n error intentando verificar si se es root: I/O");
@@ -99,6 +102,33 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
         return false;
     }
 
+    public static ArrayList<UsuarioCliente> generarListaUsuarios() {
+        try {
+            ArrayList<UsuarioCliente> listaUsuarios = new ArrayList();
+            Orden orden = new Orden(Funciones.ORDENLISTAUSUARIOS);
+            Ejecucion.ejecutar(orden);
+            String resultado = orden.getResultado().getResultado();
+            StringTokenizer tokens = new StringTokenizer(resultado, "\n");
+            ciclo:
+            while (tokens.hasMoreTokens()){
+                String nombreUsuario = tokens.nextToken();
+                UsuarioCliente nuevoUsuario = new UsuarioCliente(nombreUsuario);
+                for(UsuarioCliente usuario : listaUsuarios){
+                    if (usuario.isEqual(nuevoUsuario)){
+                        continue ciclo;
+                    }
+                }
+                listaUsuarios.add(nuevoUsuario);
+            }
+            return listaUsuarios;
+        } catch (IOException ex) {
+            Logger.getLogger(UsuarioCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(UsuarioCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     /**
      * Obtiene el nombre del usuario que está ejecutando el servicio.
      *
@@ -108,7 +138,7 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
         // Si ya fue calculado anteriormente, no se calcula de nuevo.
         try {
             Orden orden = new Orden(Funciones.ORDENUSUARIO);
-            Ejecutar.ejecutar(orden);
+            Ejecucion.ejecutar(orden);
             return orden.getResultado().getResultado();
 
         } catch (IOException | InterruptedException ex) {
@@ -137,7 +167,7 @@ public class UsuarioCliente implements Usuario, Serializable, Enviable {
 
     @Override
     public String obtenerNombreDeUsuario() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.nombreDeUsuario;
     }
 
     @Override

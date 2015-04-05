@@ -34,7 +34,7 @@ import java.io.InputStreamReader;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class Ejecutar {
+public class Ejecucion {
 
     /**
      * Ejecuta la orden solicitada en el intérprete de comandos con el que se
@@ -46,32 +46,34 @@ public class Ejecutar {
      * @throws InterruptedException externamente.
      */
     public static void ejecutar(Orden orden) throws IOException, InterruptedException {
-        StringBuilder output = new StringBuilder();
-        // Ejecución de la orden.
-        Process p = Runtime.getRuntime().exec(orden.getOrden());
+        
+        //Miniscript de ejecución del comando, para evitar problemas con los pipelines
+        String[] comando = {
+            "/bin/sh",
+            "-c",
+            orden.getOrden()
+        };
+        Process p = Runtime.getRuntime().exec(comando);
+
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+                p.getInputStream()));
+
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(
+                p.getErrorStream()));
         p.waitFor();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line;
-
-        // Lectura, línea por línea, mientras no sea interrumpida.
-        while ((line = reader.readLine()) != null && !orden.isInterrumpida()) {
-            // CADA LÍNEA DEBERÍA SER ENVIADA DE NUEVO AL EJECUTOR.
-            output.append(line).append("\n");
+        String s;
+        String resultado = "";
+        int i = 0;
+        while ((s = stdInput.readLine()) != null) {
+            if (i == 0) {
+                resultado = s;
+                i++;
+            } else {
+                resultado += "\n" + s;
+            }
         }
-        String salida = output.toString();
 
-        orden.setResultado(new Resultado(salida));
-
-//        // Lectura del estado de salida.
-//        p = Runtime.getRuntime().exec("echo $?");
-//        p.waitFor();
-//        reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//        line = reader.readLine();
-//        
-//        System.out.println("Hola" + line);
-//        
-//        line = reader.readLine();
+        orden.setResultado(new Resultado(resultado));
         orden.setEstadoSalida(p.exitValue());
     }
 }

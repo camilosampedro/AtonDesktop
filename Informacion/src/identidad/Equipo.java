@@ -24,6 +24,8 @@
  */
 package identidad;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Camilo Sampedro
@@ -37,9 +39,9 @@ public interface Equipo {
 
     public String obtenerHostname();
 
-    public Usuario obtenerUsuario();
+    public ArrayList obtenerUsuarios();
 
-    public void asignarUsuario(Usuario usuario);
+    public void agregarUsuario(Usuario usuario);
 
     public void asignarIP(String ip);
 

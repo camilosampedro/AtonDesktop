@@ -23,7 +23,7 @@
  */
 package identidad;
 
-import ejecucion.Ejecutar;
+import ejecucion.Ejecucion;
 import ejecucion.Funciones;
 import ejecucion.Orden;
 import exception.NoEncontrado;
@@ -82,7 +82,7 @@ public class Sala {
             String mac = fila.obtenerEquipo(numeroEquipo).obtenerMAC();
             Orden orden = new Orden(Funciones.ORDENDESPERTAREQUIPO(sufijoIPSala, mac));
             try {
-                Ejecutar.ejecutar(orden);
+                Ejecucion.ejecutar(orden);
             } catch (IOException ex) {
                 Logger.getLogger(Sala.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {

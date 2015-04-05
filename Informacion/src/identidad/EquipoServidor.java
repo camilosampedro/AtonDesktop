@@ -26,7 +26,7 @@ package identidad;
 import comunicacion.Enviable;
 import static comunicacion.Enviable.FINCUERPO;
 import static comunicacion.Enviable.INICIOCUERPO;
-import ejecucion.Ejecutar;
+import ejecucion.Ejecucion;
 import ejecucion.Funciones;
 import ejecucion.Orden;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class EquipoServidor implements Equipo, Enviable {
     private String ip;
     private String mac;
     private String hostname;
-    private Usuario usuario;
+    private ArrayList<Usuario> usuarios;
     private ArrayList<String[]> resultados;
     private Orden ordenActual;
 
@@ -125,17 +125,13 @@ public class EquipoServidor implements Equipo, Enviable {
     }
 
     @Override
-    public Usuario obtenerUsuario() {
-        if (esUsado()) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        } else {
-            return (this.usuario);
-        }
+    public ArrayList<Usuario> obtenerUsuarios() {
+        return usuarios;
     }
 
     @Override
-    public void asignarUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void agregarUsuario(Usuario usuario) {
+        usuarios.add(usuario);
     }
 
     @Override
@@ -193,7 +189,7 @@ public class EquipoServidor implements Equipo, Enviable {
     public boolean encenderEquipo() {
         Orden orden = new Orden(Funciones.ORDENDESPERTAREQUIPO(sala.obtenerSufijoSala(), this.mac));
         try {
-            Ejecutar.ejecutar(orden);
+            Ejecucion.ejecutar(orden);
             return orden.esExitoso();
         } catch (IOException ex) {
             Logger.getLogger(EquipoServidor.class.getName()).log(Level.SEVERE, null, ex);

@@ -36,6 +36,7 @@ public interface Enviable {
     public static final String INICIOCABECERA = "*[";
     public static final String FINCABECERA = "]*";
     public static final String SEPARADOR = "*(/)*";
+    public static final String SEPARADORLISTA = "*(=)*";
     public static final int TAMAÑOPAQUETE = 2048;
     
     //Tipos de enviable
