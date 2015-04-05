@@ -30,9 +30,10 @@ import identidad.EquipoServidor;
 import identidad.Fila;
 import identidad.Sala;
 import identidad.Salon;
-import interfaz.InterfazSalon;
+import interfaz.InterfazSalones;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -149,14 +150,10 @@ public class Informacion extends Thread {
         Comunicacion.inicializar(5978);
         leerDatos();
         if (!Informacion.modo) {
-            for(Salon salon : salones){
-                InterfazSalon interfaz = new InterfazSalon(salon);
-                interfaz.setVisible(true);
-            }
+            InterfazSalones interfaz = new InterfazSalones(salones);
+            interfaz.setVisible(true);
         }
         Comunicacion.despertar();
-        
-        
     }
 
     public static void generarXML() {

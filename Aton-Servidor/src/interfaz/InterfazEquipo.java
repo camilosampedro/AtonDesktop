@@ -53,7 +53,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jtpPestanas = new javax.swing.JTabbedPane();
         panelGeneral = new javax.swing.JPanel();
         panelEstado = new javax.swing.JPanel();
         jlIP = new javax.swing.JLabel();
@@ -83,7 +83,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
             .addGap(0, 160, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("General", panelGeneral);
+        jtpPestanas.addTab("General", panelGeneral);
 
         panelEstado.setBackground(new java.awt.Color(255, 231, 197));
         panelEstado.setLayout(new java.awt.GridLayout(0, 2, 10, 0));
@@ -114,7 +114,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
         jlEstado.setText("Estado: " + estado);
         panelEstado.add(jlEstado);
 
-        jTabbedPane1.addTab("Estado", panelEstado);
+        jtpPestanas.addTab("Estado", panelEstado);
 
         javax.swing.GroupLayout panelUsuariosLayout = new javax.swing.GroupLayout(panelUsuarios);
         panelUsuarios.setLayout(panelUsuariosLayout);
@@ -127,7 +127,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
             .addGap(0, 160, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Usuarios", panelUsuarios);
+        jtpPestanas.addTab("Usuarios", panelUsuarios);
 
         jButton1.setText("Enviar archivo Bash");
 
@@ -175,7 +175,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Ordenar", panelOrdenar);
+        jtpPestanas.addTab("Ordenar", panelOrdenar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -183,14 +183,14 @@ public class InterfazEquipo extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(13, 13, 13)
-                .addComponent(jTabbedPane1)
+                .addComponent(jtpPestanas)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jtpPestanas)
                 .addContainerGap())
         );
 
@@ -240,12 +240,12 @@ public class InterfazEquipo extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel jlEstado;
     private javax.swing.JLabel jlIP;
     private javax.swing.JLabel jlMac;
     private javax.swing.JLabel jlPoder;
+    private javax.swing.JTabbedPane jtpPestanas;
     private javax.swing.JPanel panelEstado;
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JPanel panelOrdenar;

@@ -52,7 +52,7 @@ public class Procesador {
     static void procesarUsuario(String remitente, UsuarioCliente usuario) {
         try {
             EquipoServidor equipoEncontrado = informacion.Informacion.buscarEquipo(remitente);
-            equipoEncontrado.asignarUsuario(usuario);
+            equipoEncontrado.agregarUsuario(usuario);
         } catch (NoEncontrado ex) {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -27,7 +27,10 @@ import ejecucion.Resultado;
 import ejecucion.Solicitud;
 import identidad.EquipoCliente;
 import identidad.UsuarioCliente;
+import java.io.IOException;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,7 +52,12 @@ public class Comunicacion extends ClienteServidor {
 
     @Override
     protected void abrirCanal() throws SocketException {
-        Object[] objetoRecibido = escuchar();
+        Object[] objetoRecibido = null;
+        try {
+            objetoRecibido = escuchar();
+        } catch (IOException ex) {
+            Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (objetoRecibido[1] instanceof Resultado) {
             Procesador.procesarResultado((String) objetoRecibido[0], (Resultado) objetoRecibido[1]);
             return;

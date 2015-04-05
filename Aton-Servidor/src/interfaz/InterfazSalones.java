@@ -25,30 +25,31 @@ package interfaz;
 
 import identidad.Sala;
 import identidad.Salon;
+import java.util.ArrayList;
 
 /**
  *
  * @author prog-labs
  */
-public class InterfazSalon extends javax.swing.JFrame {
-    private Salon salon;
+public class InterfazSalones extends javax.swing.JFrame {
+
+    private ArrayList<Salon> salones;
 
     /**
      * Creates new form InterfazSalon
      */
-    private InterfazSalon() {
+    private InterfazSalones() {
         initComponents();
     }
-    
-    public InterfazSalon(Salon salon){
-        this.salon = salon;
+
+    public InterfazSalones(ArrayList<Salon> salones) {
         initComponents();
-        for(Sala sala : salon.getSalas()){
-            JIFFSala subventana = new JIFFSala(sala);
-            subventana.setVisible(true);
-            this.add(subventana);
-        }
-        this.paintAll(this.getGraphics());
+        this.salones = salones;
+        for (Salon salon : salones) {
+            PanelSalon interfaz = new PanelSalon(salon);
+            interfaz.setVisible(true);
+            jTabbedPane1.addTab(salon.getNombre(), interfaz);
+       }
     }
 
     /**
@@ -60,12 +61,50 @@ public class InterfazSalon extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        btnAcercaDe = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(salon.getNombre());
-        getContentPane().setLayout(new java.awt.GridLayout());
+        setTitle("Aton");
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+        getContentPane().add(jTabbedPane1);
+
+        jMenu1.setText("Salones");
+        jMenuBar1.add(jMenu1);
+
+        jMenu3.setText("Selección");
+        jMenuBar1.add(jMenu3);
+
+        jMenu2.setText("Ayuda");
+
+        jMenuItem1.setText("Ayuda");
+        jMenu2.add(jMenuItem1);
+
+        btnAcercaDe.setText("Acerca de");
+        btnAcercaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAcercaDeActionPerformed(evt);
+            }
+        });
+        jMenu2.add(btnAcercaDe);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcercaDeActionPerformed
+        // TODO add your handling code here:
+        InterfazAcercaDe interfazAcercaDe = new InterfazAcercaDe();
+        interfazAcercaDe.setVisible(true);
+    }//GEN-LAST:event_btnAcercaDeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -84,24 +123,32 @@ public class InterfazSalon extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfazSalon().setVisible(true);
+                new InterfazSalones().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem btnAcercaDe;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }
