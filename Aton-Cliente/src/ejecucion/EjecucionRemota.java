@@ -56,7 +56,7 @@ public class EjecucionRemota extends Thread {
     @Override
     public void run() {
         try {
-            Ejecutar.ejecutar(orden);
+            Ejecucion.ejecutar(orden);
             Comunicacion.enviarObjeto(orden.getResultado());
         } catch (IOException | InterruptedException ex) {
             CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo un error en la ejecución de la orden.");
@@ -66,6 +66,8 @@ public class EjecucionRemota extends Thread {
             } catch (UnknownHostException ex1) {
                 Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
             } catch (SocketException ex1) {
+                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (IOException ex1) {
                 Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }

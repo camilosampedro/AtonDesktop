@@ -29,6 +29,7 @@ import ejecucion.Orden;
 import ejecucion.Resultado;
 import informacion.Informacion;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -38,34 +39,47 @@ import java.util.logging.Logger;
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.0
+ * @version 0.1.5
  */
 public class Comunicacion extends ClienteServidor {
 
     protected static ServerSocket serverSocket;
-    protected static String servidor;
+    protected static String ipServidor;
     protected static EjecucionRemota ejecucionActual;
     protected static Solicitud solicitudActual;
     protected static Comunicacion cliente_servidor;
 
-    public static void inicializar(String server, int port) {
-        servidor = server;
-        puerto = port;
+    /**
+     * Inicializa las variables estáticas
+     *
+     * @param ipServidor Servidor donde se centraliza todo el control
+     * @param puertoComunicacion Puerto por el cual se enviarán y se recibirán
+     * los mensajes
+     */
+    public static void inicializar(String ipServidor, int puertoComunicacion) {
+        Comunicacion.ipServidor = ipServidor;
+        Comunicacion.puerto = puertoComunicacion;
         cliente_servidor = new Comunicacion();
     }
 
+    /**
+     * Solicita conexión con el servidor y abre el hilo de escucha.
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static void despertar() throws IOException, ClassNotFoundException {
         Comunicacion.enviarObjeto(new Solicitud(Solicitud.CONEXION));
-        cliente_servidor.escuchar();
+//        cliente_servidor.escuchar();
         Comunicacion.enviarObjeto(Informacion.getEquipo());
         cliente_servidor.start();
     }
 
-    public static void ejecutarOrden(Orden ordenActual) {
-        ejecucionActual = new EjecucionRemota(ordenActual);
-        ejecucionActual.start();
-    }
-
+    /**
+     * Envia el resultado de una ejecución.
+     *
+     * @param resultado Resultado a enviar.
+     */
     public static void enviarResultado(Resultado resultado) {
         try {
             Comunicacion.enviarObjeto(resultado);
@@ -73,16 +87,37 @@ public class Comunicacion extends ClienteServidor {
             Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SocketException ex) {
             Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void enviarObjeto(Enviable o) throws UnknownHostException, SocketException {
-        enviarObjeto(o, servidor);
+    /**
+     * Envía el objeto a la dirección ip del servidor.
+     *
+     * @throws java.net.ConnectException
+     * @see ClienteServidor
+     * @param o Objeto a enviar.
+     * @throws UnknownHostException
+     * @throws SocketException
+     */
+    public static void enviarObjeto(Enviable o) throws UnknownHostException, SocketException, IOException, ConnectException {
+        enviarObjeto(o, ipServidor);
     }
 
+    /**
+     * Abre el canal de escucha y procesa el objeto llega por este.
+     *
+     * @throws SocketException
+     */
     @Override
     protected void abrirCanal() throws SocketException {
-        Object[] objetoRecibido = escuchar();
+        Object[] objetoRecibido = null;
+        try {
+            objetoRecibido = escuchar();
+        } catch (IOException ex) {
+            Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (objetoRecibido[1] instanceof Orden) {
             Procesador.procesarOrden((String) objetoRecibido[0], (Orden) objetoRecibido[1]);
             return;

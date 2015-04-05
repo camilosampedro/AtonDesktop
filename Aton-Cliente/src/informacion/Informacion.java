@@ -72,8 +72,13 @@ public class Informacion {
             System.err.println("Se debe ser root para ejecutar el servicio.");
             System.exit(1);
         }
-        Comunicacion.inicializar("192.168.30.250", 5901);
+        inicializarEquipo();
+        Comunicacion.inicializar("localhost", 5978);
         Comunicacion.despertar();
+    }
+
+    private static void inicializarEquipo() {
+        equipo = EquipoCliente.inicializarEquipoActual();
     }
 
 }

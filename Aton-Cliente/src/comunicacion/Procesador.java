@@ -28,6 +28,7 @@ import ejecucion.Orden;
 import ejecucion.Resultado;
 import ejecucion.Solicitud;
 import informacion.Informacion;
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -53,7 +54,9 @@ class Procesador {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SocketException ex) {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } catch (IOException ex) {
+            Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+        }
                 break;
             case Solicitud.HOST:
                 Resultado resultado = new Resultado(Informacion.getEquipo().obtenerHostname());
@@ -63,7 +66,9 @@ class Procesador {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SocketException ex) {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } catch (IOException ex) {
+            Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+        }
                 break;
             case Solicitud.USUARIO:
                 try {
@@ -72,7 +77,9 @@ class Procesador {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SocketException ex) {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } catch (IOException ex) {
+            Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+        }
                 break;
             default:
                 System.err.println("Llegó una solicitud no esperada.");
