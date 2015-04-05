@@ -44,10 +44,11 @@ public class Sala {
     protected int sufijoIPSala;
     protected boolean esHorizontal;
 
-    public Sala(String nombre, boolean esHorizontal) {
+    public Sala(String nombre, boolean esHorizontal, int sufijoIP) {
         filas = new ArrayList();
         this.esHorizontal = esHorizontal;
         this.nombre = nombre;
+        this.sufijoIPSala = sufijoIP;
     }
 
     public Fila obtenerFila(int numeroFila) throws NoEncontrado {
@@ -147,5 +148,9 @@ public class Sala {
 
     public boolean esHorizontal() {
         return esHorizontal;
+    }
+
+    public void agregarFila(Fila fila) {
+        filas.add(fila);
     }
 }

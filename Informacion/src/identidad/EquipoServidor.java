@@ -95,10 +95,12 @@ public class EquipoServidor implements Equipo, Enviable {
     private Sala sala;
 
     public EquipoServidor(Sala padre) {
+        this.resultados = new ArrayList();
         sala = padre;
     }
 
     public EquipoServidor(String ip, String mac, int numeroEquipo, boolean estadoPoder, boolean estadoUso, Sala sala) {
+        this.resultados = new ArrayList();
         this.ip = ip;
         this.mac = mac;
         this.numeroEquipo = numeroEquipo;
@@ -208,7 +210,10 @@ public class EquipoServidor implements Equipo, Enviable {
 
     @Override
     public String obtenerCuerpo() {
-        return INICIOCUERPO + ip + SEPARADOR + mac + SEPARADOR + numeroEquipo + SEPARADOR + estadoPoder + SEPARADOR + estadoUso + SEPARADOR + sala.obtenerNombre() + SEPARADOR + sala.esHorizontal + FINCUERPO;
+        return INICIOCUERPO + ip + SEPARADOR + mac + SEPARADOR + numeroEquipo
+                + SEPARADOR + estadoPoder + SEPARADOR + estadoUso + SEPARADOR
+                + sala.obtenerNombre() + SEPARADOR + sala.esHorizontal
+                + SEPARADOR + sala.sufijoIPSala + FINCUERPO;
     }
 
     @Override
@@ -222,7 +227,7 @@ public class EquipoServidor implements Equipo, Enviable {
         String info = informacion.substring(i, j);
         StringTokenizer tokens = new StringTokenizer(info, SEPARADOR);
         //Probar
-        return new EquipoServidor(tokens.nextToken(), tokens.nextToken(), Integer.parseInt(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), new Sala(tokens.nextToken(), Boolean.parseBoolean(tokens.nextToken())));
+        return new EquipoServidor(tokens.nextToken(), tokens.nextToken(), Integer.parseInt(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), new Sala(tokens.nextToken(), Boolean.parseBoolean(tokens.nextToken()), Integer.parseInt(tokens.nextToken())));
     }
 
     @Override
