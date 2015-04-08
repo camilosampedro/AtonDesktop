@@ -16,7 +16,7 @@ public class AtonServidor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        informacion.Informacion.inicializar(args.length == 1);
+        informacion.Informacion.inicializar(args.length == 1, "Spanish");
     }
     
 }

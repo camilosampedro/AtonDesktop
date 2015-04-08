@@ -23,15 +23,30 @@
  */
 package interfaz;
 
-import identidad.Sala;
 import identidad.Salon;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 
 /**
  *
- * @author prog-labs
+ * @author Camilo Sampedro
+ * @version 0.2.0
  */
 public class InterfazSalones extends javax.swing.JFrame {
+    
+        private static final ImageIcon icono = new ImageIcon("imagenes/Aton32.png");
+
+    public static final String PROP_ICONO = "icono";
+
+    /**
+     * Get the value of icono
+     *
+     * @return the value of icono
+     */
+    public static ImageIcon getIcono() {
+        return icono;
+    }
+
 
     private ArrayList<Salon> salones;
 
@@ -48,7 +63,7 @@ public class InterfazSalones extends javax.swing.JFrame {
         for (Salon salon : salones) {
             PanelSalon interfaz = new PanelSalon(salon);
             interfaz.setVisible(true);
-            jTabbedPane1.addTab(salon.getNombre(), interfaz);
+            jTabbedPane1.addTab(salon.getName(), interfaz);
        }
     }
 
@@ -71,6 +86,7 @@ public class InterfazSalones extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Aton");
+        setIconImage(getIconImage());
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
         getContentPane().add(jTabbedPane1);
 
@@ -102,7 +118,7 @@ public class InterfazSalones extends javax.swing.JFrame {
 
     private void btnAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcercaDeActionPerformed
         // TODO add your handling code here:
-        InterfazAcercaDe interfazAcercaDe = new InterfazAcercaDe();
+        AboutInterface interfazAcercaDe = new AboutInterface();
         interfazAcercaDe.setVisible(true);
     }//GEN-LAST:event_btnAcercaDeActionPerformed
 

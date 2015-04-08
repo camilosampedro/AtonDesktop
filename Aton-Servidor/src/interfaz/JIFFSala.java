@@ -23,8 +23,8 @@
  */
 package interfaz;
 
-import identidad.Fila;
-import identidad.Sala;
+import identidad.Row;
+import identidad.Room;
 
 /**
  *
@@ -33,7 +33,7 @@ import identidad.Sala;
  */
 public class JIFFSala extends javax.swing.JInternalFrame {
 
-    private Sala sala;
+    private Room sala;
     /**
      * Creates new form JIFFSala
      */
@@ -41,17 +41,17 @@ public class JIFFSala extends javax.swing.JInternalFrame {
         initComponents();
     }
     
-    public JIFFSala(Sala sala){
+    public JIFFSala(Room sala){
         initComponents();
-        if(sala.esHorizontal()){
+        if(sala.isHorizontal()){
             getContentPane().setLayout(new java.awt.GridLayout(0, 1));
         } else {
             getContentPane().setLayout(new java.awt.GridLayout());
         }
         pack();
         this.sala = sala;
-        this.setTitle(sala.obtenerNombre());
-        for (Fila fila : sala.getFilas()){
+        this.setTitle(sala.getName());
+        for (Row fila : sala.getRows()){
             PanelFila panel = new PanelFila(fila);
             panel.setVisible(true);
             this.add(panel);

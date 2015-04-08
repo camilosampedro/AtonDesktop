@@ -23,10 +23,11 @@
  */
 package comunicacion;
 
-import ejecucion.Resultado;
-import ejecucion.Solicitud;
-import identidad.EquipoCliente;
-import identidad.UsuarioCliente;
+import comunication.Comunicator;
+import execution.Result;
+import execution.Request;
+import identidad.ClientComputer;
+import identidad.ClientUser;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Level;
@@ -37,12 +38,12 @@ import java.util.logging.Logger;
  * @author Camilo Sampedro
  * @version 0.2.0
  */
-public class Comunicacion extends ClienteServidor {
+public class Comunicacion extends Comunicator {
 
     private static Comunicacion cliente_servidor;
 
     public static void inicializar(int puerto) {
-        Comunicacion.puerto = puerto;
+        Comunicacion.port = puerto;
         cliente_servidor = new Comunicacion();
     }
 
@@ -51,27 +52,27 @@ public class Comunicacion extends ClienteServidor {
     }
 
     @Override
-    protected void abrirCanal() throws SocketException {
+    protected void openChannel() throws SocketException {
         Object[] objetoRecibido = null;
         try {
-            objetoRecibido = escuchar();
+            objetoRecibido = listen();
         } catch (IOException ex) {
             Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (objetoRecibido[1] instanceof Resultado) {
-            Procesador.procesarResultado((String) objetoRecibido[0], (Resultado) objetoRecibido[1]);
+        if (objetoRecibido[1] instanceof Result) {
+            Procesador.procesarResultado((String) objetoRecibido[0], (Result) objetoRecibido[1]);
             return;
         }
-        if (objetoRecibido[1] instanceof Solicitud) {
-            Procesador.procesarSolicitud((String) objetoRecibido[0], (Solicitud) objetoRecibido[1]);
+        if (objetoRecibido[1] instanceof Request) {
+            Procesador.procesarSolicitud((String) objetoRecibido[0], (Request) objetoRecibido[1]);
             return;
         }
-        if (objetoRecibido[1] instanceof EquipoCliente) {
-            Procesador.procesarEquipo((String) objetoRecibido[0], (EquipoCliente) objetoRecibido[1]);
+        if (objetoRecibido[1] instanceof ClientComputer) {
+            Procesador.procesarEquipo((String) objetoRecibido[0], (ClientComputer) objetoRecibido[1]);
             return;
         }
-        if (objetoRecibido[1] instanceof UsuarioCliente) {
-            Procesador.procesarUsuario((String) objetoRecibido[0], (UsuarioCliente) objetoRecibido[1]);
+        if (objetoRecibido[1] instanceof ClientUser) {
+            Procesador.procesarUsuario((String) objetoRecibido[0], (ClientUser) objetoRecibido[1]);
             return;
         }
     }

@@ -23,12 +23,12 @@
  */
 package comunicacion;
 
-import ejecucion.Resultado;
-import ejecucion.Solicitud;
-import exception.NoEncontrado;
-import identidad.EquipoCliente;
-import identidad.EquipoServidor;
-import identidad.UsuarioCliente;
+import execution.Result;
+import execution.Request;
+import exception.NotFound;
+import identidad.ClientComputer;
+import identidad.ServerComputer;
+import identidad.ClientUser;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,32 +40,32 @@ import java.util.logging.Logger;
  */
 public class Procesador {
 
-    static void procesarEquipo(String remitente, EquipoCliente equipo) {
+    static void procesarEquipo(String remitente, ClientComputer equipo) {
         try {
-            EquipoServidor equipoEncontrado = informacion.Informacion.buscarEquipo(remitente);
-            equipoEncontrado.copiarInformacion(equipo);
-        } catch (NoEncontrado ex) {
+            ServerComputer equipoEncontrado = informacion.Informacion.buscarEquipo(remitente);
+            equipoEncontrado.copyComputer(equipo);
+        } catch (NotFound ex) {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    static void procesarUsuario(String remitente, UsuarioCliente usuario) {
+    static void procesarUsuario(String remitente, ClientUser usuario) {
         try {
-            EquipoServidor equipoEncontrado = informacion.Informacion.buscarEquipo(remitente);
-            equipoEncontrado.agregarUsuario(usuario);
-        } catch (NoEncontrado ex) {
+            ServerComputer equipoEncontrado = informacion.Informacion.buscarEquipo(remitente);
+            equipoEncontrado.addUser(usuario);
+        } catch (NotFound ex) {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     ArrayList<Object[]> resultados;
 
-    static void procesarSolicitud(String remitente, Solicitud solicitud) {
-        switch (solicitud.getTipo()) {
-            case Solicitud.CONEXION:
+    static void procesarSolicitud(String remitente, Request solicitud) {
+        switch (solicitud.getType()) {
+            case Request.CONECTION:
                 try {
                     informacion.Informacion.agregarEquipoConectado(remitente);
-                } catch (NoEncontrado ex) {
+                } catch (NotFound ex) {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
@@ -75,13 +75,13 @@ public class Procesador {
         }
     }
 
-    static void procesarResultado(String remitente, Resultado resultado) {
+    static void procesarResultado(String remitente, Result resultado) {
         try {
-            EquipoServidor equipo = informacion.Informacion.buscarEquipo(remitente);
-            String[] resultadoNuevo = {equipo.getOrdenActual().getOrden(), resultado.getResultado()};
-            equipo.addResultado(resultadoNuevo);
-            equipo.setOrdenActual(null);
-        } catch (NoEncontrado ex) {
+            ServerComputer equipo = informacion.Informacion.buscarEquipo(remitente);
+            String[] resultadoNuevo = {equipo.getActualOrder().getOrder(), resultado.getResult()};
+            equipo.addResult(resultadoNuevo);
+            equipo.setActualOrder(null);
+        } catch (NotFound ex) {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

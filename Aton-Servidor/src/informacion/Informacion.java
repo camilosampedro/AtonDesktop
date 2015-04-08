@@ -24,13 +24,14 @@
 package informacion;
 
 import comunicacion.Comunicacion;
-import ejecucion.Solicitud;
-import exception.NoEncontrado;
-import identidad.EquipoServidor;
-import identidad.Fila;
-import identidad.Sala;
+import execution.Request;
+import exception.NotFound;
+import identidad.ServerComputer;
+import identidad.Row;
+import identidad.Room;
 import identidad.Salon;
 import interfaz.InterfazSalones;
+import international.LanguagesController;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -54,7 +55,7 @@ import org.jdom2.output.XMLOutputter;
  */
 public class Informacion extends Thread {
 
-    private static ArrayList<EquipoServidor> equiposConectados;
+    private static ArrayList<ServerComputer> equiposConectados;
     private static ArrayList<Salon> salones;
 
     private static String rutaInformacion = "informacion.xml";
@@ -93,13 +94,13 @@ public class Informacion extends Thread {
 
     @Override
     public void run() {
-        for (EquipoServidor equipo : equiposConectados) {
+        for (ServerComputer equipo : equiposConectados) {
             try {
-                Solicitud solicitud = new Solicitud(Solicitud.CONEXION);
-                if (!Comunicacion.esAccesible(equipo.obtenerIP())) {
+                Request solicitud = new Request(Request.CONECTION);
+                if (!Comunicacion.isReachable(equipo.getIP())) {
                     equiposConectados.remove(equipo);
                 } else {
-                    Comunicacion.enviarObjeto(solicitud, equipo.obtenerIP());
+                    Comunicacion.sendObject(solicitud, equipo.getIP());
                 }
             } catch (UnknownHostException ex) {
                 Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
@@ -116,39 +117,40 @@ public class Informacion extends Thread {
         }
     }
 
-    public static void agregarEquipoConectado(String ip) throws NoEncontrado {
-        EquipoServidor equipo = null;
+    public static void agregarEquipoConectado(String ip) throws NotFound {
+        ServerComputer equipo = null;
         for (Salon salon : salones) {
-            equipo = salon.buscarPorIP(ip);
+            equipo = salon.findByIP(ip);
             if (equipo != null) {
                 break;
             }
         }
         if (equipo == null) {
-            throw new NoEncontrado(NoEncontrado.EQUIPO, ip);
+            throw new NotFound(NotFound.COMPUTER, ip);
         }
         equiposConectados.add(equipo);
     }
 
-    public static EquipoServidor buscarEquipo(String ip) throws NoEncontrado {
-        EquipoServidor equipo = null;
+    public static ServerComputer buscarEquipo(String ip) throws NotFound {
+        ServerComputer equipo = null;
         for (Salon salon : salones) {
-            equipo = salon.buscarPorIP(ip);
+            equipo = salon.findByIP(ip);
             if (equipo != null) {
                 break;
             }
         }
         if (equipo == null) {
-            throw new NoEncontrado(NoEncontrado.EQUIPO, ip);
+            throw new NotFound(NotFound.COMPUTER, ip);
         }
         return equipo;
     }
 
-    public static void inicializar(boolean modo) {
+    public static void inicializar(boolean modo, String language) {
         salones = new ArrayList();
         Informacion.modo = modo;
         Comunicacion.inicializar(5978);
         leerDatos();
+        LanguagesController.initializeLanguage(language);
         if (!Informacion.modo) {
             InterfazSalones interfaz = new InterfazSalones(salones);
             interfaz.setVisible(true);
@@ -162,21 +164,21 @@ public class Informacion extends Thread {
         documento = new Document(raiz);
         for (Salon salon : salones) {
             Element salone = new Element("Salon");
-            salone.setAttribute("Nombre", salon.getNombre());
-            for (Sala sala : salon.getSalas()) {
+            salone.setAttribute("Nombre", salon.getName());
+            for (Room sala : salon.getRooms()) {
                 Element salae = new Element("Sala");
-                salae.setAttribute("Nombre", sala.obtenerNombre());
-                salae.setAttribute("Horizontal", Boolean.toString(sala.esHorizontal()));
-                salae.addContent(new Element("SufijoIP").setText(Integer.toString(sala.obtenerSufijoSala())));
-                for (Fila fila : sala.getFilas()) {
+                salae.setAttribute("Nombre", sala.getName());
+                salae.setAttribute("Horizontal", Boolean.toString(sala.isHorizontal()));
+                salae.addContent(new Element("SufijoIP").setText(Integer.toString(sala.getRoomIPSufix())));
+                for (Row fila : sala.getRows()) {
                     Element filae = new Element("Fila");
-                    for (EquipoServidor equipo : fila.getEquipos()) {
+                    for (ServerComputer equipo : fila.getComputers()) {
                         Element equipoe = new Element("Equipo");
-                        equipoe.setAttribute("Numero", Integer.toString(equipo.getNumeroEquipo()));
-                        equipoe.addContent(new Element("IP").setText(equipo.obtenerIP()));
-                        equipoe.addContent(new Element("Mac").setText(equipo.obtenerMAC()));
-                        equipoe.addContent(new Element("Hostname").setText(equipo.obtenerHostname()));
-                        for (String[] resultados : equipo.getResultados()) {
+                        equipoe.setAttribute("Numero", Integer.toString(equipo.getComputerNumber()));
+                        equipoe.addContent(new Element("IP").setText(equipo.getIP()));
+                        equipoe.addContent(new Element("Mac").setText(equipo.getMac()));
+                        equipoe.addContent(new Element("Hostname").setText(equipo.getHostname()));
+                        for (String[] resultados : equipo.getResults()) {
                             String orden = resultados[0];
                             String resultado = resultados[1];
                             Element resultadoe = new Element("Ejecucion");
@@ -214,27 +216,27 @@ public class Informacion extends Thread {
                 Salon salon = new Salon(salone.getAttributeValue("Nombre"));
                 List<Element> elementosSala = salone.getChildren("Sala");
                 for (Element salae : elementosSala) {
-                    Sala sala = new Sala(salae.getAttributeValue("Nombre"), Boolean.parseBoolean(salae.getAttributeValue("Horizontal")), Integer.parseInt(salae.getAttributeValue("SufijoIP")));
+                    Room sala = new Room(salae.getAttributeValue("Nombre"), Boolean.parseBoolean(salae.getAttributeValue("Horizontal")), Integer.parseInt(salae.getAttributeValue("SufijoIP")));
                     List<Element> elementosFila = salae.getChildren("Fila");
                     for (Element filae : elementosFila) {
-                        Fila fila = new Fila(sala.esHorizontal());
+                        Row fila = new Row(sala.isHorizontal());
                         List<Element> elementosEquipo = filae.getChildren("Equipo");
                         for (Element equipoe : elementosEquipo) {
-                            EquipoServidor equipo = new EquipoServidor(sala);
-                            equipo.setNumeroEquipo(Integer.parseInt(equipoe.getAttributeValue("Numero")));
-                            equipo.asignarIP(equipoe.getChildText("IP"));
-                            equipo.asignarMAC(equipoe.getChildText("Mac"));
-                            equipo.asignarHostname(equipoe.getChildText("Hostname"));
+                            ServerComputer equipo = new ServerComputer(sala);
+                            equipo.setComputerNumber(Integer.parseInt(equipoe.getAttributeValue("Numero")));
+                            equipo.setIP(equipoe.getChildText("IP"));
+                            equipo.setMac(equipoe.getChildText("Mac"));
+                            equipo.setHostname(equipoe.getChildText("Hostname"));
                             List<Element> elementosEjecucion = equipoe.getChildren("Ejecucion");
                             for (Element ejecucione : elementosEjecucion) {
                                 String[] resultado = {ejecucione.getAttributeValue("Orden"), ejecucione.getAttributeValue("Resultado")};
-                                equipo.addResultado(resultado);
+                                equipo.addResult(resultado);
                             }
-                            fila.agregarEquipo(equipo);
+                            fila.addComputer(equipo);
                         }
-                        sala.agregarFila(fila);
+                        sala.addRow(fila);
                     }
-                    salon.agregarSala(sala);
+                    salon.addRoom(sala);
                 }
                 salones.add(salon);
             }

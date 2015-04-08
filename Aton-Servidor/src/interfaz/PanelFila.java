@@ -23,8 +23,8 @@
  */
 package interfaz;
 
-import identidad.EquipoServidor;
-import identidad.Fila;
+import identidad.ServerComputer;
+import identidad.Row;
 import java.util.ArrayList;
 
 /**
@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class PanelFila extends javax.swing.JPanel {
 
-    private Fila fila;
+    private Row fila;
     private ArrayList<PanelEquipo> paneles;
 
     /**
@@ -44,11 +44,11 @@ public class PanelFila extends javax.swing.JPanel {
         initComponents();
     }
 
-    public PanelFila(Fila fila) {
+    public PanelFila(Row fila) {
         paneles = new ArrayList();
         this.fila = fila;
         initComponents();
-        if(fila.esHorizontal()){
+        if(fila.isHorizontal()){
             setLayout(new java.awt.GridLayout());
         } else {
             setLayout(new java.awt.GridLayout(0, 1));
@@ -73,7 +73,7 @@ public class PanelFila extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     private void generarPaneles() {
-        for (EquipoServidor equipo : fila.getEquipos()) {
+        for (ServerComputer equipo : fila.getComputers()) {
             PanelEquipo panel = new PanelEquipo(equipo);
             panel.setVisible(true);
             paneles.add(panel);

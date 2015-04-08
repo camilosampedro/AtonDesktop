@@ -23,7 +23,7 @@
  */
 package interfaz;
 
-import identidad.EquipoServidor;
+import identidad.ServerComputer;
 
 /**
  *
@@ -31,7 +31,7 @@ import identidad.EquipoServidor;
  * @version 0.1.1
  */
 public class InterfazEquipo extends javax.swing.JFrame {
-    private EquipoServidor equipo;
+    private ServerComputer equipo;
 
     /**
      * Creates new form InterfazEquipo
@@ -40,7 +40,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
         initComponents();
     }
 
-    public InterfazEquipo(EquipoServidor equipo){
+    public InterfazEquipo(ServerComputer equipo){
         this.equipo = equipo;
         initComponents();
     }
@@ -88,15 +88,15 @@ public class InterfazEquipo extends javax.swing.JFrame {
         panelEstado.setBackground(new java.awt.Color(255, 231, 197));
         panelEstado.setLayout(new java.awt.GridLayout(0, 2, 10, 0));
 
-        jlIP.setText("IP: " + equipo.obtenerIP());
+        jlIP.setText("IP: " + equipo.getIP());
         jlIP.setInheritsPopupMenu(false);
         panelEstado.add(jlIP);
 
-        jlMac.setText("Mac: " + equipo.obtenerMAC());
+        jlMac.setText("Mac: " + equipo.getMac());
         panelEstado.add(jlMac);
 
         String encendido;
-        if(equipo.estaEncendido()){
+        if(equipo.isPoweredOn()){
             encendido = "Encendido";
         } else {
             encendido = "Apagado";
@@ -106,7 +106,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
 
         String estado;
 
-        if(equipo.esUsado()){
+        if(equipo.isUsed()){
             estado = "En uso";
         } else {
             estado = "Disponible";

@@ -90,7 +90,7 @@
             <Component class="javax.swing.JLabel" name="jlIP">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="&quot;IP: &quot; + equipo.obtenerIP()" type="code"/>
+                  <Connection code="&quot;IP: &quot; + equipo.getIP()" type="code"/>
                 </Property>
                 <Property name="inheritsPopupMenu" type="boolean" value="false"/>
               </Properties>
@@ -98,7 +98,7 @@
             <Component class="javax.swing.JLabel" name="jlMac">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="&quot;Mac: &quot; + equipo.obtenerMAC()" type="code"/>
+                  <Connection code="&quot;Mac: &quot; + equipo.getMac()" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -109,7 +109,7 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="String encendido;&#xa;if(equipo.estaEncendido()){&#xa;    encendido = &quot;Encendido&quot;;&#xa;} else {&#xa;    encendido = &quot;Apagado&quot;;&#xa;}"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="String encendido;&#xa;if(equipo.isPoweredOn()){&#xa;    encendido = &quot;Encendido&quot;;&#xa;} else {&#xa;    encendido = &quot;Apagado&quot;;&#xa;}"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="jlEstado">
@@ -119,7 +119,7 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="String estado;&#xa;&#xa;if(equipo.esUsado()){&#xa;    estado = &quot;En uso&quot;;&#xa;} else {&#xa;    estado = &quot;Disponible&quot;;&#xa;}"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="String estado;&#xa;&#xa;if(equipo.isUsed()){&#xa;    estado = &quot;En uso&quot;;&#xa;} else {&#xa;    estado = &quot;Disponible&quot;;&#xa;}"/>
               </AuxValues>
             </Component>
           </SubComponents>

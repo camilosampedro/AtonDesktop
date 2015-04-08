@@ -23,7 +23,7 @@
  */
 package interfaz;
 
-import identidad.EquipoServidor;
+import identidad.ServerComputer;
 
 /**
  *
@@ -32,7 +32,7 @@ import identidad.EquipoServidor;
  */
 public class PanelEquipo extends javax.swing.JPanel {
 
-    private EquipoServidor equipo;
+    private ServerComputer equipo;
     private javax.swing.ImageIcon icono;
 
     /**
@@ -42,11 +42,11 @@ public class PanelEquipo extends javax.swing.JPanel {
         initComponents();
     }
 
-    public PanelEquipo(EquipoServidor equipo) {
+    public PanelEquipo(ServerComputer equipo) {
         this.equipo = equipo;
         asignarIcono();
         initComponents();
-        btnEquipo.setText(Integer.toString(this.equipo.getNumeroEquipo()));
+        btnEquipo.setText(Integer.toString(this.equipo.getComputerNumber()));
     }
 
     /**
@@ -122,8 +122,8 @@ public class PanelEquipo extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void asignarIcono() {
-        if (equipo.estaEncendido()) {
-            if (equipo.esUsado()) {
+        if (equipo.isPoweredOn()) {
+            if (equipo.isUsed()) {
                 icono = new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoPC-11.png"));
             } else {
                 icono = new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoPC-10.png"));
