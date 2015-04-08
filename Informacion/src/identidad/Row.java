@@ -30,56 +30,57 @@ import java.util.ArrayList;
  * @author camilo
  * @version 0.1.0
  */
-public class Fila {
+public class Row {
 
-    private ArrayList<EquipoServidor> equipos;
-    private boolean esHorizontal;
+    private ArrayList<ServerComputer> computers;
+    private boolean isHorizontal;
 
-    public Fila(boolean esHorizontal) {
-        equipos = new ArrayList();
-        this.esHorizontal = esHorizontal;
+    public Row(boolean isHorizontal) {
+        computers = new ArrayList();
+        this.isHorizontal = isHorizontal;
     }
 
-    public Equipo obtenerEquipo(int numeroEquipo) {
-        return equipos.get(numeroEquipo);
+    public Computer getComputer(int computerNumber) {
+        return computers.get(computerNumber);
     }
 
-    public void notificar(String mensaje) {
+    public void notify(String message) {
+        throw new UnsupportedOperationException();
     }
 
-    public void agregarEquipo(Equipo equipo) {
-        equipos.add((EquipoServidor) equipo);
+    public void addComputer(Computer computer) {
+        computers.add((ServerComputer) computer);
     }
 
-    public void encenderTodo() {
+    public void turnOnAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void apagarTodo() {
+    public void turnOffAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public boolean contieneEquipo(int numeroEquipo) {
-        for (EquipoServidor equipo : equipos) {
-            if (equipo.getNumeroEquipo() == numeroEquipo) {
+    public boolean containsComputer(int computerNumber) {
+        for (ServerComputer computer : computers) {
+            if (computer.getComputerNumber() == computerNumber) {
                 return true;
             }
         }
         return false;
     }
 
-    public ArrayList<EquipoServidor> getEquipos() {
-        return equipos;
+    public ArrayList<ServerComputer> getComputers() {
+        return computers;
     }
 
-    public boolean esHorizontal() {
-        return esHorizontal;
+    public boolean isHorizontal() {
+        return this.isHorizontal;
     }
 
-    public EquipoServidor buscarPorIP(String ip) {
-        for (EquipoServidor equipo : equipos){
-            if (equipo.obtenerIP().equals(ip)){
-                return equipo;
+    public ServerComputer findByIP(String ip) {
+        for (ServerComputer computer : computers) {
+            if (computer.getIP().equals(ip)) {
+                return computer;
             }
         }
         return null;

@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package comunicacion;
+package comunication;
 
-import ejecucion.Orden;
-import ejecucion.Resultado;
-import ejecucion.Solicitud;
-import identidad.EquipoCliente;
-import identidad.EquipoServidor;
-import identidad.UsuarioCliente;
+import execution.Order;
+import execution.Result;
+import execution.Request;
+import identidad.ClientComputer;
+import identidad.ServerComputer;
+import identidad.ClientUser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,28 +46,28 @@ import java.util.logging.Logger;
  *
  * @author Camilo Sampedro
  */
-public abstract class ClienteServidor extends Thread {
+public abstract class Comunicator extends Thread {
 
-    protected static int puerto;
+    protected static int port;
     protected static ServerSocket serverSocket;
 
-    public Object[] escuchar() throws SocketException, IOException {
-        System.out.println("Servidor de escucha abierto, esperando mensajes...");
+    public Object[] listen() throws SocketException, IOException {
+        System.out.println("Listen server has opened, waiting for messages...");
         Socket socket = serverSocket.accept();
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        InetAddress IPRemitente = socket.getInetAddress();
-        String mensaje = in.readLine();
-        System.out.println("Cliente " + IPRemitente + " : " + mensaje);
+        InetAddress senderIP = socket.getInetAddress();
+        String message = in.readLine();
+        System.out.println("Client " + senderIP + " : " + message);
 //        DatagramPacket packet;
 //        DatagramSocket socket;
 //        byte[] data;    // Para los datos ser enviados en paquetes
 //        int clientPort;
-//        int packetSize = Enviable.TAMAÑOPAQUETE;
+//        int packetSize = SendableObject.PACKETSIZE;
 //        InetAddress address;
 //        String str;
 //
-//        socket = new DatagramSocket(puerto);
+//        socket = new DatagramSocket(port);
 //        data = new byte[packetSize];
 //
 //        // Crea paquetes para recibir el mensaje
@@ -88,70 +88,70 @@ public abstract class ClienteServidor extends Thread {
 
 //        // Creación del String
 //        str = new String(data, packet.getOffset(), packet.getLength());
-        Object[] retorno = {IPRemitente, recuperarEnviable(mensaje)};
+        Object[] returnArray = {senderIP, recoverSendable(message)};
 
-        return retorno;
+        return returnArray;
     }
 
-    private Enviable recuperarEnviable(String str) {
-        int i = str.indexOf(Enviable.INICIOCABECERA);
-        int j = str.indexOf(Enviable.FINCABECERA);
-        String cabecera = str.substring(i, j);
-        Enviable objeto = null;
-        if (cabecera.equals(Enviable.TIPO[Enviable.EQUIPOCLIENTE])) {
-            objeto = EquipoCliente.construirObjeto(str);
-        } else if (cabecera.equals(Enviable.TIPO[Enviable.EQUIPOSERVIDOR])) {
-            objeto = EquipoServidor.construirObjeto(str);
-        } else if (cabecera.equals(Enviable.TIPO[Enviable.ORDEN])) {
-            objeto = Orden.construirObjeto(str);
-        } else if (cabecera.equals(Enviable.TIPO[Enviable.RESULTADO])) {
-            objeto = Resultado.construirObjeto(str);
-        } else if (cabecera.equals(Enviable.TIPO[Enviable.SOLICITUD])) {
-            objeto = Solicitud.construirObjeto(str);
-        } else if (cabecera.equals(Enviable.TIPO[Enviable.USUARIOCLIENTE])) {
-            objeto = UsuarioCliente.construirObjeto(str);
+    private SendableObject recoverSendable(String stringToConvert) {
+        int i = stringToConvert.indexOf(SendableObject.HEADSTART);
+        int j = stringToConvert.indexOf(SendableObject.HEADEND);
+        String head = stringToConvert.substring(i, j);
+        SendableObject object = null;
+        if (head.equals(SendableObject.TYPE[SendableObject.CLIENTCOMPUTER])) {
+            object = ClientComputer.buildObject(stringToConvert);
+        } else if (head.equals(SendableObject.TYPE[SendableObject.SERVERCOMPUTER])) {
+            object = ServerComputer.buildObject(stringToConvert);
+        } else if (head.equals(SendableObject.TYPE[SendableObject.ORDER])) {
+            object = Order.buildObject(stringToConvert);
+        } else if (head.equals(SendableObject.TYPE[SendableObject.RESULT])) {
+            object = Result.buildObject(stringToConvert);
+        } else if (head.equals(SendableObject.TYPE[SendableObject.REQUEST])) {
+            object = Request.buildObject(stringToConvert);
+        } else if (head.equals(SendableObject.TYPE[SendableObject.USERCLIENT])) {
+            object = ClientUser.construirObjeto(stringToConvert);
         }
-        return objeto;
+        return object;
     }
 
     @Override
     public void run() {
         try {
-            serverSocket = new ServerSocket(puerto);
+            serverSocket = new ServerSocket(port);
             while (true) {
                 try {
-                    abrirCanal();
+                    openChannel();
                 } catch (SocketException ex) {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException ex1) {
-                        Logger.getLogger(ClienteServidor.class.getName()).log(Level.SEVERE, null, ex1);
+                        Logger.getLogger(Comunicator.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(ClienteServidor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Comunicator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    protected abstract void abrirCanal() throws SocketException;
+    protected abstract void openChannel() throws SocketException;
 
-    public static void enviarObjeto(Enviable o, String ipDestino) throws UnknownHostException, SocketException, IOException, ConnectException {
-        Socket socket = new Socket(ipDestino, puerto);
+    public static void sendObject(SendableObject o, String ipDestino) throws UnknownHostException, SocketException, IOException, ConnectException {
+        Socket socket = new Socket(ipDestino, port);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in
                 = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
-        String mensaje = o.generarCadena();
-        System.out.println("Mensaje: " + mensaje);
-        out.println(mensaje);
+        String message = o.generateString();
+        System.out.println("Mensaje: " + message);
+        out.println(message);
 //        
 ////        DatagramSocket socket; // Como se envian los paquetes
 ////        DatagramPacket packet; // Lo que se envia en los paquetes
 ////        InetAddress address;   // A donde se envian los paquetes
 ////        String messageSend;    // Mensaje a ser enviado
 ////        String messageReturn;  // Lo que se obtiene del Server
-////        int packetSize = Enviable.TAMAÑOPAQUETE;
+////        int packetSize = SendableObject.PACKETSIZE;
 ////        byte[] data;
 ////
 ////        // Obtener la direccion IP del  Server
@@ -159,7 +159,7 @@ public abstract class ClienteServidor extends Thread {
 ////        socket = new DatagramSocket();
 //
 //        //data = new byte[packetSize];
-////        messageSend = o.generarCadena();
+////        messageSend = o.generateString();
 ////        data = messageSend.getBytes();
 //        // messageSend.getBytes(0, messageSend.length(), data, 0);
 //        if (data.length > packetSize) {
@@ -167,7 +167,7 @@ public abstract class ClienteServidor extends Thread {
 //        }
 //
 //        // recordar a los datagramas guardar los bytes
-//        packet = new DatagramPacket(data, data.length, address, puerto);
+//        packet = new DatagramPacket(data, data.length, address, port);
 //        System.out.println(" Tratando de enviar el paquete a " + ipDestino);
 //
 //        try {
@@ -182,7 +182,7 @@ public abstract class ClienteServidor extends Thread {
 //        }
     }
 
-    public static boolean esAccesible(String ip) throws UnknownHostException, IOException {
+    public static boolean isReachable(String ip) throws UnknownHostException, IOException {
         return InetAddress.getByName(ip).isReachable(100);
     }
 

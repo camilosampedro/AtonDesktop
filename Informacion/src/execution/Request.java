@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ejecucion;
+package execution;
 
-import comunicacion.Enviable;
+import comunication.SendableObject;
 import java.io.Serializable;
 
 /**
@@ -33,47 +33,37 @@ import java.io.Serializable;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class Solicitud implements Serializable, Enviable {
+public class Request extends SendableObject {
 
-    private final byte solicitud;
+    private final byte requestType;
 
-    public static final byte CONEXION = 0;
+    public static final byte CONECTION = 0;
     public static final byte MAC = 1;
     public static final byte HOST = 2;
-    public static final byte USUARIO = 3;
+    public static final byte USER = 3;
 
-    public Solicitud(byte tipo) {
-        this.solicitud = tipo;
+    public Request(byte requestType) {
+        this.requestType = requestType;
     }
 
-    public byte getTipo() {
-        return solicitud;
-    }
-
-    @Override
-    public String obtenerCabecera() {
-        return INICIOCABECERA + TIPO[SOLICITUD] + FINCABECERA;
+    public byte getType() {
+        return requestType;
     }
 
     @Override
-    public String obtenerCuerpo() {
-        return INICIOCUERPO + solicitud + FINCUERPO;
+    public String getHead() {
+        return HEADSTART + TYPE[REQUEST] + HEADEND;
     }
 
     @Override
-    public String generarCadena() {
-        return obtenerCabecera() + obtenerCuerpo();
+    public String getBody() {
+        return BODYSTART + requestType + BODYEND;
     }
 
-    public static Solicitud construirObjeto(String informacion) {
-        int i = informacion.indexOf(INICIOCUERPO);
-        int j = informacion.indexOf(FINCUERPO);
-        String info = informacion.substring(i, j);
-        return new Solicitud(Byte.parseByte(info));
-    }
-
-    @Override
-    public Class obtenerClase() {
-        return Solicitud.class;
+    public static Request buildObject(String information) {
+        int i = information.indexOf(BODYSTART);
+        int j = information.indexOf(BODYEND);
+        String info = information.substring(i, j);
+        return new Request(Byte.parseByte(info));
     }
 }

@@ -21,59 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ejecucion;
+package execution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Clase encargada de ejecutar una orden y de verificar si fue interrumpida o no
- * mientras es ejecutada.
+ * Clase encargada de execute una orden y de verificar si fue interrumpida o no
+ mientras es ejecutada.
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class Ejecucion {
+public class Execution {
 
     /**
      * Ejecuta la orden solicitada en el intérprete de comandos con el que se
      * ejecutó el servicio (Bash en Linux, por ejemplo).
      *
-     * @param orden Orden a ejecutar, esta tiene la información de cuándo es
-     * suspendida. Aquí se almacenará también el estado de salida de la orden.
+     * @param order Order a execute, esta tiene la información de cuándo es
+ suspendida. Aquí se almacenará también el estado de salida de la orden.
      * @throws IOException
      * @throws InterruptedException externamente.
      */
-    public static void ejecutar(Orden orden) throws IOException, InterruptedException {
+    public static void execute(Order order) throws IOException, InterruptedException {
         
         //Miniscript de ejecución del comando, para evitar problemas con los pipelines
-        String[] comando = {
+        String[] commandToExecute = {
             "/bin/sh",
             "-c",
-            orden.getOrden()
+            order.getOrder()
         };
-        Process p = Runtime.getRuntime().exec(comando);
+        Process executionProcess = Runtime.getRuntime().exec(commandToExecute);
 
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-                p.getInputStream()));
+                executionProcess.getInputStream()));
 
         BufferedReader stdError = new BufferedReader(new InputStreamReader(
-                p.getErrorStream()));
-        p.waitFor();
-        String s;
-        String resultado = "";
-        int i = 0;
-        while ((s = stdInput.readLine()) != null) {
-            if (i == 0) {
-                resultado = s;
-                i++;
+                executionProcess.getErrorStream()));
+        executionProcess.waitFor();
+        String temporaryString;
+        String executionResult = "";
+        int counter = 0;
+        while ((temporaryString = stdInput.readLine()) != null) {
+            if (counter == 0) {
+                executionResult = temporaryString;
+                counter++;
             } else {
-                resultado += "\n" + s;
+                executionResult += "\n" + temporaryString;
             }
         }
 
-        orden.setResultado(new Resultado(resultado));
-        orden.setEstadoSalida(p.exitValue());
+        order.setResult(new Result(executionResult));
+        order.setExitState(executionProcess.exitValue());
     }
 }

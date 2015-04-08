@@ -23,25 +23,27 @@
  */
 package identidad;
 
+import comunication.SendableObject;
+
 /**
  * Contiene la información del usuario que ejecuta el servicio.
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public interface Usuario {
+public abstract class User extends SendableObject {
 
-    public static final boolean BANEADO = true;
-    public static final boolean NOBANEADO = false;
+    public static final boolean BANNED = true;
+    public static final boolean NOT_BANNED = false;
 
     /**
      * Obtiene el nombre del usuario que está ejecutando el servicio.
      *
      * @return String con el nombre del usuario.
      */
-    public String obtenerNombreDeUsuario();
+    public abstract String obtenerNombreDeUsuario();
 
-    public boolean isEqual(Usuario usuario);
+    public abstract boolean isEqual(User usuario);
 
-    public boolean estaBaneado();
+    public abstract boolean estaBaneado();
 }

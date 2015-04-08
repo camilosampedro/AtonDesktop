@@ -1,3 +1,4 @@
+
 /*
  * The MIT License
  *
@@ -21,51 +22,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ejecucion;
+package identidad;
 
-import comunicacion.Enviable;
+import comunication.SendableObject;
+import java.util.ArrayList;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class Resultado implements Enviable {
+public abstract class Computer extends SendableObject {
 
-    private final String resultado;
+    public abstract String getIP();
 
-    public Resultado(String resultado) {
-        this.resultado = resultado;
-    }
+    public abstract String getMac();
 
-    @Override
-    public String obtenerCuerpo() {
-        return INICIOCUERPO + resultado + FINCUERPO;
-    }
+    public abstract String getHostname();
 
-    @Override
-    public Class obtenerClase() {
-        return Resultado.class;
-    }
+    public abstract ArrayList getUsers();
 
-    public static Resultado construirObjeto(String informacion) {
-        int i = informacion.indexOf(INICIOCUERPO);
-        int j = informacion.indexOf(FINCUERPO);
-        String info = informacion.substring(i, j);
-        return new Resultado(info);
-    }
+    public abstract void addUser(User usuario);
 
-    @Override
-    public String generarCadena() {
-        return obtenerCabecera() + obtenerCuerpo();
-    }
+    public abstract void setIP(String ip);
 
-    @Override
-    public String obtenerCabecera() {
-        return INICIOCABECERA + TIPO[RESULTADO] + FINCABECERA;
-    }
-
-    public String getResultado() {
-        return resultado;
-    }
+    public abstract void setMac(String mac);
 }

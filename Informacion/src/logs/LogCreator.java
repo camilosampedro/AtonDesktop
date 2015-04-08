@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class CreadorLog {
+public class LogCreator {
 
     protected static File archivoLog;
     public static final byte INFORMACION = 0;
@@ -46,19 +46,23 @@ public class CreadorLog {
         archivoLog = new File(ruta);
     }
 
-    public static void agregarALog(byte tipo, String mensaje) {
+    public static void addToLog(byte tipo, String mensaje) {
         switch (tipo) {
             case INFORMACION:
                 agregarALog("   [INFO] " + mensaje);
+                System.out.println("   [INFO] " + mensaje);
                 break;
             case ADVERTENCIA:
                 agregarALog("  +[WARN] " + mensaje);
+                System.out.println("  +[WARN] " + mensaje);
                 break;
             case ERROR:
                 agregarALog("*  [ERROR] " + mensaje);
+                System.err.println("*  [ERROR] " + mensaje);
                 break;
             default:
                 agregarALog(mensaje);
+                System.out.println("mensaje");
                 break;
         }
     }
@@ -75,13 +79,13 @@ public class CreadorLog {
             }
         } catch (IOException ex) {
             System.err.println("Ocurrió un error al intentar crear el log");
-            Logger.getLogger(CreadorLog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogCreator.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 fw.close();
             } catch (IOException ex) {
                 System.err.println("Ocurrió un error al intentar cerrar el flujo del log");
-                Logger.getLogger(CreadorLog.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LogCreator.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

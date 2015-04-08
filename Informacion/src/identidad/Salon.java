@@ -23,7 +23,6 @@
  */
 package identidad;
 
-import exception.NoEncontrado;
 import java.util.ArrayList;
 
 /**
@@ -33,46 +32,46 @@ import java.util.ArrayList;
  */
 public class Salon {
 
-    private ArrayList<Sala> salas;
-    private String nombre;
+    private ArrayList<Room> rooms;
+    private String name;
 
-    public Salon(String nombre) {
-        salas = new ArrayList();
-        this.nombre = nombre;
+    public Salon(String name) {
+        rooms = new ArrayList();
+        this.name = name;
     }
 
-    public void encender() {
+    public void turnOnAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void apagar() {
+    public void turnOffAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void notificar(String mensaje) {
+    public void notify(String message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void agregarSala(Sala sala) {
-        salas.add(sala);
+    public void addRoom(Room room) {
+        rooms.add(room);
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public EquipoServidor buscarPorIP(String ip) {
-        EquipoServidor equipo;
-        for (Sala sala : salas) {
-            equipo = sala.buscarPorIP(ip);
-            if (equipo != null){
-                return equipo;
+    public ServerComputer findByIP(String ip) {
+        ServerComputer computer;
+        for (Room room : rooms) {
+            computer = room.findByIP(ip);
+            if (computer != null){
+                return computer;
             }
         }
         return null;
     }
     
-    public ArrayList<Sala> getSalas(){
-        return (ArrayList<Sala>) salas.clone();
+    public ArrayList<Room> getRooms(){
+        return (ArrayList<Room>) rooms.clone();
     }
 }

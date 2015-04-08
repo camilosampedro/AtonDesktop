@@ -1,4 +1,3 @@
-
 /*
  * The MIT License
  *
@@ -22,28 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
+package execution;
 
-import java.util.ArrayList;
+import comunication.SendableObject;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public interface Equipo {
+public class Result extends SendableObject {
 
-    public String obtenerIP();
+    private final String result;
 
-    public String obtenerMAC();
+    public Result(String result) {
+        this.result = result;
+    }
 
-    public String obtenerHostname();
+    @Override
+    public String getBody() {
+        return BODYSTART + result + BODYEND;
+    }
 
-    public ArrayList obtenerUsuarios();
+    public static Result buildObject(String information) {
+        int i = information.indexOf(BODYSTART);
+        int j = information.indexOf(BODYEND);
+        String info = information.substring(i, j);
+        return new Result(info);
+    }
 
-    public void agregarUsuario(Usuario usuario);
+    @Override
+    public String getHead() {
+        return HEADSTART + TYPE[RESULT] + HEADEND;
+    }
 
-    public void asignarIP(String ip);
-
-    public void asignarMAC(String mac);
+    public String getResult() {
+        return result;
+    }
 }
