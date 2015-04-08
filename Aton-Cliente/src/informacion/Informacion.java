@@ -23,9 +23,9 @@
  */
 package informacion;
 
-import comunicacion.Comunicacion;
-import identidad.EquipoCliente;
-import identidad.UsuarioCliente;
+import comunication.Comunicacion;
+import identidad.ClientComputer;
+import identidad.ClientUser;
 import java.io.IOException;
 
 /**
@@ -35,39 +35,39 @@ import java.io.IOException;
  */
 public class Informacion {
 
-    private static UsuarioCliente usuario;
-    private static EquipoCliente equipo;
+    private static ClientUser usuario;
+    private static ClientComputer equipo;
 
     /**
      * @return the usuario
      */
-    public static UsuarioCliente getUsuario() {
+    public static ClientUser getUsuario() {
         return usuario;
     }
 
     /**
      * @param aUsuario the usuario to set
      */
-    public static void setUsuario(UsuarioCliente aUsuario) {
+    public static void setUsuario(ClientUser aUsuario) {
         usuario = aUsuario;
     }
 
     /**
      * @return the equipo
      */
-    public static EquipoCliente getEquipo() {
+    public static ClientComputer getEquipo() {
         return equipo;
     }
 
     /**
      * @param aEquipo the equipo to set
      */
-    public static void setEquipo(EquipoCliente aEquipo) {
+    public static void setEquipo(ClientComputer aEquipo) {
         equipo = aEquipo;
     }
 
     public static void inicializar() throws IOException, ClassNotFoundException {   
-        if (!UsuarioCliente.esRoot()) {
+        if (!ClientUser.isRoot()) {
             System.err.println("El usuario que ejecutó el servicio no es root.");
             System.err.println("Se debe ser root para ejecutar el servicio.");
             System.exit(1);
@@ -78,7 +78,7 @@ public class Informacion {
     }
 
     private static void inicializarEquipo() {
-        equipo = EquipoCliente.inicializarEquipoActual();
+        equipo = ClientComputer.initializeActualComputer();
     }
 
 }

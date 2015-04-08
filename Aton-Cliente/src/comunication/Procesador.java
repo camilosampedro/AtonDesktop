@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package comunicacion;
+package comunication;
 
 import ejecucion.EjecucionRemota;
-import ejecucion.Orden;
-import ejecucion.Resultado;
-import ejecucion.Solicitud;
+import execution.Order;
+import execution.Result;
+import execution.Request;
 import informacion.Informacion;
 import java.io.IOException;
 import java.net.SocketException;
@@ -40,14 +40,14 @@ import java.util.logging.Logger;
  */
 class Procesador {
 
-    static void procesarOrden(String remitente, Orden orden) {
+    static void procesarOrden(String remitente, Order orden) {
         EjecucionRemota ejecucion = new EjecucionRemota(orden);
         ejecucion.start();
     }
 
-    static void procesarSolicitud(String remitente, Solicitud solicitud) {
-        switch (solicitud.getTipo()) {
-            case Solicitud.CONEXION:
+    static void procesarSolicitud(String remitente, Request solicitud) {
+        switch (solicitud.getType()) {
+            case Request.CONECTION:
                 try {
                     Comunicacion.enviarObjeto(Informacion.getEquipo());
                 } catch (UnknownHostException ex) {
@@ -58,8 +58,8 @@ class Procesador {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
         }
                 break;
-            case Solicitud.HOST:
-                Resultado resultado = new Resultado(Informacion.getEquipo().obtenerHostname());
+            case Request.HOST:
+                Result resultado = new Result(Informacion.getEquipo().getHostname());
                 try {
                     Comunicacion.enviarObjeto(resultado);
                 } catch (UnknownHostException ex) {
@@ -70,7 +70,7 @@ class Procesador {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
         }
                 break;
-            case Solicitud.USUARIO:
+            case Request.USER:
                 try {
                     Comunicacion.enviarObjeto(informacion.Informacion.getUsuario());
                 } catch (UnknownHostException ex) {

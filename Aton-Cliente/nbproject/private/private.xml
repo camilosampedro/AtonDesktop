@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/src/comunicacion/Comunicacion.java</file>
             <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/src/informacion/Informacion.java</file>
+            <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/src/comunication/Comunicacion.java</file>
             <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/src/principal/Principal.java</file>
-            <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/src/comunicacion/Procesador.java</file>
-            <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/src/ejecucion/EjecucionRemota.java</file>
-            <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/build.xml</file>
+            <file>file:/home/camilo/git/AtonN/Aton/Aton-Cliente/src/comunication/Procesador.java</file>
         </group>
     </open-files>
 </project-private>

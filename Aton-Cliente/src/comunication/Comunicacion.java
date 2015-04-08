@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package comunicacion;
+package comunication;
 
-import ejecucion.Solicitud;
+import execution.Request;
 import ejecucion.EjecucionRemota;
-import ejecucion.Orden;
-import ejecucion.Resultado;
+import execution.Order;
+import execution.Result;
 import informacion.Informacion;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -41,12 +41,11 @@ import java.util.logging.Logger;
  * @author Camilo Sampedro
  * @version 0.1.5
  */
-public class Comunicacion extends ClienteServidor {
+public class Comunicacion extends Comunicator {
 
-    protected static ServerSocket serverSocket;
     protected static String ipServidor;
     protected static EjecucionRemota ejecucionActual;
-    protected static Solicitud solicitudActual;
+    protected static Request solicitudActual;
     protected static Comunicacion cliente_servidor;
 
     /**
@@ -58,7 +57,7 @@ public class Comunicacion extends ClienteServidor {
      */
     public static void inicializar(String ipServidor, int puertoComunicacion) {
         Comunicacion.ipServidor = ipServidor;
-        Comunicacion.puerto = puertoComunicacion;
+        Comunicacion.port = puertoComunicacion;
         cliente_servidor = new Comunicacion();
     }
 
@@ -69,8 +68,8 @@ public class Comunicacion extends ClienteServidor {
      * @throws ClassNotFoundException
      */
     public static void despertar() throws IOException, ClassNotFoundException {
-        Comunicacion.enviarObjeto(new Solicitud(Solicitud.CONEXION));
-//        cliente_servidor.escuchar();
+        Comunicacion.enviarObjeto(new Request(Request.CONECTION));
+//        cliente_servidor.listen();
         Comunicacion.enviarObjeto(Informacion.getEquipo());
         cliente_servidor.start();
     }
@@ -78,9 +77,9 @@ public class Comunicacion extends ClienteServidor {
     /**
      * Envia el resultado de una ejecución.
      *
-     * @param resultado Resultado a enviar.
+     * @param resultado Result a enviar.
      */
-    public static void enviarResultado(Resultado resultado) {
+    public static void enviarResultado(Result resultado) {
         try {
             Comunicacion.enviarObjeto(resultado);
         } catch (UnknownHostException ex) {
@@ -96,13 +95,13 @@ public class Comunicacion extends ClienteServidor {
      * Envía el objeto a la dirección ip del servidor.
      *
      * @throws java.net.ConnectException
-     * @see ClienteServidor
+     * @see Comunicator
      * @param o Objeto a enviar.
      * @throws UnknownHostException
      * @throws SocketException
      */
-    public static void enviarObjeto(Enviable o) throws UnknownHostException, SocketException, IOException, ConnectException {
-        enviarObjeto(o, ipServidor);
+    public static void enviarObjeto(SendableObject o) throws UnknownHostException, SocketException, IOException, ConnectException {
+        sendObject(o, ipServidor);
     }
 
     /**
@@ -111,19 +110,19 @@ public class Comunicacion extends ClienteServidor {
      * @throws SocketException
      */
     @Override
-    protected void abrirCanal() throws SocketException {
+    protected void openChannel() throws SocketException {
         Object[] objetoRecibido = null;
         try {
-            objetoRecibido = escuchar();
+            objetoRecibido = listen();
         } catch (IOException ex) {
             Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (objetoRecibido[1] instanceof Orden) {
-            Procesador.procesarOrden((String) objetoRecibido[0], (Orden) objetoRecibido[1]);
+        if (objetoRecibido[1] instanceof Order) {
+            Procesador.procesarOrden((String) objetoRecibido[0], (Order) objetoRecibido[1]);
             return;
         }
-        if (objetoRecibido[1] instanceof Solicitud) {
-            Procesador.procesarSolicitud((String) objetoRecibido[0], (Solicitud) objetoRecibido[1]);
+        if (objetoRecibido[1] instanceof Request) {
+            Procesador.procesarSolicitud((String) objetoRecibido[0], (Request) objetoRecibido[1]);
             return;
         }
     }

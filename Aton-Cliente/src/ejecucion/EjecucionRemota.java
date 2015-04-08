@@ -23,13 +23,16 @@
  */
 package ejecucion;
 
-import comunicacion.Comunicacion;
+import execution.Result;
+import execution.Execution;
+import execution.Order;
+import comunication.Comunicacion;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logs.CreadorLog;
+import logs.LogCreator;
 
 /**
  *
@@ -39,14 +42,14 @@ import logs.CreadorLog;
 public class EjecucionRemota extends Thread {
 
     /**
-     * Orden a ejecutar.
+     * Order a execute.
      */
-    protected Orden orden;
+    protected Order orden;
 
     public static final boolean SUDO = true;
     public boolean USER = false;
 
-    public EjecucionRemota(Orden orden) {
+    public EjecucionRemota(Order orden) {
         this.orden = orden;
     }
 
@@ -56,13 +59,13 @@ public class EjecucionRemota extends Thread {
     @Override
     public void run() {
         try {
-            Ejecucion.ejecutar(orden);
-            Comunicacion.enviarObjeto(orden.getResultado());
+            Execution.execute(orden);
+            Comunicacion.enviarObjeto(orden.getResult());
         } catch (IOException | InterruptedException ex) {
-            CreadorLog.agregarALog(CreadorLog.ERROR, "Se produjo un error en la ejecución de la orden.");
+            LogCreator.addToLog(LogCreator.ERROR, "Se produjo un error en la ejecución de la orden.");
             Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex);
             try {
-                Comunicacion.enviarObjeto(new Resultado("ERROR"));
+                Comunicacion.enviarObjeto(new Result("ERROR"));
             } catch (UnknownHostException ex1) {
                 Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
             } catch (SocketException ex1) {
@@ -77,8 +80,8 @@ public class EjecucionRemota extends Thread {
     /**
      * @return resultado de la ejecución.
      */
-    public Resultado obtenerResultado() {
-        return orden.getResultado();
+    public Result obtenerResultado() {
+        return orden.getResult();
     }
 
 }
