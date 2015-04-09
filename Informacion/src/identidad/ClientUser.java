@@ -62,7 +62,7 @@ public class ClientUser extends User {
      */
     public ClientUser() {
         isRoot = isRoot();
-        isBanned = verificarBaneo();
+        //isBanned = verificarBaneo();
     }
 
     /**
@@ -148,7 +148,7 @@ public class ClientUser extends User {
      *
      * @return String con el nombre del usuario.
      */
-    public static String obtenerNombreDeUsuarioEjecutor() {
+    public static String getRunnerUsername() {
         try {
             //whoami muestra el nombre del usuario que ejecuta el programa.
             Order orden = new Order(Function.USER_IDENTIFIER_ORDER);
@@ -218,8 +218,8 @@ public class ClientUser extends User {
      * @param informacion
      * @return
      */
-    public static ClientUser construirObjeto(String informacion) {
-        int i = informacion.indexOf(BODYSTART);
+    public static ClientUser buildObject(String informacion) {
+        int i = informacion.indexOf(BODYSTART) + BODYSTART.length();
         int j = informacion.indexOf(BODYEND);
         int k = informacion.indexOf(SEPARATOR);
         String usuario = informacion.substring(i, k);

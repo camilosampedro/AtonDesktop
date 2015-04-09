@@ -61,7 +61,7 @@ public class Request extends SendableObject {
     }
 
     public static Request buildObject(String information) {
-        int i = information.indexOf(BODYSTART);
+        int i = information.indexOf(BODYSTART) + BODYSTART.length();
         int j = information.indexOf(BODYEND);
         String info = information.substring(i, j);
         return new Request(Byte.parseByte(info));

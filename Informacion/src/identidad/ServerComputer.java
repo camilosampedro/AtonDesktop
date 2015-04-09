@@ -52,7 +52,7 @@ public class ServerComputer extends Computer {
     private String ip;
     private String mac;
     private String hostname;
-    private ArrayList<User> usuarios;
+    private ArrayList<User> users;
     private ArrayList<String[]> results;
     private Order actualOrder;
 
@@ -94,13 +94,15 @@ public class ServerComputer extends Computer {
 
     private Room room;
 
-    public ServerComputer(Room padre) {
+    public ServerComputer(Room container) {
         this.results = new ArrayList();
-        room = padre;
+        this.users = new ArrayList();
+        room = container;
     }
 
     public ServerComputer(String ip, String mac, int numeroEquipo, boolean estadoPoder, boolean estadoUso, Room sala) {
         this.results = new ArrayList();
+        this.users = new ArrayList();
         this.ip = ip;
         this.mac = mac;
         this.computerNumber = numeroEquipo;
@@ -126,12 +128,12 @@ public class ServerComputer extends Computer {
 
     @Override
     public ArrayList<User> getUsers() {
-        return usuarios;
+        return users;
     }
 
     @Override
     public void addUser(User user) {
-        usuarios.add(user);
+        users.add(user);
     }
 
     @Override
@@ -154,7 +156,7 @@ public class ServerComputer extends Computer {
     /**
      * @param useState the useState to set
      */
-    public void setEstadoUso(boolean useState) {
+    public void setUseState(boolean useState) {
         this.useState = useState;
     }
 
@@ -213,7 +215,7 @@ public class ServerComputer extends Computer {
     }
 
     public static ServerComputer buildObject(String informacion) {
-        int i = informacion.indexOf(BODYSTART);
+        int i = informacion.indexOf(BODYSTART) + BODYSTART.length();
         int j = informacion.indexOf(BODYEND);
         String info = informacion.substring(i, j);
         StringTokenizer tokens = new StringTokenizer(info, SEPARATOR);

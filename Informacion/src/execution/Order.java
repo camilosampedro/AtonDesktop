@@ -129,7 +129,7 @@ public class Order extends SendableObject {
     }
 
     public static Order buildObject(String informacion) {
-        int i = informacion.indexOf(BODYSTART);
+        int i = informacion.indexOf(BODYSTART) + BODYSTART.length();
         int j = informacion.indexOf(BODYEND);
         String info = informacion.substring(i, j);
         StringTokenizer tokens = new StringTokenizer(info, SEPARATOR);

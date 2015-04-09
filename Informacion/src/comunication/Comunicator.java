@@ -29,6 +29,7 @@ import execution.Request;
 import identidad.ClientComputer;
 import identidad.ServerComputer;
 import identidad.ClientUser;
+import international.LanguagesController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,49 +53,19 @@ public abstract class Comunicator extends Thread {
     protected static ServerSocket serverSocket;
 
     public Object[] listen() throws SocketException, IOException {
-        System.out.println("Listen server has opened, waiting for messages...");
+        System.out.println(LanguagesController.getWord("ListenerMessage"));
         Socket socket = serverSocket.accept();
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         InetAddress senderIP = socket.getInetAddress();
         String message = in.readLine();
-        System.out.println("Client " + senderIP + " : " + message);
-//        DatagramPacket packet;
-//        DatagramSocket socket;
-//        byte[] data;    // Para los datos ser enviados en paquetes
-//        int clientPort;
-//        int packetSize = SendableObject.PACKETSIZE;
-//        InetAddress address;
-//        String str;
-//
-//        socket = new DatagramSocket(port);
-//        data = new byte[packetSize];
-//
-//        // Crea paquetes para recibir el mensaje
-//        packet = new DatagramPacket(data, packetSize);
-//
-//        try {
-//            // Esperar indefinidamente a que el paquete llegue
-//            socket.receive(packet);
-//        } catch (IOException ie) {
-//            System.out.println(" No pudo recibir :" + ie.getMessage());
-//            System.exit(0);
-//        }
-//
-//        System.out.println("Llegó un paquete");
-//        // Obtener datos del cliente para poder hacer echo a los datos
-//        address = packet.getAddress();
-//        clientPort = packet.getPort();
-
-//        // Creación del String
-//        str = new String(data, packet.getOffset(), packet.getLength());
+        System.out.println(LanguagesController.getWord("Client") + ":" + senderIP + LanguagesController.getWord("Message") + ":" + message);
         Object[] returnArray = {senderIP, recoverSendable(message)};
-
         return returnArray;
     }
 
-    private SendableObject recoverSendable(String stringToConvert) {
-        int i = stringToConvert.indexOf(SendableObject.HEADSTART);
+    public SendableObject recoverSendable(String stringToConvert) {
+        int i = stringToConvert.indexOf(SendableObject.HEADSTART) + SendableObject.HEADSTART.length();
         int j = stringToConvert.indexOf(SendableObject.HEADEND);
         String head = stringToConvert.substring(i, j);
         SendableObject object = null;
@@ -109,7 +80,7 @@ public abstract class Comunicator extends Thread {
         } else if (head.equals(SendableObject.TYPE[SendableObject.REQUEST])) {
             object = Request.buildObject(stringToConvert);
         } else if (head.equals(SendableObject.TYPE[SendableObject.USERCLIENT])) {
-            object = ClientUser.construirObjeto(stringToConvert);
+            object = ClientUser.buildObject(stringToConvert);
         }
         return object;
     }
@@ -143,43 +114,8 @@ public abstract class Comunicator extends Thread {
                 = new BufferedReader(
                         new InputStreamReader(socket.getInputStream()));
         String message = o.generateString();
-        System.out.println("Mensaje: " + message);
+        System.out.println(LanguagesController.getWord("Message") + ": " + message);
         out.println(message);
-//        
-////        DatagramSocket socket; // Como se envian los paquetes
-////        DatagramPacket packet; // Lo que se envia en los paquetes
-////        InetAddress address;   // A donde se envian los paquetes
-////        String messageSend;    // Mensaje a ser enviado
-////        String messageReturn;  // Lo que se obtiene del Server
-////        int packetSize = SendableObject.PACKETSIZE;
-////        byte[] data;
-////
-////        // Obtener la direccion IP del  Server
-////        address = InetAddress.getByName(ipDestino);
-////        socket = new DatagramSocket();
-//
-//        //data = new byte[packetSize];
-////        messageSend = o.generateString();
-////        data = messageSend.getBytes();
-//        // messageSend.getBytes(0, messageSend.length(), data, 0);
-//        if (data.length > packetSize) {
-//            return;
-//        }
-//
-//        // recordar a los datagramas guardar los bytes
-//        packet = new DatagramPacket(data, data.length, address, port);
-//        System.out.println(" Tratando de enviar el paquete a " + ipDestino);
-//
-//        try {
-//            // envia el paquete
-//
-//            socket.send(packet);
-//            System.out.println("Paquete enviado.");
-//
-//        } catch (IOException ie) {
-//            System.out.println("No pudo ser enviado  :" + ie.getMessage());
-//            System.exit(1);
-//        }
     }
 
     public static boolean isReachable(String ip) throws UnknownHostException, IOException {

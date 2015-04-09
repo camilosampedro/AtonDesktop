@@ -23,13 +23,13 @@
  */
 package identidad;
 
-import comunication.SendableObject;
 import static comunication.SendableObject.BODYEND;
 import static comunication.SendableObject.BODYSTART;
 import static comunication.SendableObject.SEPARATOR;
 import execution.Execution;
 import execution.Function;
 import execution.Order;
+import international.LanguagesController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -71,13 +71,15 @@ public class ClientComputer extends Computer {
         for (ClientUser singleUser : ClientUser.generateUserList()) {
             computer.addUser(singleUser);
         }
+        System.out.println(LanguagesController.getWord("ActualIP") + ":" + computer.ip);
+        System.out.println(LanguagesController.getWord("ActualMac") + ":" + computer.mac);
         return computer;
     }
 
     private static String getActualComputerMAC() {
         assert ClientUser.isRoot();
         try {
-            Order order = new Order(Function.MAC_ORDER);
+            Order order = new Order(Function.ALT_MAC_ORDER);
             Execution.execute(order);
             return order.getResult().getResult();
         } catch (IOException | InterruptedException ex) {
@@ -90,7 +92,7 @@ public class ClientComputer extends Computer {
     public static String getActualComputerIP() {
         assert ClientUser.isRoot();
         try {
-            Order orden = new Order(Function.IP_ORDER);
+            Order orden = new Order(Function.ALT_IP_ORDER);
             Execution.execute(orden);
             return orden.getResult().getResult();
         } catch (IOException | InterruptedException ex) {
@@ -162,7 +164,7 @@ public class ClientComputer extends Computer {
     }
 
     public static ClientComputer buildObject(String information) {
-        int i = information.indexOf(BODYSTART);
+        int i = information.indexOf(BODYSTART) + BODYSTART.length();
         int j = information.indexOf(BODYEND);
         String info = information.substring(i, j);
         StringTokenizer tokens = new StringTokenizer(info, SEPARATOR);

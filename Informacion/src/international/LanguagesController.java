@@ -21,41 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package execution;
+package international;
 
-import comunication.SendableObject;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.ResourceBundle.Control;
 
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.0
  */
-public class Result extends SendableObject {
+public class LanguagesController {
 
-    private final String result;
-
-    public Result(String result) {
-        this.result = result;
+    private static Map supportedLanguages;
+    private static ResourceBundle translation;
+    
+    public static void initializeLanguage(String language) {
+        Locale spanish = new Locale("Spanish");
+        supportedLanguages = new HashMap();
+        supportedLanguages.put("Spanish", spanish);
+        supportedLanguages.put("English", Locale.ENGLISH);
+        translation = ResourceBundle.getBundle("resources.language", (Locale) supportedLanguages.get(language));
     }
 
-    @Override
-    public String getBody() {
-        return BODYSTART + result + BODYEND;
-    }
-
-    public static Result buildObject(String information) {
-        int i = information.indexOf(BODYSTART) + BODYSTART.length();
-        int j = information.indexOf(BODYEND);
-        String info = information.substring(i, j);
-        return new Result(info);
-    }
-
-    @Override
-    public String getHead() {
-        return HEADSTART + TYPE[RESULT] + HEADEND;
-    }
-
-    public String getResult() {
-        return result;
+    public static String getWord(String keyword) {
+        return translation.getString(keyword);
     }
 }
