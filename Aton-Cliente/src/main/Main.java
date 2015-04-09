@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package principal;
+package main;
 
-import informacion.Informacion;
+import informacion.Information;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,18 +32,18 @@ import java.util.logging.Logger;
  *
  * @author Camilo Sampedro
  */
-public class Principal {
+public class Main {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         try {
-            Informacion.inicializar();
+            Information.initialize("Spanish");
         } catch (IOException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

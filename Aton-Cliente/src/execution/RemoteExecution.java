@@ -21,12 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package ejecucion;
+package execution;
 
-import execution.Result;
-import execution.Execution;
-import execution.Order;
-import comunication.Comunicacion;
+import comunication.ClientComunicator;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -39,18 +36,15 @@ import logs.LogCreator;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class EjecucionRemota extends Thread {
+public class RemoteExecution extends Thread {
 
     /**
      * Order a execute.
      */
-    protected Order orden;
+    protected Order order;
 
-    public static final boolean SUDO = true;
-    public boolean USER = false;
-
-    public EjecucionRemota(Order orden) {
-        this.orden = orden;
+    public RemoteExecution(Order order) {
+        this.order = order;
     }
 
     /**
@@ -59,19 +53,19 @@ public class EjecucionRemota extends Thread {
     @Override
     public void run() {
         try {
-            Execution.execute(orden);
-            Comunicacion.enviarObjeto(orden.getResult());
+            Execution.execute(order);
+            ClientComunicator.sendObject(order.getResult());
         } catch (IOException | InterruptedException ex) {
             LogCreator.addToLog(LogCreator.ERROR, "Se produjo un error en la ejecución de la orden.");
-            Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RemoteExecution.class.getName()).log(Level.SEVERE, null, ex);
             try {
-                Comunicacion.enviarObjeto(new Result("ERROR"));
+                ClientComunicator.sendObject(new Result("ERROR"));
             } catch (UnknownHostException ex1) {
-                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(RemoteExecution.class.getName()).log(Level.SEVERE, null, ex1);
             } catch (SocketException ex1) {
-                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(RemoteExecution.class.getName()).log(Level.SEVERE, null, ex1);
             } catch (IOException ex1) {
-                Logger.getLogger(EjecucionRemota.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(RemoteExecution.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
 
@@ -80,8 +74,8 @@ public class EjecucionRemota extends Thread {
     /**
      * @return resultado de la ejecución.
      */
-    public Result obtenerResultado() {
-        return orden.getResult();
+    public Result getResult() {
+        return order.getResult();
     }
 
 }

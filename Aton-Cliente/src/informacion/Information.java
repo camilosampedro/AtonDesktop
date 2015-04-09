@@ -23,9 +23,10 @@
  */
 package informacion;
 
-import comunication.Comunicacion;
+import comunication.ClientComunicator;
 import identidad.ClientComputer;
 import identidad.ClientUser;
+import international.LanguagesController;
 import java.io.IOException;
 
 /**
@@ -33,52 +34,52 @@ import java.io.IOException;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class Informacion {
+public class Information {
 
-    private static ClientUser usuario;
-    private static ClientComputer equipo;
+    private static ClientUser actualUser;
+    private static ClientComputer actualComputer;
 
     /**
      * @return the usuario
      */
-    public static ClientUser getUsuario() {
-        return usuario;
+    public static ClientUser getActualUser() {
+        return actualUser;
     }
 
     /**
      * @param aUsuario the usuario to set
      */
-    public static void setUsuario(ClientUser aUsuario) {
-        usuario = aUsuario;
+    public static void setActualUser(ClientUser aUsuario) {
+        actualUser = aUsuario;
     }
 
     /**
      * @return the equipo
      */
-    public static ClientComputer getEquipo() {
-        return equipo;
+    public static ClientComputer getActualComputer() {
+        return actualComputer;
     }
 
     /**
-     * @param aEquipo the equipo to set
+     * @param newComputer the equipo to set
      */
-    public static void setEquipo(ClientComputer aEquipo) {
-        equipo = aEquipo;
+    public static void setActualComputer(ClientComputer newComputer) {
+        actualComputer = newComputer;
     }
 
-    public static void inicializar() throws IOException, ClassNotFoundException {   
+    public static void initialize(String language) throws IOException, ClassNotFoundException {   
+        LanguagesController.initializeLanguage(language);
         if (!ClientUser.isRoot()) {
-            System.err.println("El usuario que ejecutó el servicio no es root.");
-            System.err.println("Se debe ser root para ejecutar el servicio.");
+            System.err.println(LanguagesController.getWord("RootError"));
             System.exit(1);
         }
-        inicializarEquipo();
-        Comunicacion.inicializar("localhost", 5978);
-        Comunicacion.despertar();
+        initializeActualComputer();
+        ClientComunicator.initialize(LanguagesController.getWord("serverIP"), 5978);
+        ClientComunicator.wakeUp();
     }
 
-    private static void inicializarEquipo() {
-        equipo = ClientComputer.initializeActualComputer();
+    private static void initializeActualComputer() {
+        actualComputer = ClientComputer.initializeActualComputer();
     }
 
 }

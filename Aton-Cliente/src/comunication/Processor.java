@@ -23,11 +23,11 @@
  */
 package comunication;
 
-import ejecucion.EjecucionRemota;
+import execution.RemoteExecution;
 import execution.Order;
 import execution.Result;
 import execution.Request;
-import informacion.Informacion;
+import informacion.Information;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -38,51 +38,51 @@ import java.util.logging.Logger;
  *
  * @author Camilo Sampedro
  */
-class Procesador {
+class Processor {
 
-    static void procesarOrden(String remitente, Order orden) {
-        EjecucionRemota ejecucion = new EjecucionRemota(orden);
-        ejecucion.start();
+    static void processOrder(String sender, Order order) {
+        RemoteExecution execution = new RemoteExecution(order);
+        execution.start();
     }
 
-    static void procesarSolicitud(String remitente, Request solicitud) {
-        switch (solicitud.getType()) {
+    static void processRequest(String sender, Request request) {
+        switch (request.getType()) {
             case Request.CONECTION:
                 try {
-                    Comunicacion.enviarObjeto(Informacion.getEquipo());
+                    ClientComunicator.sendObject(Information.getActualComputer());
                 } catch (UnknownHostException ex) {
-                    Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SocketException ex) {
-                    Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
-            Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
             case Request.HOST:
-                Result resultado = new Result(Informacion.getEquipo().getHostname());
+                Result resultado = new Result(Information.getActualComputer().getHostname());
                 try {
-                    Comunicacion.enviarObjeto(resultado);
+                    ClientComunicator.sendObject(resultado);
                 } catch (UnknownHostException ex) {
-                    Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SocketException ex) {
-                    Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
-            Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
             case Request.USER:
                 try {
-                    Comunicacion.enviarObjeto(informacion.Informacion.getUsuario());
+                    ClientComunicator.sendObject(informacion.Information.getActualUser());
                 } catch (UnknownHostException ex) {
-                    Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SocketException ex) {
-                    Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
-            Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                    Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
             default:
-                System.err.println("Llegó una solicitud no esperada.");
+                System.err.println("An unknown request were received.");
                 break;
         }
     }
