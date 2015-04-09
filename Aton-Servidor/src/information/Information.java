@@ -21,16 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package informacion;
+package information;
 
-import comunicacion.Comunicacion;
+import comunication.ServerComunicator;
 import execution.Request;
 import exception.NotFound;
 import identidad.ServerComputer;
 import identidad.Row;
 import identidad.Room;
 import identidad.Salon;
-import interfaz.InterfazSalones;
+import gui.SalonsGUI;
 import international.LanguagesController;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,6 +39,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Document;
@@ -47,16 +49,18 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import timer.TimerTaskUpdateUI;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.3.0
  */
-public class Informacion extends Thread {
+public class Information extends Thread {
 
     private static ArrayList<ServerComputer> equiposConectados;
     private static ArrayList<Salon> salones;
+    public static SalonsGUI interfaz;
 
     private static String rutaInformacion = "informacion.xml";
 
@@ -75,7 +79,7 @@ public class Informacion extends Thread {
      * @param rutaInformacion new value of rutaInformacion
      */
     public static void setRutaInformacion(String rutaInformacion) {
-        Informacion.rutaInformacion = rutaInformacion;
+        Information.rutaInformacion = rutaInformacion;
     }
 
     private static boolean modo;
@@ -92,28 +96,49 @@ public class Informacion extends Thread {
     public static final boolean MODOCONSOLA = true;
     public static final boolean MODOGRAFICO = false;
 
+    private static void startClock() {
+        TimerTask timerTask = new TimerTaskUpdateUI();
+        //running timer task as daemon thread
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(timerTask, 0, 3 * 1000);
+        System.out.println("TimerTask started");
+        //cancel after sometime
+//        try {
+//            Thread.sleep(120000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        timer.cancel();
+//        System.out.println("TimerTask cancelled");
+//        try {
+//            Thread.sleep(30000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+    }
+
     @Override
     public void run() {
         for (ServerComputer equipo : equiposConectados) {
             try {
                 Request solicitud = new Request(Request.CONECTION);
-                if (!Comunicacion.isReachable(equipo.getIP())) {
+                if (!ServerComunicator.isReachable(equipo.getIP())) {
                     equiposConectados.remove(equipo);
                 } else {
-                    Comunicacion.sendObject(solicitud, equipo.getIP());
+                    ServerComunicator.sendObject(solicitud, equipo.getIP());
                 }
             } catch (UnknownHostException ex) {
-                Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SocketException ex) {
-                Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -131,7 +156,7 @@ public class Informacion extends Thread {
         equiposConectados.add(equipo);
     }
 
-    public static ServerComputer buscarEquipo(String ip) throws NotFound {
+    public static ServerComputer findByIP(String ip) throws NotFound {
         ServerComputer equipo = null;
         for (Salon salon : salones) {
             equipo = salon.findByIP(ip);
@@ -145,17 +170,19 @@ public class Informacion extends Thread {
         return equipo;
     }
 
-    public static void inicializar(boolean modo, String language) {
+    public static void initialize(boolean modo, String language) {
         salones = new ArrayList();
-        Informacion.modo = modo;
-        Comunicacion.inicializar(5978);
+        equiposConectados = new ArrayList();
+        Information.modo = modo;
+        ServerComunicator.inicializar(5978);
         leerDatos();
         LanguagesController.initializeLanguage(language);
-        if (!Informacion.modo) {
-            InterfazSalones interfaz = new InterfazSalones(salones);
+        if (!Information.modo) {
+            interfaz = new SalonsGUI(salones);
             interfaz.setVisible(true);
         }
-        Comunicacion.despertar();
+        startClock();
+        ServerComunicator.despertar();
     }
 
     public static void generarXML() {
@@ -201,7 +228,7 @@ public class Informacion extends Thread {
             xmlOutput.setFormat(Format.getPrettyFormat());
             xmlOutput.output(documento, new FileWriter(rutaInformacion));
         } catch (IOException ex) {
-            Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -241,9 +268,9 @@ public class Informacion extends Thread {
                 salones.add(salon);
             }
         } catch (JDOMException ex) {
-            Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Informacion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Camilo Sampedro.
+ * Copyright 2015 camilo.sampedro.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package international;
+package timer;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.ResourceBundle.Control;
+import information.Information;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
- * @author Camilo Sampedro
+ * @author camilo.sampedro
  */
-public class LanguagesController {
+public class TimerTaskUpdateUI extends TimerTask {
 
-    private static Map supportedLanguages;
-    private static ResourceBundle translation;
-    
-    public static void initializeLanguage(String language) {
-        Locale ColombianSpanish = new Locale("Spanish", "Colombia", "es_CO");
-        supportedLanguages = new HashMap();
-        supportedLanguages.put("Spanish", ColombianSpanish);
-        supportedLanguages.put("English", Locale.ENGLISH);
-        translation = ResourceBundle.getBundle("languages", (Locale) supportedLanguages.get(language));
+    @Override
+    public void run() {
+        System.out.println("Timer task started at:" + new Date());
+        completeTask();
+        System.out.println("Timer task finished at:" + new Date());
     }
 
-    public static String getWord(String keyword) {
-        return translation.getString(keyword);
+    private void completeTask() {
+        Information.interfaz.updateUI();
+    }
+
+    public static void main(String args[]) {
+        
     }
 }

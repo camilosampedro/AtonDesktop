@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package interfaz;
+package gui;
 
 import international.LanguagesController;
 import java.awt.Desktop;
@@ -35,12 +35,12 @@ import java.util.logging.Logger;
  *
  * @author Camilo Sampedro
  */
-public class AboutInterface extends javax.swing.JFrame {
+public class AboutGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form InterfazAcercaDe
      */
-    public AboutInterface() {
+    public AboutGUI() {
         initComponents();
     }
 
@@ -64,7 +64,7 @@ public class AboutInterface extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Acerca de Aton");
         setResizable(false);
 
@@ -72,7 +72,7 @@ public class AboutInterface extends javax.swing.JFrame {
         jLabel3.setText(getDevelopedByTranslation());
 
         btnImagen.setBackground(new java.awt.Color(255, 255, 255));
-        btnImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoCamiloSampedro.jpg"))); // NOI18N
+        btnImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/IconoCamiloSampedro.jpg"))); // NOI18N
         btnImagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnImagenActionPerformed(evt);
@@ -117,7 +117,7 @@ public class AboutInterface extends javax.swing.JFrame {
         });
 
         btnAton.setBackground(new java.awt.Color(255, 255, 255));
-        btnAton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Aton.png"))); // NOI18N
+        btnAton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Aton.png"))); // NOI18N
         btnAton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtonActionPerformed(evt);
@@ -206,9 +206,9 @@ public class AboutInterface extends javax.swing.JFrame {
             Desktop d = Desktop.getDesktop();
             d.browse(new URI("https://github.com/camilosampedro"));
         } catch (URISyntaxException ex) {
-            Logger.getLogger(AboutInterface.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AboutGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(AboutInterface.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AboutGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_btnImagenActionPerformed
@@ -223,7 +223,7 @@ public class AboutInterface extends javax.swing.JFrame {
             d.browse(new URI("https://github.com/camilosampedro/Aton"));
         } catch (URISyntaxException ex) {
         } catch (IOException ex) {
-            Logger.getLogger(AboutInterface.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AboutGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAtonActionPerformed
 
@@ -248,21 +248,23 @@ public class AboutInterface extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AboutInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AboutGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AboutInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AboutGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AboutInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AboutGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AboutInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AboutGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AboutInterface().setVisible(true);
+                new AboutGUI().setVisible(true);
             }
         });
     }

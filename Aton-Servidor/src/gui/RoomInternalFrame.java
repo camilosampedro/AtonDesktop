@@ -21,40 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package interfaz;
+package gui;
 
-import identidad.ServerComputer;
 import identidad.Row;
-import java.util.ArrayList;
+import identidad.Room;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class PanelFila extends javax.swing.JPanel {
+public class RoomInternalFrame extends javax.swing.JInternalFrame {
 
-    private Row fila;
-    private ArrayList<PanelEquipo> paneles;
-
+    private Room sala;
     /**
-     * Creates new form PanelFila
+     * Creates new form JIFFSala
      */
-    private PanelFila() {
+    private RoomInternalFrame() {
         initComponents();
     }
-
-    public PanelFila(Row fila) {
-        paneles = new ArrayList();
-        this.fila = fila;
+    
+    public RoomInternalFrame(Room sala){
         initComponents();
-        if(fila.isHorizontal()){
-            setLayout(new java.awt.GridLayout());
+        if(sala.isHorizontal()){
+            getContentPane().setLayout(new java.awt.GridLayout(0, 1));
         } else {
-            setLayout(new java.awt.GridLayout(0, 1));
+            getContentPane().setLayout(new java.awt.GridLayout());
         }
-        generarPaneles();
-        this.updateUI();
+        pack();
+        this.sala = sala;
+        this.setTitle(sala.getName());
+        for (Row fila : sala.getRows()){
+            RowPanel panel = new RowPanel(fila);
+            panel.setVisible(true);
+            this.add(panel);
+        }
+        this.paintAll(this.getGraphics());
     }
 
     /**
@@ -66,18 +68,11 @@ public class PanelFila extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setLayout(new java.awt.GridLayout());
-    }// </editor-fold>//GEN-END:initComponents
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    private void generarPaneles() {
-        for (ServerComputer equipo : fila.getComputers()) {
-            PanelEquipo panel = new PanelEquipo(equipo);
-            panel.setVisible(true);
-            paneles.add(panel);
-            this.add(panel);
-        }
-    }
 }

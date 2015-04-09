@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package comunicacion;
+package comunication;
 
-import comunication.Comunicator;
 import execution.Result;
 import execution.Request;
 import identidad.ClientComputer;
 import identidad.ClientUser;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,42 +38,45 @@ import java.util.logging.Logger;
  * @author Camilo Sampedro
  * @version 0.2.0
  */
-public class Comunicacion extends Comunicator {
+public class ServerComunicator extends Comunicator {
 
-    private static Comunicacion cliente_servidor;
+    private static ServerComunicator serverComunicatorInstance;
 
     public static void inicializar(int puerto) {
-        Comunicacion.port = puerto;
-        cliente_servidor = new Comunicacion();
+        ServerComunicator.port = puerto;
+        serverComunicatorInstance = new ServerComunicator();
     }
 
     public static void despertar() {
-        cliente_servidor.start();
+        serverComunicatorInstance.start();
     }
 
     @Override
     protected void openChannel() throws SocketException {
         Object[] objetoRecibido = null;
+        InetAddress direccion = null;
         try {
             objetoRecibido = listen();
+            direccion = (InetAddress) objetoRecibido[0];
+            SendableObject sendable = (SendableObject) objetoRecibido[1];
+            if (objetoRecibido[1] instanceof Result) {
+                Procesador.procesarResultado(direccion.getHostAddress(), (Result) objetoRecibido[1]);
+                return;
+            }
+            if (objetoRecibido[1] instanceof Request) {
+                Procesador.procesarSolicitud(direccion.getHostAddress(), (Request) objetoRecibido[1]);
+                return;
+            }
+            if (objetoRecibido[1] instanceof ClientComputer) {
+                Procesador.processComputer(direccion.getHostAddress(), (ClientComputer) objetoRecibido[1]);
+                return;
+            }
+            if (objetoRecibido[1] instanceof ClientUser) {
+                Procesador.procesarUsuario(direccion.getHostAddress(), (ClientUser) objetoRecibido[1]);
+                return;
+            }
         } catch (IOException ex) {
-            Logger.getLogger(Comunicacion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (objetoRecibido[1] instanceof Result) {
-            Procesador.procesarResultado((String) objetoRecibido[0], (Result) objetoRecibido[1]);
-            return;
-        }
-        if (objetoRecibido[1] instanceof Request) {
-            Procesador.procesarSolicitud((String) objetoRecibido[0], (Request) objetoRecibido[1]);
-            return;
-        }
-        if (objetoRecibido[1] instanceof ClientComputer) {
-            Procesador.procesarEquipo((String) objetoRecibido[0], (ClientComputer) objetoRecibido[1]);
-            return;
-        }
-        if (objetoRecibido[1] instanceof ClientUser) {
-            Procesador.procesarUsuario((String) objetoRecibido[0], (ClientUser) objetoRecibido[1]);
-            return;
+            Logger.getLogger(ServerComunicator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

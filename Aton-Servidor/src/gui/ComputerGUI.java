@@ -21,29 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package interfaz;
+package gui;
 
+import comunication.ServerComunicator;
+import execution.Function;
+import execution.Order;
 import identidad.ServerComputer;
+import international.LanguagesController;
+import java.io.IOException;
+import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.1
  */
-public class InterfazEquipo extends javax.swing.JFrame {
-    private ServerComputer equipo;
+public class ComputerGUI extends javax.swing.JFrame {
+
+    private ServerComputer computer;
 
     /**
      * Creates new form InterfazEquipo
      */
-    private InterfazEquipo() {
+    private ComputerGUI() {
         initComponents();
     }
 
-    public InterfazEquipo(ServerComputer equipo){
-        this.equipo = equipo;
+    public ComputerGUI(ServerComputer equipo) {
+        this.computer = equipo;
         initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -67,8 +78,8 @@ public class InterfazEquipo extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnApagar = new javax.swing.JButton();
+        btnNotify = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -88,15 +99,15 @@ public class InterfazEquipo extends javax.swing.JFrame {
         panelEstado.setBackground(new java.awt.Color(255, 231, 197));
         panelEstado.setLayout(new java.awt.GridLayout(0, 2, 10, 0));
 
-        jlIP.setText("IP: " + equipo.getIP());
+        jlIP.setText("IP: " + computer.getIP());
         jlIP.setInheritsPopupMenu(false);
         panelEstado.add(jlIP);
 
-        jlMac.setText("Mac: " + equipo.getMac());
+        jlMac.setText("Mac: " + computer.getMac());
         panelEstado.add(jlMac);
 
         String encendido;
-        if(equipo.isPoweredOn()){
+        if(computer.isPoweredOn()){
             encendido = "Encendido";
         } else {
             encendido = "Apagado";
@@ -106,7 +117,7 @@ public class InterfazEquipo extends javax.swing.JFrame {
 
         String estado;
 
-        if(equipo.isUsed()){
+        if(computer.isUsed()){
             estado = "En uso";
         } else {
             estado = "Disponible";
@@ -138,10 +149,20 @@ public class InterfazEquipo extends javax.swing.JFrame {
         jButton3.setText("Encender");
         jPanel5.add(jButton3);
 
-        jButton4.setText("Apagar");
-        jPanel5.add(jButton4);
+        btnApagar.setText("Apagar");
+        btnApagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApagarActionPerformed(evt);
+            }
+        });
+        jPanel5.add(btnApagar);
 
-        jButton5.setText("Notificar");
+        btnNotify.setText("Notificar");
+        btnNotify.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNotifyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelOrdenarLayout = new javax.swing.GroupLayout(panelOrdenar);
         panelOrdenar.setLayout(panelOrdenarLayout);
@@ -156,14 +177,14 @@ public class InterfazEquipo extends javax.swing.JFrame {
                         .addComponent(jTextField1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2))
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnNotify, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelOrdenarLayout.setVerticalGroup(
             panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOrdenarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(btnNotify)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -197,6 +218,29 @@ public class InterfazEquipo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNotifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotifyActionPerformed
+        // TODO add your handling code here:
+        String message = JOptionPane.showInputDialog(this, LanguagesController.getWord("NotifyRequest"), LanguagesController.getWord("Notify"), JOptionPane.QUESTION_MESSAGE);
+        try {
+            ServerComunicator.sendObject(new Order(Function.NOTIFICACION_ORDER(computer.getUsers().get(0), message)), computer.getIP());
+        } catch (SocketException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnNotifyActionPerformed
+
+    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+        try {
+            // TODO add your handling code here:
+            ServerComunicator.sendObject(new Order(Function.SHUTDOWN_ORDER), computer.getIP());
+        } catch (SocketException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnApagarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -214,31 +258,37 @@ public class InterfazEquipo extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfazEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ComputerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfazEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ComputerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfazEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ComputerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfazEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ComputerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfazEquipo().setVisible(true);
+                new ComputerGUI().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnApagar;
+    private javax.swing.JButton btnNotify;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel jlEstado;

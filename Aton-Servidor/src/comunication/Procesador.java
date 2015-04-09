@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package comunicacion;
+package comunication;
 
 import execution.Result;
 import execution.Request;
@@ -40,10 +40,11 @@ import java.util.logging.Logger;
  */
 public class Procesador {
 
-    static void procesarEquipo(String remitente, ClientComputer equipo) {
+    static void processComputer(String remitente, ClientComputer computer) {
         try {
-            ServerComputer equipoEncontrado = informacion.Informacion.buscarEquipo(remitente);
-            equipoEncontrado.copyComputer(equipo);
+            ServerComputer equipoEncontrado = information.Information.findByIP(remitente);
+            equipoEncontrado.copyComputer(computer);
+            equipoEncontrado.setPowerState(ServerComputer.POWERED_ON_STATE);
         } catch (NotFound ex) {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,7 +52,7 @@ public class Procesador {
 
     static void procesarUsuario(String remitente, ClientUser usuario) {
         try {
-            ServerComputer equipoEncontrado = informacion.Informacion.buscarEquipo(remitente);
+            ServerComputer equipoEncontrado = information.Information.findByIP(remitente);
             equipoEncontrado.addUser(usuario);
         } catch (NotFound ex) {
             Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,7 +65,7 @@ public class Procesador {
         switch (solicitud.getType()) {
             case Request.CONECTION:
                 try {
-                    informacion.Informacion.agregarEquipoConectado(remitente);
+                    information.Information.agregarEquipoConectado(remitente);
                 } catch (NotFound ex) {
                     Logger.getLogger(Procesador.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -77,7 +78,7 @@ public class Procesador {
 
     static void procesarResultado(String remitente, Result resultado) {
         try {
-            ServerComputer equipo = informacion.Informacion.buscarEquipo(remitente);
+            ServerComputer equipo = information.Information.findByIP(remitente);
             String[] resultadoNuevo = {equipo.getActualOrder().getOrder(), resultado.getResult()};
             equipo.addResult(resultadoNuevo);
             equipo.setActualOrder(null);

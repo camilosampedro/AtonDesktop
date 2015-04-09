@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package interfaz;
+package gui;
 
 import identidad.ServerComputer;
 
@@ -30,7 +30,7 @@ import identidad.ServerComputer;
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class PanelEquipo extends javax.swing.JPanel {
+public class ComputerPanel extends javax.swing.JPanel {
 
     private ServerComputer equipo;
     private javax.swing.ImageIcon icono;
@@ -38,11 +38,11 @@ public class PanelEquipo extends javax.swing.JPanel {
     /**
      * Creates new form PanelEquipo
      */
-    private PanelEquipo() {
+    private ComputerPanel() {
         initComponents();
     }
 
-    public PanelEquipo(ServerComputer equipo) {
+    public ComputerPanel(ServerComputer equipo) {
         this.equipo = equipo;
         asignarIcono();
         initComponents();
@@ -107,7 +107,7 @@ public class PanelEquipo extends javax.swing.JPanel {
 
     private void btnEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEquipoActionPerformed
         // TODO add your handling code here:
-        InterfazEquipo interfaz = new InterfazEquipo(this.equipo);
+        ComputerGUI interfaz = new ComputerGUI(this.equipo);
         interfaz.setVisible(true);
     }//GEN-LAST:event_btnEquipoActionPerformed
 
@@ -124,12 +124,12 @@ public class PanelEquipo extends javax.swing.JPanel {
     private void asignarIcono() {
         if (equipo.isPoweredOn()) {
             if (equipo.isUsed()) {
-                icono = new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoPC-11.png"));
+                icono = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-11.png"));
             } else {
-                icono = new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoPC-10.png"));
+                icono = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-10.png"));
             }
         } else {
-            icono = new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoPC-00.png"));
+            icono = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-00.png"));
         }
     }
     

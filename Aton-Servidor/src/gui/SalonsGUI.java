@@ -21,20 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package interfaz;
+package gui;
 
 import identidad.Salon;
+import international.LanguagesController;
+import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.2.0
  */
-public class InterfazSalones extends javax.swing.JFrame {
-    
-        private static final ImageIcon icono = new ImageIcon("imagenes/Aton32.png");
+public class SalonsGUI extends javax.swing.JFrame {
+
+    private static final ImageIcon icono = new ImageIcon("imagenes/Aton32.png");
+    private static ArrayList<SalonPanel> salonPanels;
 
     public static final String PROP_ICONO = "icono";
 
@@ -47,24 +51,25 @@ public class InterfazSalones extends javax.swing.JFrame {
         return icono;
     }
 
-
     private ArrayList<Salon> salones;
 
     /**
      * Creates new form InterfazSalon
      */
-    private InterfazSalones() {
+    private SalonsGUI() {
         initComponents();
     }
 
-    public InterfazSalones(ArrayList<Salon> salones) {
-        initComponents();
+    public SalonsGUI(ArrayList<Salon> salones) {
+        salonPanels = new ArrayList();
         this.salones = salones;
-        for (Salon salon : salones) {
-            PanelSalon interfaz = new PanelSalon(salon);
-            interfaz.setVisible(true);
-            jTabbedPane1.addTab(salon.getName(), interfaz);
-       }
+        initComponents();
+    }
+
+    public void updateUI() {
+        for (SalonPanel panel : salonPanels) {
+            panel.updateUI();
+        }
     }
 
     /**
@@ -76,7 +81,7 @@ public class InterfazSalones extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jtPestañas = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
@@ -88,20 +93,29 @@ public class InterfazSalones extends javax.swing.JFrame {
         setTitle("Aton");
         setIconImage(getIconImage());
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
-        getContentPane().add(jTabbedPane1);
 
-        jMenu1.setText("Salones");
+        for (Salon salon : salones) {
+            gui.SalonPanel interfaz = new gui.SalonPanel(salon);
+            interfaz.setVisible(true);
+            salonPanels.add(interfaz);
+            jtPestañas.addTab(salon.getName(), interfaz);
+        }
+
+        getContentPane().add(jtPestañas);
+
+        jMenu1.setText(LanguagesController.getWord("Rooms"));
         jMenuBar1.add(jMenu1);
 
-        jMenu3.setText("Selección");
+        jMenu3.setText(LanguagesController.getWord("Selection")
+        );
         jMenuBar1.add(jMenu3);
 
-        jMenu2.setText("Ayuda");
+        jMenu2.setText(LanguagesController.getWord("Help"));
 
-        jMenuItem1.setText("Ayuda");
+        jMenuItem1.setText(LanguagesController.getWord("Help"));
         jMenu2.add(jMenuItem1);
 
-        btnAcercaDe.setText("Acerca de");
+        btnAcercaDe.setText(LanguagesController.getWord("About"));
         btnAcercaDe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAcercaDeActionPerformed(evt);
@@ -118,7 +132,7 @@ public class InterfazSalones extends javax.swing.JFrame {
 
     private void btnAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcercaDeActionPerformed
         // TODO add your handling code here:
-        AboutInterface interfazAcercaDe = new AboutInterface();
+        AboutGUI interfazAcercaDe = new AboutGUI();
         interfazAcercaDe.setVisible(true);
     }//GEN-LAST:event_btnAcercaDeActionPerformed
 
@@ -139,21 +153,27 @@ public class InterfazSalones extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalonsGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalonsGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalonsGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfazSalones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalonsGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfazSalones().setVisible(true);
+                new SalonsGUI().setVisible(true);
             }
         });
     }
@@ -165,6 +185,6 @@ public class InterfazSalones extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jtPestañas;
     // End of variables declaration//GEN-END:variables
 }

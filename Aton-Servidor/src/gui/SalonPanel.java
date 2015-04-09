@@ -21,40 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package interfaz;
+package gui;
 
-import identidad.Row;
 import identidad.Room;
+import identidad.Salon;
 
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.0
  */
-public class JIFFSala extends javax.swing.JInternalFrame {
+public class SalonPanel extends javax.swing.JPanel {
+    private Salon salon;
 
-    private Room sala;
     /**
-     * Creates new form JIFFSala
+     * Creates new form PanelSalon
      */
-    private JIFFSala() {
+    private SalonPanel() {
         initComponents();
     }
     
-    public JIFFSala(Room sala){
+    public SalonPanel(Salon salon){
+        this.salon = salon;
         initComponents();
-        if(sala.isHorizontal()){
-            getContentPane().setLayout(new java.awt.GridLayout(0, 1));
-        } else {
-            getContentPane().setLayout(new java.awt.GridLayout());
-        }
-        pack();
-        this.sala = sala;
-        this.setTitle(sala.getName());
-        for (Row fila : sala.getRows()){
-            PanelFila panel = new PanelFila(fila);
-            panel.setVisible(true);
-            this.add(panel);
+        for(Room sala : salon.getRooms()){
+            RoomInternalFrame subventana = new RoomInternalFrame(sala);
+            subventana.setVisible(true);
+            this.add(subventana);
         }
         this.paintAll(this.getGraphics());
     }
@@ -68,10 +60,9 @@ public class JIFFSala extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        getContentPane().setLayout(new java.awt.GridLayout());
-
-        pack();
+        setLayout(new java.awt.GridLayout(1, 0));
     }// </editor-fold>//GEN-END:initComponents
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

@@ -21,34 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package interfaz;
+package gui;
 
-import identidad.Room;
-import identidad.Salon;
+import identidad.ServerComputer;
+import identidad.Row;
+import java.util.ArrayList;
 
 /**
  *
  * @author Camilo Sampedro
+ * @version 0.1.0
  */
-public class PanelSalon extends javax.swing.JPanel {
-    private Salon salon;
+public class RowPanel extends javax.swing.JPanel {
+
+    private Row fila;
+    private ArrayList<ComputerPanel> paneles;
 
     /**
-     * Creates new form PanelSalon
+     * Creates new form PanelFila
      */
-    private PanelSalon() {
+    private RowPanel() {
         initComponents();
     }
-    
-    public PanelSalon(Salon salon){
-        this.salon = salon;
+
+    public RowPanel(Row fila) {
+        paneles = new ArrayList();
+        this.fila = fila;
         initComponents();
-        for(Room sala : salon.getRooms()){
-            JIFFSala subventana = new JIFFSala(sala);
-            subventana.setVisible(true);
-            this.add(subventana);
+        if(fila.isHorizontal()){
+            setLayout(new java.awt.GridLayout());
+        } else {
+            setLayout(new java.awt.GridLayout(0, 1));
         }
-        this.paintAll(this.getGraphics());
+        generarPaneles();
+        this.updateUI();
     }
 
     /**
@@ -60,10 +66,18 @@ public class PanelSalon extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setLayout(new java.awt.GridLayout());
+        setLayout(new java.awt.GridLayout(1, 0));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+    private void generarPaneles() {
+        for (ServerComputer equipo : fila.getComputers()) {
+            ComputerPanel panel = new ComputerPanel(equipo);
+            panel.setVisible(true);
+            paneles.add(panel);
+            this.add(panel);
+        }
+    }
 }
