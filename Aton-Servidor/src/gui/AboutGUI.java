@@ -65,7 +65,7 @@ public class AboutGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Acerca de Aton");
+        setTitle(LanguagesController.getWord("About") + " " + LanguagesController.getWord("AppName"));
         setResizable(false);
 
         jLabel3.setFont(new java.awt.Font("Droid Sans", 1, 18)); // NOI18N

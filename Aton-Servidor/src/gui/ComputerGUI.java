@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author Camilo Sampedro
- * @version 0.1.1
+ * @version 0.3.5
  */
 public class ComputerGUI extends javax.swing.JFrame {
 
