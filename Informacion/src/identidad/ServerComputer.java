@@ -23,14 +23,17 @@
  */
 package identidad;
 
-import comunication.SendableObject;
 import static comunication.SendableObject.BODYEND;
 import static comunication.SendableObject.BODYSTART;
 import execution.Execution;
 import execution.Function;
 import execution.Order;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,6 +58,7 @@ public class ServerComputer extends Computer {
     private ArrayList<User> users;
     private ArrayList<String[]> results;
     private Order actualOrder;
+    private PropertyChangeSupport changeSupport;
 
     /**
      * Get the value of results
@@ -95,12 +99,14 @@ public class ServerComputer extends Computer {
     private Room room;
 
     public ServerComputer(Room container) {
+        this.changeSupport = new PropertyChangeSupport(this);
         this.results = new ArrayList();
         this.users = new ArrayList();
         room = container;
     }
 
     public ServerComputer(String ip, String mac, int numeroEquipo, boolean estadoPoder, boolean estadoUso, Room sala) {
+        this.changeSupport = new PropertyChangeSupport(this);
         this.results = new ArrayList();
         this.users = new ArrayList();
         this.ip = ip;
@@ -138,12 +144,16 @@ public class ServerComputer extends Computer {
 
     @Override
     public void setIP(String ip) {
+        String oldValue = this.ip;
         this.ip = ip;
+        changeSupport.firePropertyChange("ip", oldValue, this.ip);
     }
 
     @Override
     public void setMac(String mac) {
+        String oldValue = this.mac;
         this.mac = mac;
+        changeSupport.firePropertyChange("ip", oldValue, this.mac);
     }
 
     /**
@@ -157,7 +167,9 @@ public class ServerComputer extends Computer {
      * @param useState the useState to set
      */
     public void setUseState(boolean useState) {
+        boolean oldValue = this.useState;
         this.useState = useState;
+        changeSupport.firePropertyChange("useState", oldValue, this.useState);
     }
 
     /**
@@ -171,7 +183,9 @@ public class ServerComputer extends Computer {
      * @param powerState the powerState to set
      */
     public void setPowerState(boolean powerState) {
+        boolean oldValue = this.powerState;
         this.powerState = powerState;
+        changeSupport.firePropertyChange("powerState", oldValue, this.powerState);
     }
 
     /**
@@ -232,4 +246,11 @@ public class ServerComputer extends Computer {
         this.hostname = hostname;
     }
 
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+        changeSupport.addPropertyChangeListener(l);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        changeSupport.removePropertyChangeListener(l);
+    }
 }
