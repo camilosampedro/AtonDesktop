@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 camilo.sampedro.
+ * Copyright 2015 Camilo Sampedro.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,26 @@
 package timer;
 
 import information.Information;
+import java.io.IOException;
 import java.util.Date;
-import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author camilo.sampedro
+ * @author Camilo Sampedro
+ * @version 0.7.0
  */
-public class TimerTaskUpdateUI extends TimerTask {
+public class TimerTaskChecker extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println("Timer task started at:" + new Date());
-        completeTask();
-        System.out.println("Timer task finished at:" + new Date());
-    }
-
-    private void completeTask() {
-        Information.interfaz.updateUI();
+        try {
+            Information.checkComputers();
+        } catch (IOException ex) {
+            Logger.getLogger(TimerTaskChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void main(String args[]) {

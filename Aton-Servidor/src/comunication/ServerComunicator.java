@@ -25,8 +25,8 @@ package comunication;
 
 import execution.Result;
 import execution.Request;
-import identidad.ClientComputer;
-import identidad.ClientUser;
+import identity.ClientComputer;
+import identity.ClientUser;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;

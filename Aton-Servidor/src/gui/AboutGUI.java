@@ -128,7 +128,7 @@ public class AboutGUI extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Droid Sans", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Aton Alfa");
+        jLabel1.setText(LanguagesController.getWord("AppName")+ " " + LanguagesController.getWord("Version"));
 
         jLabel2.setFont(new java.awt.Font("Droid Serif", 0, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(226, 226, 226));

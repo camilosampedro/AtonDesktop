@@ -26,7 +26,7 @@ package gui;
 import comunication.ServerComunicator;
 import execution.Function;
 import execution.Order;
-import identidad.ServerComputer;
+import identity.ServerComputer;
 import international.LanguagesController;
 import java.io.IOException;
 import java.net.SocketException;
@@ -42,6 +42,8 @@ import javax.swing.JOptionPane;
 public class ComputerGUI extends javax.swing.JFrame {
 
     private ServerComputer computer;
+    private javax.swing.ImageIcon icon;
+    private UserTableModel userTableModel;
 
     /**
      * Creates new form InterfazEquipo
@@ -50,8 +52,10 @@ public class ComputerGUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public ComputerGUI(ServerComputer equipo) {
-        this.computer = equipo;
+    public ComputerGUI(ServerComputer computer) {
+        this.computer = computer;
+        userTableModel = new UserTableModel(computer.getUsers());
+        setComputerIcon();
         initComponents();
     }
 
@@ -64,39 +68,26 @@ public class ComputerGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jtpPestanas = new javax.swing.JTabbedPane();
-        panelGeneral = new javax.swing.JPanel();
         panelEstado = new javax.swing.JPanel();
         jlIP = new javax.swing.JLabel();
         jlMac = new javax.swing.JLabel();
         jlPoder = new javax.swing.JLabel();
         jlEstado = new javax.swing.JLabel();
-        panelUsuarios = new javax.swing.JPanel();
-        panelOrdenar = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
+        panelButtons = new javax.swing.JPanel();
         btnApagar = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        btnGeneralInformation = new javax.swing.JButton();
         btnNotify = new javax.swing.JButton();
+        txtOrder = new javax.swing.JTextField();
+        btnSendOrder = new javax.swing.JButton();
+        btnSendBashFile = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        userTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(LanguagesController.getWord("Computer") + " " + computer.getComputerNumber());
 
-        javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
-        panelGeneral.setLayout(panelGeneralLayout);
-        panelGeneralLayout.setHorizontalGroup(
-            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 348, Short.MAX_VALUE)
-        );
-        panelGeneralLayout.setVerticalGroup(
-            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
-        );
-
-        jtpPestanas.addTab("General", panelGeneral);
-
-        panelEstado.setBackground(new java.awt.Color(255, 231, 197));
+        panelEstado.setBackground(new java.awt.Color(239, 239, 255));
         panelEstado.setLayout(new java.awt.GridLayout(0, 2, 10, 0));
 
         jlIP.setText("IP: " + computer.getIP());
@@ -125,29 +116,7 @@ public class ComputerGUI extends javax.swing.JFrame {
         jlEstado.setText("Estado: " + estado);
         panelEstado.add(jlEstado);
 
-        jtpPestanas.addTab("Estado", panelEstado);
-
-        javax.swing.GroupLayout panelUsuariosLayout = new javax.swing.GroupLayout(panelUsuarios);
-        panelUsuarios.setLayout(panelUsuariosLayout);
-        panelUsuariosLayout.setHorizontalGroup(
-            panelUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 348, Short.MAX_VALUE)
-        );
-        panelUsuariosLayout.setVerticalGroup(
-            panelUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
-        );
-
-        jtpPestanas.addTab("Usuarios", panelUsuarios);
-
-        jButton1.setText("Enviar archivo Bash");
-
-        jButton2.setText("Enviar orden");
-
-        jPanel5.setLayout(new java.awt.GridLayout(0, 2));
-
-        jButton3.setText("Encender");
-        jPanel5.add(jButton3);
+        panelButtons.setLayout(new java.awt.GridLayout(0, 2, 5, 5));
 
         btnApagar.setText("Apagar");
         btnApagar.addActionListener(new java.awt.event.ActionListener() {
@@ -155,7 +124,15 @@ public class ComputerGUI extends javax.swing.JFrame {
                 btnApagarActionPerformed(evt);
             }
         });
-        jPanel5.add(btnApagar);
+        panelButtons.add(btnApagar);
+
+        jButton3.setText("Encender");
+        panelButtons.add(jButton3);
+
+        btnGeneralInformation.setIcon(icon);
+        btnGeneralInformation.setText(LanguagesController.getWord("Computer") + " " + computer.getComputerNumber());
+        btnGeneralInformation.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnGeneralInformation.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         btnNotify.setText("Notificar");
         btnNotify.addActionListener(new java.awt.event.ActionListener() {
@@ -164,54 +141,59 @@ public class ComputerGUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout panelOrdenarLayout = new javax.swing.GroupLayout(panelOrdenar);
-        panelOrdenar.setLayout(panelOrdenarLayout);
-        panelOrdenarLayout.setHorizontalGroup(
-            panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelOrdenarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOrdenarLayout.createSequentialGroup()
-                        .addComponent(jTextField1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addComponent(btnNotify, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        panelOrdenarLayout.setVerticalGroup(
-            panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOrdenarLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnNotify)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelOrdenarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap())
-        );
+        btnSendOrder.setText("Enviar orden");
+        btnSendOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendOrderActionPerformed(evt);
+            }
+        });
 
-        jtpPestanas.addTab("Ordenar", panelOrdenar);
+        btnSendBashFile.setText("Enviar archivo Bash");
+        btnSendBashFile.setEnabled(false);
+
+        userTable.setModel(userTableModel);
+        jScrollPane1.setViewportView(userTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addComponent(jtpPestanas)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNotify, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnGeneralInformation, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtOrder)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSendOrder))
+                    .addComponent(btnSendBashFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(panelButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jtpPestanas)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(btnGeneralInformation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnNotify)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSendOrder))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSendBashFile, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -220,6 +202,14 @@ public class ComputerGUI extends javax.swing.JFrame {
 
     private void btnNotifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotifyActionPerformed
         // TODO add your handling code here:
+        if (!computer.isPoweredOn()){
+            JOptionPane.showMessageDialog(this, LanguagesController.getWord("Computer off"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (!computer.isUsed()) {
+            JOptionPane.showMessageDialog(this, LanguagesController.getWord("Computer not used"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         String message = JOptionPane.showInputDialog(this, LanguagesController.getWord("NotifyRequest"), LanguagesController.getWord("Notify"), JOptionPane.QUESTION_MESSAGE);
         try {
             ServerComunicator.sendObject(new Order(Function.NOTIFICACION_ORDER(computer.getUsers().get(0), message)), computer.getIP());
@@ -231,6 +221,10 @@ public class ComputerGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNotifyActionPerformed
 
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+        if (!computer.isPoweredOn()){
+            JOptionPane.showMessageDialog(this, LanguagesController.getWord("Computer off"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         try {
             // TODO add your handling code here:
             ServerComunicator.sendObject(new Order(Function.SHUTDOWN_ORDER), computer.getIP());
@@ -240,6 +234,26 @@ public class ComputerGUI extends javax.swing.JFrame {
             Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnApagarActionPerformed
+
+    private void btnSendOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendOrderActionPerformed
+        // TODO add your handling code here:
+        if (!computer.isPoweredOn()){
+            JOptionPane.showMessageDialog(this, LanguagesController.getWord("Computer off"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String order = txtOrder.getText();
+        if ("".equals(order) || order == null) {
+            JOptionPane.showMessageDialog(this, LanguagesController.getWord("Empty order"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            ServerComunicator.sendObject(new Order(order), computer.getIP());
+        } catch (SocketException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSendOrderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -283,22 +297,33 @@ public class ComputerGUI extends javax.swing.JFrame {
         });
     }
 
+    private void setComputerIcon() {
+        if (computer.isPoweredOn()) {
+            if (computer.isUsed()) {
+                icon = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-11.png"));
+            } else {
+                icon = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-10.png"));
+            }
+        } else {
+            icon = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-00.png"));
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApagar;
+    private javax.swing.JButton btnGeneralInformation;
     private javax.swing.JButton btnNotify;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnSendBashFile;
+    private javax.swing.JButton btnSendOrder;
     private javax.swing.JButton jButton3;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jlEstado;
     private javax.swing.JLabel jlIP;
     private javax.swing.JLabel jlMac;
     private javax.swing.JLabel jlPoder;
-    private javax.swing.JTabbedPane jtpPestanas;
+    private javax.swing.JPanel panelButtons;
     private javax.swing.JPanel panelEstado;
-    private javax.swing.JPanel panelGeneral;
-    private javax.swing.JPanel panelOrdenar;
-    private javax.swing.JPanel panelUsuarios;
+    private javax.swing.JTextField txtOrder;
+    private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
 }

@@ -23,8 +23,11 @@
  */
 package gui;
 
-import identidad.Row;
-import identidad.Room;
+import identity.Row;
+import identity.Room;
+import identity.ServerComputer;
+import international.LanguagesController;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,7 +36,9 @@ import identidad.Room;
  */
 public class RoomInternalFrame extends javax.swing.JInternalFrame {
 
-    private Room sala;
+    private Room room;
+    private ArrayList<RowPanel> rowPanels;
+    
     /**
      * Creates new form JIFFSala
      */
@@ -42,19 +47,21 @@ public class RoomInternalFrame extends javax.swing.JInternalFrame {
     }
     
     public RoomInternalFrame(Room sala){
+        rowPanels = new ArrayList();
         initComponents();
         if(sala.isHorizontal()){
-            getContentPane().setLayout(new java.awt.GridLayout(0, 1));
+            mainPanel.setLayout(new java.awt.GridLayout(0, 1));
         } else {
-            getContentPane().setLayout(new java.awt.GridLayout());
+            mainPanel.setLayout(new java.awt.GridLayout());
         }
         pack();
-        this.sala = sala;
+        this.room = sala;
         this.setTitle(sala.getName());
         for (Row fila : sala.getRows()){
             RowPanel panel = new RowPanel(fila);
             panel.setVisible(true);
-            this.add(panel);
+            mainPanel.add(panel);
+            rowPanels.add(panel);
         }
         this.paintAll(this.getGraphics());
     }
@@ -68,11 +75,62 @@ public class RoomInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+        checkAll = new javax.swing.JCheckBox();
+        mainPanel = new javax.swing.JPanel();
+
+        checkAll.setText(LanguagesController.getWord("Select all"));
+        checkAll.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        checkAll.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        checkAll.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                checkAllItemStateChanged(evt);
+            }
+        });
+
+        mainPanel.setLayout(new java.awt.GridLayout(1, 0));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(checkAll, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(checkAll, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void checkAllItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkAllItemStateChanged
+        changeAllChecked(checkAll.isSelected());
+    }//GEN-LAST:event_checkAllItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox checkAll;
+    private javax.swing.JPanel mainPanel;
     // End of variables declaration//GEN-END:variables
+
+    ArrayList<ServerComputer> getSelectedComputers() {
+        ArrayList<ServerComputer> selectedComputers = new ArrayList();
+        for (RowPanel rowPanel: rowPanels){
+            selectedComputers.addAll(rowPanel.getSelectedComputers());
+        }
+        return selectedComputers;
+    }
+
+    private void changeAllChecked(boolean selectState) {
+        for(RowPanel rowPanel: rowPanels){
+            rowPanel.changeAllChecked(selectState);
+        }
+    }
 }

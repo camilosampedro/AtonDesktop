@@ -23,30 +23,34 @@
  */
 package gui;
 
-import identidad.ServerComputer;
+import identity.ServerComputer;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  *
  * @author Camilo Sampedro
  * @version 0.1.0
  */
-public class ComputerPanel extends javax.swing.JPanel {
+public class ComputerPanel extends javax.swing.JPanel implements PropertyChangeListener {
 
-    private ServerComputer equipo;
-    private javax.swing.ImageIcon icono;
+    private ServerComputer computer;
+    private javax.swing.ImageIcon icon;
 
     /**
      * Creates new form PanelEquipo
      */
     private ComputerPanel() {
+        this.computer = null;
         initComponents();
+        btnEquipo.setText("[E] VC");
     }
 
-    public ComputerPanel(ServerComputer equipo) {
-        this.equipo = equipo;
-        asignarIcono();
+    public ComputerPanel(ServerComputer computer) {
+        this.computer = computer;
+        setComputerIcon();
         initComponents();
-        btnEquipo.setText(Integer.toString(this.equipo.getComputerNumber()));
+        btnEquipo.setText(Integer.toString(this.computer.getComputerNumber()));
     }
 
     /**
@@ -59,11 +63,11 @@ public class ComputerPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         btnEquipo = new javax.swing.JButton();
-        cbSeleccion = new javax.swing.JCheckBox();
+        cbSelection = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
-        btnEquipo.setIcon(icono);
+        btnEquipo.setIcon(icon);
         btnEquipo.setText("##");
         btnEquipo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEquipo.setIconTextGap(2);
@@ -76,10 +80,10 @@ public class ComputerPanel extends javax.swing.JPanel {
             }
         });
 
-        cbSeleccion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        cbSeleccion.addActionListener(new java.awt.event.ActionListener() {
+        cbSelection.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cbSelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbSeleccionActionPerformed(evt);
+                cbSelectionActionPerformed(evt);
             }
         });
 
@@ -91,7 +95,7 @@ public class ComputerPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbSeleccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cbSelection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -100,40 +104,61 @@ public class ComputerPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbSeleccion)
+                .addComponent(cbSelection)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEquipoActionPerformed
         // TODO add your handling code here:
-        ComputerGUI interfaz = new ComputerGUI(this.equipo);
+        ComputerGUI interfaz = new ComputerGUI(this.computer);
         interfaz.setVisible(true);
     }//GEN-LAST:event_btnEquipoActionPerformed
 
-    private void cbSeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSeleccionActionPerformed
+    private void cbSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSelectionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbSeleccionActionPerformed
+    }//GEN-LAST:event_cbSelectionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEquipo;
-    private javax.swing.JCheckBox cbSeleccion;
+    private javax.swing.JCheckBox cbSelection;
     // End of variables declaration//GEN-END:variables
 
-    private void asignarIcono() {
-        if (equipo.isPoweredOn()) {
-            if (equipo.isUsed()) {
-                icono = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-11.png"));
+    private void setComputerIcon() {
+        if (computer.isPoweredOn()) {
+            if (computer.isUsed()) {
+                icon = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-11.png"));
             } else {
-                icono = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-10.png"));
+                icon = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-10.png"));
             }
         } else {
-            icono = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-00.png"));
+            icon = new javax.swing.ImageIcon(getClass().getResource("/images/IconoPC-00.png"));
         }
     }
     
-    public boolean estaCheckeado(){
-        return cbSeleccion.isSelected();
+    public boolean isChecked(){
+        return cbSelection.isSelected();
+    }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if(ServerComputer.USE_STATE_PROPERTY.equals(propertyName) || ServerComputer.POWER_STATE_PROPERTY.equals(propertyName)){
+            setComputerIcon();
+            updateUserInterface();
+        }
+    }
+
+    private void updateUserInterface() {
+        this.updateUI();
+    }
+
+    ServerComputer getComputer() {
+        return this.computer;
+    }
+
+    void setChecked(boolean selectState) {
+        cbSelection.setSelected(selectState);
     }
 }

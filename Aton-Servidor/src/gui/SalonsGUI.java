@@ -23,12 +23,19 @@
  */
 package gui;
 
-import identidad.Salon;
+import comunication.ServerComunicator;
+import execution.Function;
+import execution.Order;
+import identity.Salon;
+import identity.ServerComputer;
 import international.LanguagesController;
-import java.awt.Component;
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -66,11 +73,7 @@ public class SalonsGUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public void updateUI() {
-        for (SalonPanel panel : salonPanels) {
-            panel.updateUI();
-        }
-    }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -83,14 +86,17 @@ public class SalonsGUI extends javax.swing.JFrame {
 
         jtPestañas = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        btnAcercaDe = new javax.swing.JMenuItem();
+        menuRooms = new javax.swing.JMenu();
+        menuSelection = new javax.swing.JMenu();
+        btnNotify = new javax.swing.JMenuItem();
+        btnShutdown = new javax.swing.JMenuItem();
+        btnSendBashOrder = new javax.swing.JMenuItem();
+        menuHelp = new javax.swing.JMenu();
+        btnHelp = new javax.swing.JMenuItem();
+        btnAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Aton");
+        setTitle(LanguagesController.getWord("AppName"));
         setIconImage(getIconImage());
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
@@ -103,38 +109,84 @@ public class SalonsGUI extends javax.swing.JFrame {
 
         getContentPane().add(jtPestañas);
 
-        jMenu1.setText(LanguagesController.getWord("Rooms"));
-        jMenuBar1.add(jMenu1);
+        menuRooms.setMnemonic('R');
+        menuRooms.setText(LanguagesController.getWord("Rooms"));
+        jMenuBar1.add(menuRooms);
 
-        jMenu3.setText(LanguagesController.getWord("Selection")
+        menuSelection.setMnemonic('S');
+        menuSelection.setText(LanguagesController.getWord("Selection")
         );
-        jMenuBar1.add(jMenu3);
 
-        jMenu2.setText(LanguagesController.getWord("Help"));
-
-        jMenuItem1.setText(LanguagesController.getWord("Help"));
-        jMenu2.add(jMenuItem1);
-
-        btnAcercaDe.setText(LanguagesController.getWord("About"));
-        btnAcercaDe.addActionListener(new java.awt.event.ActionListener() {
+        btnNotify.setText(LanguagesController.getWord("Notify"));
+        btnNotify.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAcercaDeActionPerformed(evt);
+                btnNotifyActionPerformed(evt);
             }
         });
-        jMenu2.add(btnAcercaDe);
+        menuSelection.add(btnNotify);
 
-        jMenuBar1.add(jMenu2);
+        btnShutdown.setText(LanguagesController.getWord("Shutdown"));
+        menuSelection.add(btnShutdown);
+
+        btnSendBashOrder.setText(LanguagesController.getWord("Send bash order"));
+        menuSelection.add(btnSendBashOrder);
+
+        jMenuBar1.add(menuSelection);
+
+        menuHelp.setMnemonic('H');
+        menuHelp.setText(LanguagesController.getWord("Help"));
+
+        btnHelp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        btnHelp.setText(LanguagesController.getWord("Help"));
+        menuHelp.add(btnHelp);
+
+        btnAbout.setText(LanguagesController.getWord("About"));
+        btnAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAboutActionPerformed(evt);
+            }
+        });
+        menuHelp.add(btnAbout);
+
+        jMenuBar1.add(menuHelp);
 
         setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcercaDeActionPerformed
+    private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
         // TODO add your handling code here:
         AboutGUI interfazAcercaDe = new AboutGUI();
         interfazAcercaDe.setVisible(true);
-    }//GEN-LAST:event_btnAcercaDeActionPerformed
+    }//GEN-LAST:event_btnAboutActionPerformed
+
+    private void btnNotifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotifyActionPerformed
+        // TODO add your handling code here:
+        ArrayList<ServerComputer> selectedComputers = getSelectedComputers();
+        if(selectedComputers.isEmpty()){
+            JOptionPane.showMessageDialog(this, LanguagesController.getWord("No computer selected"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String message = JOptionPane.showInputDialog(this, LanguagesController.getWord("NotifyRequest"), LanguagesController.getWord("Notify"), JOptionPane.QUESTION_MESSAGE);
+        for(ServerComputer computer: selectedComputers){
+            if(!computer.isPoweredOn()){
+                logs.LogCreator.addToLog(logs.LogCreator.ERROR, LanguagesController.getWord("Computer") + " " + computer.getComputerNumber() + " " + LanguagesController.getWord("off"));
+                continue;
+            }
+            if(!computer.isUsed()){
+                logs.LogCreator.addToLog(logs.LogCreator.ERROR, LanguagesController.getWord("Computer") + " " + computer.getComputerNumber() +  " " + LanguagesController.getWord("not used"));
+                continue;
+            }
+            try {
+                ServerComunicator.sendObject(new Order(Function.NOTIFICACION_ORDER(computer.getUsers().get(0), message)), computer.getIP());
+            } catch (SocketException ex) {
+                Logger.getLogger(SalonsGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(SalonsGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnNotifyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,12 +231,23 @@ public class SalonsGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem btnAcercaDe;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuItem btnAbout;
+    private javax.swing.JMenuItem btnHelp;
+    private javax.swing.JMenuItem btnNotify;
+    private javax.swing.JMenuItem btnSendBashOrder;
+    private javax.swing.JMenuItem btnShutdown;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JTabbedPane jtPestañas;
+    private javax.swing.JMenu menuHelp;
+    private javax.swing.JMenu menuRooms;
+    private javax.swing.JMenu menuSelection;
     // End of variables declaration//GEN-END:variables
+
+    private ArrayList<ServerComputer> getSelectedComputers() {
+        ArrayList<ServerComputer> selectedComputers = new ArrayList();
+        for (SalonPanel salonPanel: salonPanels){
+            selectedComputers.addAll(salonPanel.getSelectedComputers());
+        }
+        return selectedComputers;
+    }
 }

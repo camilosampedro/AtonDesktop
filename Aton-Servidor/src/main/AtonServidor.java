@@ -34,6 +34,6 @@ public class AtonServidor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        information.Information.initialize(args.length == 1, "English");
+        information.Information.initialize(args.length == 1, "Spanish");
     }
 }

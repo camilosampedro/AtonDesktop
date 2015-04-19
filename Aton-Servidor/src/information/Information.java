@@ -26,15 +26,14 @@ package information;
 import comunication.ServerComunicator;
 import execution.Request;
 import exception.NotFound;
-import identidad.ServerComputer;
-import identidad.Row;
-import identidad.Room;
-import identidad.Salon;
+import identity.ServerComputer;
+import identity.Row;
+import identity.Room;
+import identity.Salon;
 import gui.SalonsGUI;
 import international.LanguagesController;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import timer.TimerTaskUpdateUI;
+import timer.TimerTaskChecker;
 
 /**
  *
@@ -58,72 +57,67 @@ import timer.TimerTaskUpdateUI;
  */
 public class Information extends Thread {
 
-    private static ArrayList<ServerComputer> equiposConectados;
-    private static ArrayList<Salon> salones;
-    public static SalonsGUI interfaz;
+    private static ArrayList<ServerComputer> conectedComputers;
+    private static ArrayList<Salon> salons;
+    public static SalonsGUI mainInterface;
 
-    private static String rutaInformacion = "informacion.xml";
+    private static String informationPath = "informacion.xml";
+    private static String logFile = "logServer.log";
 
     /**
-     * Get the value of rutaInformacion
+     * Get the value of informationPath
      *
-     * @return the value of rutaInformacion
+     * @return the value of informationPath
      */
     public static String getRutaInformacion() {
-        return rutaInformacion;
+        return informationPath;
     }
 
     /**
-     * Set the value of rutaInformacion
+     * Set the value of informationPath
      *
-     * @param rutaInformacion new value of rutaInformacion
+     * @param informationPath new value of informationPath
      */
-    public static void setRutaInformacion(String rutaInformacion) {
-        Information.rutaInformacion = rutaInformacion;
+    public static void setInformationPath(String informationPath) {
+        Information.informationPath = informationPath;
     }
 
-    private static boolean modo;
+    private static boolean mode;
 
     /**
      * Get the value of modo
      *
      * @return the value of modo
      */
-    public static boolean isModoConsola() {
-        return modo;
+    public static boolean isConsoleMode() {
+        return mode;
     }
 
-    public static final boolean MODOCONSOLA = true;
-    public static final boolean MODOGRAFICO = false;
+    public static final boolean CONSOLEMODE = true;
+    public static final boolean GRAPHICMODE = false;
 
     private static void startClock() {
-        TimerTask timerTask = new TimerTaskUpdateUI();
+        TimerTask timerTask = new TimerTaskChecker();
         //running timer task as daemon thread
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(timerTask, 0, 3 * 1000);
         System.out.println("TimerTask started");
-        //cancel after sometime
-//        try {
-//            Thread.sleep(120000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        timer.cancel();
-//        System.out.println("TimerTask cancelled");
-//        try {
-//            Thread.sleep(30000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+    }
+
+    public static void contactComputers() throws SocketException, IOException {
+        for (ServerComputer computer : conectedComputers) {
+            Request request = new Request(Request.CONECTION);
+            ServerComunicator.sendObject(request, computer.getIP());
+        }
     }
 
     @Override
     public void run() {
-        for (ServerComputer equipo : equiposConectados) {
+        for (ServerComputer equipo : conectedComputers) {
             try {
                 Request solicitud = new Request(Request.CONECTION);
                 if (!ServerComunicator.isReachable(equipo.getIP())) {
-                    equiposConectados.remove(equipo);
+                    conectedComputers.remove(equipo);
                 } else {
                     ServerComunicator.sendObject(solicitud, equipo.getIP());
                 }
@@ -144,7 +138,7 @@ public class Information extends Thread {
 
     public static void agregarEquipoConectado(String ip) throws NotFound {
         ServerComputer equipo = null;
-        for (Salon salon : salones) {
+        for (Salon salon : salons) {
             equipo = salon.findByIP(ip);
             if (equipo != null) {
                 break;
@@ -153,12 +147,12 @@ public class Information extends Thread {
         if (equipo == null) {
             throw new NotFound(NotFound.COMPUTER, ip);
         }
-        equiposConectados.add(equipo);
+        conectedComputers.add(equipo);
     }
 
     public static ServerComputer findByIP(String ip) throws NotFound {
         ServerComputer equipo = null;
-        for (Salon salon : salones) {
+        for (Salon salon : salons) {
             equipo = salon.findByIP(ip);
             if (equipo != null) {
                 break;
@@ -171,25 +165,33 @@ public class Information extends Thread {
     }
 
     public static void initialize(boolean modo, String language) {
-        salones = new ArrayList();
-        equiposConectados = new ArrayList();
-        Information.modo = modo;
+        salons = new ArrayList();
+        conectedComputers = new ArrayList();
+        Information.mode = modo;
         ServerComunicator.inicializar(5978);
+        logs.LogCreator.asignarArchivoLog(logFile);
         leerDatos();
         LanguagesController.initializeLanguage(language);
-        if (!Information.modo) {
-            interfaz = new SalonsGUI(salones);
-            interfaz.setVisible(true);
+        if (!Information.mode) {
+            mainInterface = new SalonsGUI(salons);
+            mainInterface.setVisible(true);
         }
         startClock();
         ServerComunicator.despertar();
+    }
+
+    public static void checkComputers() throws SocketException, IOException {
+        for(ServerComputer computer: conectedComputers){
+            Request request = new Request(Request.CONECTION);
+            comunication.Comunicator.sendObject(request, computer.getIP());
+        }
     }
 
     public static void generarXML() {
         Document documento;
         Element raiz = new Element("Salones");
         documento = new Document(raiz);
-        for (Salon salon : salones) {
+        for (Salon salon : salons) {
             Element salone = new Element("Salon");
             salone.setAttribute("Nombre", salon.getName());
             for (Room sala : salon.getRooms()) {
@@ -226,14 +228,14 @@ public class Information extends Thread {
         try {
             xmlOutput.output(documento, System.out);
             xmlOutput.setFormat(Format.getPrettyFormat());
-            xmlOutput.output(documento, new FileWriter(rutaInformacion));
+            xmlOutput.output(documento, new FileWriter(informationPath));
         } catch (IOException ex) {
             Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private static void leerDatos() {
-        java.io.File archivo = new java.io.File(rutaInformacion);
+        java.io.File archivo = new java.io.File(informationPath);
         SAXBuilder saxBuilder = new SAXBuilder();
         try {
             Document documento = saxBuilder.build(archivo);
@@ -265,7 +267,7 @@ public class Information extends Thread {
                     }
                     salon.addRoom(sala);
                 }
-                salones.add(salon);
+                salons.add(salon);
             }
         } catch (JDOMException ex) {
             Logger.getLogger(Information.class.getName()).log(Level.SEVERE, null, ex);

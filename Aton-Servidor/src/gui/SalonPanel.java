@@ -23,8 +23,10 @@
  */
 package gui;
 
-import identidad.Room;
-import identidad.Salon;
+import identity.Room;
+import identity.Salon;
+import identity.ServerComputer;
+import java.util.ArrayList;
 
 /**
  *
@@ -32,6 +34,7 @@ import identidad.Salon;
  */
 public class SalonPanel extends javax.swing.JPanel {
     private Salon salon;
+    private ArrayList<RoomInternalFrame> subwindows;
 
     /**
      * Creates new form PanelSalon
@@ -41,14 +44,24 @@ public class SalonPanel extends javax.swing.JPanel {
     }
     
     public SalonPanel(Salon salon){
+        subwindows = new ArrayList();
         this.salon = salon;
         initComponents();
         for(Room sala : salon.getRooms()){
             RoomInternalFrame subventana = new RoomInternalFrame(sala);
             subventana.setVisible(true);
             this.add(subventana);
+            subwindows.add(subventana);
         }
         this.paintAll(this.getGraphics());
+    }
+    
+    public ArrayList<ServerComputer> getSelectedComputers(){
+        ArrayList<ServerComputer> selectedComputers = new ArrayList();
+        for (RoomInternalFrame subwindow: subwindows){
+            selectedComputers.addAll(subwindow.getSelectedComputers());
+        }
+        return selectedComputers;
     }
 
     /**

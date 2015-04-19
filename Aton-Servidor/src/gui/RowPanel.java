@@ -23,8 +23,8 @@
  */
 package gui;
 
-import identidad.ServerComputer;
-import identidad.Row;
+import identity.ServerComputer;
+import identity.Row;
 import java.util.ArrayList;
 
 /**
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class RowPanel extends javax.swing.JPanel {
 
     private Row fila;
-    private ArrayList<ComputerPanel> paneles;
+    private ArrayList<ComputerPanel> panels;
 
     /**
      * Creates new form PanelFila
@@ -45,10 +45,10 @@ public class RowPanel extends javax.swing.JPanel {
     }
 
     public RowPanel(Row fila) {
-        paneles = new ArrayList();
+        panels = new ArrayList();
         this.fila = fila;
         initComponents();
-        if(fila.isHorizontal()){
+        if (fila.isHorizontal()) {
             setLayout(new java.awt.GridLayout());
         } else {
             setLayout(new java.awt.GridLayout(0, 1));
@@ -76,8 +76,24 @@ public class RowPanel extends javax.swing.JPanel {
         for (ServerComputer equipo : fila.getComputers()) {
             ComputerPanel panel = new ComputerPanel(equipo);
             panel.setVisible(true);
-            paneles.add(panel);
+            panels.add(panel);
             this.add(panel);
+        }
+    }
+
+    ArrayList<ServerComputer> getSelectedComputers() {
+        ArrayList<ServerComputer> selectedComputers = new ArrayList();
+        for (ComputerPanel panel : panels) {
+            if (panel.isChecked()) {
+                selectedComputers.add(panel.getComputer());
+            }
+        }
+        return selectedComputers;
+    }
+
+    public void changeAllChecked(boolean selectState) {
+        for(ComputerPanel computerPanel: panels){
+            computerPanel.setChecked(selectState);
         }
     }
 }
