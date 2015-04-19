@@ -21,23 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
+package identity;
 
 import java.util.ArrayList;
 
 /**
  *
- * @author Camilo Sampedro
+ * @author camilo
  * @version 0.1.0
  */
-public class Salon {
+public class Row {
 
-    private ArrayList<Room> rooms;
-    private String name;
+    private ArrayList<ServerComputer> computers;
+    private boolean isHorizontal;
 
-    public Salon(String name) {
-        rooms = new ArrayList();
-        this.name = name;
+    public Row(boolean isHorizontal) {
+        computers = new ArrayList();
+        this.isHorizontal = isHorizontal;
+    }
+
+    public Computer getComputer(int computerNumber) {
+        return computers.get(computerNumber);
+    }
+
+    public void notify(String message) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void addComputer(Computer computer) {
+        computers.add((ServerComputer) computer);
     }
 
     public void turnOnAll() {
@@ -48,30 +60,29 @@ public class Salon {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void notify(String message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean containsComputer(int computerNumber) {
+        for (ServerComputer computer : computers) {
+            if (computer.getComputerNumber() == computerNumber) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void addRoom(Room room) {
-        rooms.add(room);
+    public ArrayList<ServerComputer> getComputers() {
+        return computers;
     }
 
-    public String getName() {
-        return name;
+    public boolean isHorizontal() {
+        return this.isHorizontal;
     }
 
     public ServerComputer findByIP(String ip) {
-        ServerComputer computer;
-        for (Room room : rooms) {
-            computer = room.findByIP(ip);
-            if (computer != null){
+        for (ServerComputer computer : computers) {
+            if (computer.getIP().equals(ip)) {
                 return computer;
             }
         }
         return null;
-    }
-    
-    public ArrayList<Room> getRooms(){
-        return (ArrayList<Room>) rooms.clone();
     }
 }

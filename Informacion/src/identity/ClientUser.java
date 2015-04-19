@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
+package identity;
 
 import comunication.SendableObject;
 import execution.Execution;
@@ -175,7 +175,7 @@ public class ClientUser extends User {
      */
     @Override
     public boolean isEqual(User usuario) {
-        return (getNombreDeUsuario().endsWith(usuario.obtenerNombreDeUsuario()));
+        return (getUserName().equals(usuario.getUserName()));
     }
 
     /**
@@ -199,7 +199,7 @@ public class ClientUser extends User {
     }
 
     @Override
-    public String obtenerNombreDeUsuario() {
+    public String getUserName() {
         return this.username;
     }
 
@@ -211,7 +211,7 @@ public class ClientUser extends User {
 
     @Override
     public String getBody() {
-        return BODYSTART + this.getNombreDeUsuario() + SEPARATOR + this.getGrupo() + BODYEND;
+        return BODYSTART + this.getUserName() + SEPARATOR + this.getGrupo() + BODYEND;
     }
 
     /**
@@ -231,12 +231,7 @@ public class ClientUser extends User {
     }
 
 // </editor-fold>
-    /**
-     * @return the nombreDeUsuario
-     */
-    public String getNombreDeUsuario() {
-        return username;
-    }
+    
 
     /**
      * @param nombreDeUsuario the nombreDeUsuario to set

@@ -23,7 +23,7 @@
  */
 package execution;
 
-import identidad.User;
+import identity.User;
 import international.LanguagesController;
 
 /**
@@ -57,6 +57,6 @@ public final class Function {
     }
 
     public static String GENERATE_ORDER_FOR_USER(User usuario, String orden) {
-        return "sudo -u " + usuario.obtenerNombreDeUsuario() + " DISPLAY=:0.0 " + orden;
+        return "sudo -u " + usuario.getUserName() + " DISPLAY=:0.0 " + orden;
     }
 }

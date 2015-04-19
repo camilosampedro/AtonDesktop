@@ -21,19 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
+package identity;
 
 import static comunication.SendableObject.BODYEND;
 import static comunication.SendableObject.BODYSTART;
 import execution.Execution;
 import execution.Function;
 import execution.Order;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +47,13 @@ public class ServerComputer extends Computer {
     public static final boolean FREE_STATE = false;
     public static final boolean POWERED_ON_STATE = true;
     public static final boolean POWERED_OFF_STATE = false;
+    public static final String IP_PROPERTY = "ip";
+    public static final String MAC_PROPERTY = "mac";
+    public static final String ACTUAL_ORDER_PROPERTY = "actual order";
+    public static final String USE_STATE_PROPERTY = "use state";
+    public static final String POWER_STATE_PROPERTY = "power state";
+    
+    private final PropertyChangeSupport propertyChangeSupport;
     private boolean useState;
     private boolean powerState;
     private int computerNumber;
@@ -58,7 +63,7 @@ public class ServerComputer extends Computer {
     private ArrayList<User> users;
     private ArrayList<String[]> results;
     private Order actualOrder;
-    private PropertyChangeSupport changeSupport;
+    private Room parentRoom;
 
     /**
      * Get the value of results
@@ -96,17 +101,16 @@ public class ServerComputer extends Computer {
         this.actualOrder = actualOrder;
     }
 
-    private Room room;
+    
 
     public ServerComputer(Room container) {
-        this.changeSupport = new PropertyChangeSupport(this);
         this.results = new ArrayList();
         this.users = new ArrayList();
-        room = container;
+        parentRoom = container;
+        propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     public ServerComputer(String ip, String mac, int numeroEquipo, boolean estadoPoder, boolean estadoUso, Room sala) {
-        this.changeSupport = new PropertyChangeSupport(this);
         this.results = new ArrayList();
         this.users = new ArrayList();
         this.ip = ip;
@@ -114,7 +118,8 @@ public class ServerComputer extends Computer {
         this.computerNumber = numeroEquipo;
         this.powerState = estadoPoder;
         this.useState = estadoUso;
-        this.room = sala;
+        this.parentRoom = sala;
+        propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     @Override
@@ -146,14 +151,14 @@ public class ServerComputer extends Computer {
     public void setIP(String ip) {
         String oldValue = this.ip;
         this.ip = ip;
-        changeSupport.firePropertyChange("ip", oldValue, this.ip);
+        propertyChangeSupport.firePropertyChange(IP_PROPERTY, oldValue, this.ip);
     }
 
     @Override
     public void setMac(String mac) {
         String oldValue = this.mac;
         this.mac = mac;
-        changeSupport.firePropertyChange("ip", oldValue, this.mac);
+        propertyChangeSupport.firePropertyChange(MAC_PROPERTY, oldValue, this.mac);
     }
 
     /**
@@ -169,7 +174,7 @@ public class ServerComputer extends Computer {
     public void setUseState(boolean useState) {
         boolean oldValue = this.useState;
         this.useState = useState;
-        changeSupport.firePropertyChange("useState", oldValue, this.useState);
+        propertyChangeSupport.firePropertyChange(USE_STATE_PROPERTY, oldValue, this.useState);
     }
 
     /**
@@ -185,7 +190,7 @@ public class ServerComputer extends Computer {
     public void setPowerState(boolean powerState) {
         boolean oldValue = this.powerState;
         this.powerState = powerState;
-        changeSupport.firePropertyChange("powerState", oldValue, this.powerState);
+        propertyChangeSupport.firePropertyChange(POWER_STATE_PROPERTY, oldValue, this.powerState);
     }
 
     /**
@@ -203,7 +208,7 @@ public class ServerComputer extends Computer {
     }
 
     public boolean turnOn() {
-        Order order = new Order(Function.COMPUTER_WAKEUP_ORDER(room.getRoomIPSufix(), this.mac));
+        Order order = new Order(Function.COMPUTER_WAKEUP_ORDER(parentRoom.getRoomIPSufix(), this.mac));
         try {
             Execution.execute(order);
             return order.isSuccessful();
@@ -224,8 +229,8 @@ public class ServerComputer extends Computer {
     public String getBody() {
         return BODYSTART + ip + SEPARATOR + mac + SEPARATOR + computerNumber
                 + SEPARATOR + powerState + SEPARATOR + useState + SEPARATOR
-                + room.getName() + SEPARATOR + room.isHorizontal
-                + SEPARATOR + room.roomIPSufix + BODYEND;
+                + parentRoom.getName() + SEPARATOR + parentRoom.isHorizontal
+                + SEPARATOR + parentRoom.roomIPSufix + BODYEND;
     }
 
     public static ServerComputer buildObject(String informacion) {
@@ -247,10 +252,10 @@ public class ServerComputer extends Computer {
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
-        changeSupport.addPropertyChangeListener(l);
+        propertyChangeSupport.addPropertyChangeListener(l);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener l) {
-        changeSupport.removePropertyChangeListener(l);
+        propertyChangeSupport.removePropertyChangeListener(l);
     }
 }

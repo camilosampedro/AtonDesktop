@@ -26,20 +26,22 @@ package comunication;
 import execution.Order;
 import execution.Result;
 import execution.Request;
-import identidad.ClientComputer;
-import identidad.ServerComputer;
-import identidad.ClientUser;
+import identity.ClientComputer;
+import identity.ServerComputer;
+import identity.ClientUser;
 import international.LanguagesController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.BindException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,13 +103,21 @@ public abstract class Comunicator extends Thread {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(Comunicator.class.getName()).log(Level.SEVERE, null, ex);
+            if(ex instanceof BindException){
+                logs.LogCreator.addToLog(logs.LogCreator.ERROR, "El puerto ya está ocupado.");
+                System.err.println(Arrays.toString(ex.getStackTrace()));
+//                Logger.getLogger(Comunicator.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     protected abstract void openChannel() throws SocketException;
 
     public static void sendObject(SendableObject o, String ipDestino) throws UnknownHostException, SocketException, IOException, ConnectException {
+        if(!isReachable(ipDestino)){
+            logs.LogCreator.addToLog(logs.LogCreator.ERROR, "Comunicator: IP inalcanzable");
+            return;
+        }
         Socket socket = new Socket(ipDestino, port);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in

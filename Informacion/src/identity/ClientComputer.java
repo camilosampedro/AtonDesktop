@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
+package identity;
 
 import static comunication.SendableObject.BODYEND;
 import static comunication.SendableObject.BODYSTART;

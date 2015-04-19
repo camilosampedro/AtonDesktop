@@ -26,6 +26,7 @@ package international;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
@@ -37,7 +38,7 @@ public class LanguagesController {
 
     private static Map supportedLanguages;
     private static ResourceBundle translation;
-    
+
     public static void initializeLanguage(String language) {
         Locale spanish = new Locale("Spanish");
         supportedLanguages = new HashMap();
@@ -47,6 +48,11 @@ public class LanguagesController {
     }
 
     public static String getWord(String keyword) {
-        return translation.getString(keyword);
+        try {
+            return translation.getString(keyword);
+        } catch (MissingResourceException ex) {
+            logs.LogCreator.addToLog(logs.LogCreator.ERROR, "Word resource not found: " + keyword);
+            return "[WR NF] " + keyword;
+        }
     }
 }

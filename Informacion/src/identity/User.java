@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package identidad;
+package identity;
 
 import comunication.SendableObject;
 
@@ -41,7 +41,7 @@ public abstract class User extends SendableObject {
      *
      * @return String con el nombre del usuario.
      */
-    public abstract String obtenerNombreDeUsuario();
+    public abstract String getUserName();
 
     public abstract boolean isEqual(User usuario);
 
