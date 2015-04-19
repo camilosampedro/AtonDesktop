@@ -27,7 +27,7 @@ import execution.RemoteExecution;
 import execution.Order;
 import execution.Result;
 import execution.Request;
-import informacion.Information;
+import information.Information;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -72,7 +72,7 @@ class Processor {
                 break;
             case Request.USER:
                 try {
-                    ClientComunicator.sendObject(informacion.Information.getActualUser());
+                    ClientComunicator.sendObject(information.Information.getActualUser());
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SocketException ex) {

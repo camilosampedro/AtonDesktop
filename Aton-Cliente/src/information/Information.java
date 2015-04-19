@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package informacion;
+package information;
 
 import comunication.ClientComunicator;
-import identidad.ClientComputer;
-import identidad.ClientUser;
+import identity.ClientComputer;
+import identity.ClientUser;
 import international.LanguagesController;
 import java.io.IOException;
 

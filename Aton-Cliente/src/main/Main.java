@@ -23,7 +23,7 @@
  */
 package main;
 
-import informacion.Information;
+import information.Information;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
