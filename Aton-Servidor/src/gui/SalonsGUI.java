@@ -31,9 +31,13 @@ import identity.ServerComputer;
 import international.LanguagesController;
 import java.io.IOException;
 import java.net.SocketException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
+import javax.help.HelpSetException;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -71,6 +75,18 @@ public class SalonsGUI extends javax.swing.JFrame {
         salonPanels = new ArrayList();
         this.salones = salones;
         initComponents();
+        try {
+            URL hsURL = this.getClass().getResource("/help/help.hs");
+            HelpSet helpset = new HelpSet(null, hsURL);
+            HelpSet.Presentation hsp = helpset.getPresentation("MainWin");
+
+            HelpBroker help_browser = helpset.createHelpBroker();
+            help_browser.setHelpSetPresentation(hsp);
+
+            help_browser.enableHelpOnButton(btnHelp, "introduction", helpset);
+        } catch (HelpSetException ex) {
+            Logger.getLogger(SalonsGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
    
@@ -137,6 +153,7 @@ public class SalonsGUI extends javax.swing.JFrame {
         menuHelp.setText(LanguagesController.getWord("Help"));
 
         btnHelp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ayuda.png"))); // NOI18N
         btnHelp.setText(LanguagesController.getWord("Help"));
         menuHelp.add(btnHelp);
 

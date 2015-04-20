@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>  
+<map version="1.0">  
+        <mapID target="introduction"     	 	 url="Introduccion.htm"/>  
+        <mapID target="gramatica"        	 	 url="Gramatica.htm"/>  
+		<mapID target="tiposGramaticas"  	 	 url="tiposGramaticas.htm"/>
+		<mapID target="S"				 	 	 url="s.htm"/>
+		<mapID target="Q"				 	 	 url="q.htm"/>
+		<mapID target="LL1"				 		 url="ll1.htm"/>
+		<mapID target="informacion"      		 url="informacion.htm"/>
+		<mapID target="masInformacionGramaticas" url="masinfo.htm"/>
+        <mapID target="FolderClosed"     	 	 url="images/FolderClosed.gif"/>  
+        <mapID target="FolderOpened"     	 	 url="images/FolderOpened.gif"/>  
+        <mapID target="ItemIco"          	 	 url="images/book.png"/>  
+        <mapID target="ContentIco"       	 	 url="images/bookBlue.png"/>  
+        <mapID target="SearchIco"        	 	 url="images/view.png"/>  
+        <mapID target="PrintIco"         	 	 url="images/printer.png"/>  
+        <mapID target="PrintSetupIco"    	 	 url="images/printersetup.png"/>  
+        <mapID target="BackwardIco"      	 	 url="images/Previous.gif"/>  
+        <mapID target="ForwardIco"       	 	 url="images/Next.gif"/> 
+		<mapID target="seleccion" 				 url="seleccion.htm"/>
+</map>  

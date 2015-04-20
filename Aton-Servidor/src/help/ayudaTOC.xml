@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>  
+<toc version="1.0" categoryclosedimage="FolderClosed" categoryopenimage="FolderOpened"  topicimage="ItemIco">  
+    <tocitem text="Introducción"    target="introduction"/>  
+	<tocitem text="Gramática">   
+        <tocitem text="¿Qué es una gramática?" target="gramatica"/>  
+        <tocitem text="Tipos de gramáticas"
+			<tocitem text="S" target="S"/>
+			<tocitem text="Q" target="Q"/>
+			<tocitem text="LL(1)" target="LL1"/>
+			<tocitem text="Otros tipos" target="otros"/>
+		</tocitem>
+		<tocitem text="Proceso de programación"
+			<tocitem text="S" target="convS"/>
+			<tocitem text="Q" target="convQ"/>
+			<tocitem text="LL(1)" target="convLL1"/>
+			<tocitem text="Otros tipos" target="convotros"/>
+		</tocitem>
+		<tocitem text="Más información de las gramáticas" target="masInformacionGramaticas"/>
+    </tocitem>
+	<tocitem text="Programa">
+		<tocitem text="Información" target="informacion"/>
+		<tocitem text="Adición del conjunto de selección" target="seleccion"/>
+	</tocitem>
+</toc>  
