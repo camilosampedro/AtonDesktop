@@ -22,11 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-
-
 <Salones>
     <Salon Nombre="LIS">
-        <Sala Nombre="Sala 1" Horizontal="true" SufijoIP="192">
+        <Sala Nombre="Sala 1" Horizontal="false" SufijoIP="192">
             <Fila>
                 <Equipo Numero="1">
                     <IP>192.168.192.1</IP>
@@ -46,12 +44,10 @@ THE SOFTWARE.
                         <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
                     </Ejecucion>
                 </Equipo>
-            </Fila>
-            <Fila>
                 <Equipo Numero="3">
                     <IP>192.168.192.3</IP>
                     <Mac>d8:50:e6:4e:04:4f</Mac>
-                    <Hostname>lis-s2e1</Hostname>
+                    <Hostname>lis-s2e2</Hostname>
                     <Ejecucion>
                         <Orden>ifconfig</Orden>
                         <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
@@ -66,14 +62,214 @@ THE SOFTWARE.
                         <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
                     </Ejecucion>
                 </Equipo>
+                <Equipo Numero="5">
+                    <IP>192.168.192.5</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="6">
+                    <IP>192.168.192.6</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="7">
+                    <IP>192.168.192.7</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="8">
+                    <IP>192.168.192.8</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="9">
+                    <IP>192.168.192.9</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="10">
+                    <IP>192.168.192.10</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="11">
+                    <IP>192.168.192.11</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+            </Fila>
+            <Fila>
+                <Equipo Numero="12">
+                    <IP>192.168.192.12</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e1</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="13">
+                    <IP>192.168.192.13</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="14">
+                    <IP>192.168.192.14</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="15">
+                    <IP>192.168.192.15</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="16">
+                    <IP>192.168.192.16</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="17">
+                    <IP>192.168.192.17</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="18">
+                    <IP>192.168.192.18</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="19">
+                    <IP>192.168.192.19</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="20">
+                    <IP>192.168.192.20</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
             </Fila>
         </Sala>
         <Sala Nombre="Sala 2" Horizontal="false" SufijoIP="193">
             <Fila>
-                <Equipo Numero="1">
-                    <IP>192.168.193.1</IP>
+                <Equipo Numero="9">
+                    <IP>192.168.193.9</IP>
                     <Mac>d8:50:e6:4e:04:4f</Mac>
-                    <Hostname>lis-s2e1</Hostname>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="8">
+                    <IP>192.168.193.8</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="7">
+                    <IP>192.168.193.7</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="6">
+                    <IP>192.168.193.6</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="5">
+                    <IP>192.168.193.5</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="4">
+                    <IP>192.168.193.4</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="3">
+                    <IP>192.168.193.3</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
                     <Ejecucion>
                         <Orden>ifconfig</Orden>
                         <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
@@ -88,10 +284,8 @@ THE SOFTWARE.
                         <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
                     </Ejecucion>
                 </Equipo>
-            </Fila>
-            <Fila>
-                <Equipo Numero="3">
-                    <IP>192.168.193.3</IP>
+                <Equipo Numero="1">
+                    <IP>192.168.193.1</IP>
                     <Mac>d8:50:e6:4e:04:4f</Mac>
                     <Hostname>lis-s2e1</Hostname>
                     <Ejecucion>
@@ -99,8 +293,106 @@ THE SOFTWARE.
                         <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
                     </Ejecucion>
                 </Equipo>
-                <Equipo Numero="4">
-                    <IP>192.168.193.4</IP>
+            </Fila>
+            <Fila>
+                <Equipo Numero="10">
+                    <IP>192.168.193.10</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e1</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="11">
+                    <IP>192.168.193.11</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="12">
+                    <IP>192.168.193.12</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="13">
+                    <IP>192.168.193.13</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="14">
+                    <IP>192.168.193.14</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="15">
+                    <IP>192.168.193.15</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="16">
+                    <IP>192.168.193.16</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+            </Fila>
+        </Sala>
+        <Sala Nombre="Sala 3" Horizontal="true" SufijoIP="193">
+            <Fila>
+                <Equipo Numero="17">
+                    <IP>192.168.193.17</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e1</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="18">
+                    <IP>192.168.193.18</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e2</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+            </Fila>
+            <Fila>
+                <Equipo Numero="19">
+                    <IP>192.168.193.19</IP>
+                    <Mac>d8:50:e6:4e:04:4f</Mac>
+                    <Hostname>lis-s2e1</Hostname>
+                    <Ejecucion>
+                        <Orden>ifconfig</Orden>
+                        <Resultado>Link encap:Ethernet  direcciónHW d8:50:e6:4e:04:4f</Resultado>
+                    </Ejecucion>
+                </Equipo>
+                <Equipo Numero="20">
+                    <IP>192.168.193.20</IP>
                     <Mac>d8:50:e6:4e:04:4f</Mac>
                     <Hostname>lis-s2e2</Hostname>
                     <Ejecucion>
