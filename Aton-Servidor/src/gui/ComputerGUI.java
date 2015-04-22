@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author Camilo Sampedro
- * @version 0.3.5
+ * @version 0.7.5
  */
 public class ComputerGUI extends javax.swing.JFrame {
 
@@ -74,8 +74,8 @@ public class ComputerGUI extends javax.swing.JFrame {
         jlPoder = new javax.swing.JLabel();
         jlEstado = new javax.swing.JLabel();
         panelButtons = new javax.swing.JPanel();
-        btnApagar = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnTurnoff = new javax.swing.JButton();
+        btnWakeup = new javax.swing.JButton();
         btnGeneralInformation = new javax.swing.JButton();
         btnNotify = new javax.swing.JButton();
         txtOrder = new javax.swing.JTextField();
@@ -118,16 +118,21 @@ public class ComputerGUI extends javax.swing.JFrame {
 
         panelButtons.setLayout(new java.awt.GridLayout(0, 2, 5, 5));
 
-        btnApagar.setText("Apagar");
-        btnApagar.addActionListener(new java.awt.event.ActionListener() {
+        btnTurnoff.setText("Apagar");
+        btnTurnoff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnApagarActionPerformed(evt);
+                btnTurnoffActionPerformed(evt);
             }
         });
-        panelButtons.add(btnApagar);
+        panelButtons.add(btnTurnoff);
 
-        jButton3.setText("Encender");
-        panelButtons.add(jButton3);
+        btnWakeup.setText("Encender");
+        btnWakeup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnWakeupActionPerformed(evt);
+            }
+        });
+        panelButtons.add(btnWakeup);
 
         btnGeneralInformation.setIcon(icon);
         btnGeneralInformation.setText(LanguagesController.getWord("Computer") + " " + computer.getComputerNumber());
@@ -201,7 +206,6 @@ public class ComputerGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNotifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotifyActionPerformed
-        // TODO add your handling code here:
         if (!computer.isPoweredOn()){
             JOptionPane.showMessageDialog(this, LanguagesController.getWord("Computer off"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
             return;
@@ -220,7 +224,7 @@ public class ComputerGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnNotifyActionPerformed
 
-    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+    private void btnTurnoffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTurnoffActionPerformed
         if (!computer.isPoweredOn()){
             JOptionPane.showMessageDialog(this, LanguagesController.getWord("Computer off"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
             return;
@@ -233,10 +237,9 @@ public class ComputerGUI extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnApagarActionPerformed
+    }//GEN-LAST:event_btnTurnoffActionPerformed
 
     private void btnSendOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendOrderActionPerformed
-        // TODO add your handling code here:
         if (!computer.isPoweredOn()){
             JOptionPane.showMessageDialog(this, LanguagesController.getWord("Computer off"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
             return;
@@ -255,13 +258,23 @@ public class ComputerGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSendOrderActionPerformed
 
+    private void btnWakeupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWakeupActionPerformed
+        try {
+            execution.Execution.execute(new Order(Function.COMPUTER_WAKEUP_ORDER(192, computer.getMac())));
+        } catch (IOException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ComputerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnWakeupActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* If Nimbus (introduced in Java SE 6) is not portIsAvailable, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
@@ -310,12 +323,12 @@ public class ComputerGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnApagar;
     private javax.swing.JButton btnGeneralInformation;
     private javax.swing.JButton btnNotify;
     private javax.swing.JButton btnSendBashFile;
     private javax.swing.JButton btnSendOrder;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnTurnoff;
+    private javax.swing.JButton btnWakeup;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jlEstado;
     private javax.swing.JLabel jlIP;

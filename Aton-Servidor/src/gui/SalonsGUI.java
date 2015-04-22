@@ -89,8 +89,6 @@ public class SalonsGUI extends javax.swing.JFrame {
         }
     }
 
-   
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,8 +99,12 @@ public class SalonsGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jtPestañas = new javax.swing.JTabbedPane();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuRooms = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         menuSelection = new javax.swing.JMenu();
         btnNotify = new javax.swing.JMenuItem();
         btnShutdown = new javax.swing.JMenuItem();
@@ -114,7 +116,6 @@ public class SalonsGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(LanguagesController.getWord("AppName"));
         setIconImage(getIconImage());
-        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         for (Salon salon : salones) {
             gui.SalonPanel interfaz = new gui.SalonPanel(salon);
@@ -123,11 +124,32 @@ public class SalonsGUI extends javax.swing.JFrame {
             jtPestañas.addTab(salon.getName(), interfaz);
         }
 
-        getContentPane().add(jtPestañas);
+        jLabel1.setText("jLabel1");
 
         menuRooms.setMnemonic('R');
         menuRooms.setText(LanguagesController.getWord("Rooms"));
+
+        jMenuItem2.setText("Apagar todo");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        menuRooms.add(jMenuItem2);
+
         jMenuBar1.add(menuRooms);
+
+        jMenu1.setText("Edición");
+
+        jMenuItem1.setText("Editar salas");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
 
         menuSelection.setMnemonic('S');
         menuSelection.setText(LanguagesController.getWord("Selection")
@@ -142,6 +164,11 @@ public class SalonsGUI extends javax.swing.JFrame {
         menuSelection.add(btnNotify);
 
         btnShutdown.setText(LanguagesController.getWord("Shutdown"));
+        btnShutdown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShutdownActionPerformed(evt);
+            }
+        });
         menuSelection.add(btnShutdown);
 
         btnSendBashOrder.setText(LanguagesController.getWord("Send bash order"));
@@ -169,6 +196,25 @@ public class SalonsGUI extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jtPestañas)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jtPestañas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addContainerGap())
+        );
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -181,18 +227,17 @@ public class SalonsGUI extends javax.swing.JFrame {
     private void btnNotifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotifyActionPerformed
         // TODO add your handling code here:
         ArrayList<ServerComputer> selectedComputers = getSelectedComputers();
-        if(selectedComputers.isEmpty()){
-            JOptionPane.showMessageDialog(this, LanguagesController.getWord("No computer selected"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+        if (selectedComputers == null) {
             return;
         }
         String message = JOptionPane.showInputDialog(this, LanguagesController.getWord("NotifyRequest"), LanguagesController.getWord("Notify"), JOptionPane.QUESTION_MESSAGE);
-        for(ServerComputer computer: selectedComputers){
-            if(!computer.isPoweredOn()){
+        for (ServerComputer computer : selectedComputers) {
+            if (!computer.isPoweredOn()) {
                 logs.LogCreator.addToLog(logs.LogCreator.ERROR, LanguagesController.getWord("Computer") + " " + computer.getComputerNumber() + " " + LanguagesController.getWord("off"));
                 continue;
             }
-            if(!computer.isUsed()){
-                logs.LogCreator.addToLog(logs.LogCreator.ERROR, LanguagesController.getWord("Computer") + " " + computer.getComputerNumber() +  " " + LanguagesController.getWord("not used"));
+            if (!computer.isUsed()) {
+                logs.LogCreator.addToLog(logs.LogCreator.ERROR, LanguagesController.getWord("Computer") + " " + computer.getComputerNumber() + " " + LanguagesController.getWord("not used"));
                 continue;
             }
             try {
@@ -205,13 +250,37 @@ public class SalonsGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnNotifyActionPerformed
 
+    private void btnShutdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShutdownActionPerformed
+        logs.LogCreator.addToLog(logs.LogCreator.INFORMACION, LanguagesController.getWord("Starting shutdown for selected computers"));
+        ArrayList<ServerComputer> selectedComputers = getSelectedComputers();
+        if (selectedComputers == null) {
+            return;
+        }
+        for (ServerComputer computer : selectedComputers) {
+            turnOffComputer(computer);
+        }
+    }//GEN-LAST:event_btnShutdownActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        for (ServerComputer computer : information.Information.getConnectedComputers()) {
+            turnOffComputer(computer);
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        EditionGUI editor = new EditionGUI();
+        editor.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* If Nimbus (introduced in Java SE 6) is not portIsAvailable, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
@@ -253,7 +322,11 @@ public class SalonsGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem btnNotify;
     private javax.swing.JMenuItem btnSendBashOrder;
     private javax.swing.JMenuItem btnShutdown;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JTabbedPane jtPestañas;
     private javax.swing.JMenu menuHelp;
     private javax.swing.JMenu menuRooms;
@@ -262,9 +335,31 @@ public class SalonsGUI extends javax.swing.JFrame {
 
     private ArrayList<ServerComputer> getSelectedComputers() {
         ArrayList<ServerComputer> selectedComputers = new ArrayList();
-        for (SalonPanel salonPanel: salonPanels){
+        for (SalonPanel salonPanel : salonPanels) {
             selectedComputers.addAll(salonPanel.getSelectedComputers());
         }
+        if (selectedComputers.isEmpty()) {
+            JOptionPane.showMessageDialog(this, LanguagesController.getWord("No computer selected"), LanguagesController.getWord("Error"), JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
         return selectedComputers;
+    }
+
+    private void turnOffComputer(ServerComputer computer) {
+        if (!computer.isPoweredOn()) {
+            logs.LogCreator.addToLog(logs.LogCreator.WARNING, LanguagesController.getWord("Computer") + " " + computer.getComputerNumber() + " " + LanguagesController.getWord("off"));
+            return;
+        }
+        if (!computer.isUsed()) {
+            logs.LogCreator.addToLog(logs.LogCreator.WARNING, LanguagesController.getWord("Computer") + " " + computer.getComputerNumber() + " " + LanguagesController.getWord("not used"));
+            return;
+        }
+        try {
+            ServerComunicator.sendObject(new Order(Function.SHUTDOWN_ORDER), computer.getIP());
+        } catch (SocketException ex) {
+            Logger.getLogger(SalonsGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SalonsGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

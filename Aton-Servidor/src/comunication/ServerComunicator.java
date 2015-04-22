@@ -42,12 +42,12 @@ public class ServerComunicator extends Comunicator {
 
     private static ServerComunicator serverComunicatorInstance;
 
-    public static void inicializar(int puerto) {
+    public static void initialize(int puerto) {
         ServerComunicator.port = puerto;
         serverComunicatorInstance = new ServerComunicator();
     }
 
-    public static void despertar() {
+    public static void wakeup() {
         serverComunicatorInstance.start();
     }
 
@@ -76,6 +76,8 @@ public class ServerComunicator extends Comunicator {
                 return;
             }
         } catch (IOException ex) {
+            Logger.getLogger(ServerComunicator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
             Logger.getLogger(ServerComunicator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

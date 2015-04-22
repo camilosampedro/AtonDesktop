@@ -48,6 +48,7 @@ public class ComputerPanel extends javax.swing.JPanel implements PropertyChangeL
 
     public ComputerPanel(ServerComputer computer) {
         this.computer = computer;
+        this.computer.addPropertyChangeListener(this);
         setComputerIcon();
         initComponents();
         btnEquipo.setText(Integer.toString(this.computer.getComputerNumber()));
@@ -67,11 +68,13 @@ public class ComputerPanel extends javax.swing.JPanel implements PropertyChangeL
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
+        btnEquipo.setBackground(new java.awt.Color(233, 233, 233));
         btnEquipo.setIcon(icon);
         btnEquipo.setText("##");
+        btnEquipo.setBorderPainted(false);
         btnEquipo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnEquipo.setIconTextGap(2);
-        btnEquipo.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        btnEquipo.setIconTextGap(0);
+        btnEquipo.setMargin(new java.awt.Insets(0, 0, 0, 0));
         btnEquipo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         btnEquipo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnEquipo.addActionListener(new java.awt.event.ActionListener() {
@@ -81,31 +84,20 @@ public class ComputerPanel extends javax.swing.JPanel implements PropertyChangeL
         });
 
         cbSelection.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        cbSelection.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbSelectionActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbSelection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cbSelection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(btnEquipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbSelection)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -114,10 +106,6 @@ public class ComputerPanel extends javax.swing.JPanel implements PropertyChangeL
         ComputerGUI interfaz = new ComputerGUI(this.computer);
         interfaz.setVisible(true);
     }//GEN-LAST:event_btnEquipoActionPerformed
-
-    private void cbSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSelectionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbSelectionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -146,6 +134,8 @@ public class ComputerPanel extends javax.swing.JPanel implements PropertyChangeL
         String propertyName = evt.getPropertyName();
         if(ServerComputer.USE_STATE_PROPERTY.equals(propertyName) || ServerComputer.POWER_STATE_PROPERTY.equals(propertyName)){
             setComputerIcon();
+            btnEquipo.setIcon(icon);
+            System.out.println("Cambió el ícono");
             updateUserInterface();
         }
     }

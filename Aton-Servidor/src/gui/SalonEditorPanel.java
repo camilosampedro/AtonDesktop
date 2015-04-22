@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Camilo Sampedro.
+ * Copyright 2015 lis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,45 +23,17 @@
  */
 package gui;
 
-import identity.Room;
-import identity.Salon;
-import identity.ServerComputer;
-import java.util.ArrayList;
-
 /**
  *
- * @author Camilo Sampedro
+ * @author lis
  */
-public class SalonPanel extends javax.swing.JPanel {
-    private Salon salon;
-    private ArrayList<RoomInternalFrame> subwindows;
+public class SalonEditorPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelSalon
+     * Creates new form SalonEditorPanel
      */
-    private SalonPanel() {
+    public SalonEditorPanel() {
         initComponents();
-    }
-    
-    public SalonPanel(Salon salon){
-        subwindows = new ArrayList();
-        this.salon = salon;
-        initComponents();
-        for(Room sala : salon.getRooms()){
-            RoomInternalFrame subventana = new RoomInternalFrame(sala);
-            subventana.setVisible(true);
-            this.add(subventana);
-            subwindows.add(subventana);
-        }
-        this.paintAll(this.getGraphics());
-    }
-    
-    public ArrayList<ServerComputer> getSelectedComputers(){
-        ArrayList<ServerComputer> selectedComputers = new ArrayList();
-        for (RoomInternalFrame subwindow: subwindows){
-            selectedComputers.addAll(subwindow.getSelectedComputers());
-        }
-        return selectedComputers;
     }
 
     /**
@@ -73,10 +45,43 @@ public class SalonPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setLayout(new java.awt.GridLayout());
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                .addContainerGap())
+        );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

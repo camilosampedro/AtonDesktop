@@ -134,18 +134,21 @@
         <Property name="verticalGap" type="int" value="5"/>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="btnApagar">
+        <Component class="javax.swing.JButton" name="btnTurnoff">
           <Properties>
             <Property name="text" type="java.lang.String" value="Apagar"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnApagarActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTurnoffActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton3">
+        <Component class="javax.swing.JButton" name="btnWakeup">
           <Properties>
             <Property name="text" type="java.lang.String" value="Encender"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnWakeupActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

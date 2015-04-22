@@ -63,6 +63,10 @@ public class Information extends Thread {
 
     private static String informationPath = "informacion.xml";
     private static String logFile = "logServer.log";
+    
+    public static ArrayList<ServerComputer> getConnectedComputers(){
+        return conectedComputers;
+    }
 
     /**
      * Get the value of informationPath
@@ -168,7 +172,7 @@ public class Information extends Thread {
         salons = new ArrayList();
         conectedComputers = new ArrayList();
         Information.mode = modo;
-        ServerComunicator.inicializar(5978);
+        ServerComunicator.initialize(5978);
         logs.LogCreator.asignarArchivoLog(logFile);
         leerDatos();
         LanguagesController.initializeLanguage(language);
@@ -177,11 +181,12 @@ public class Information extends Thread {
             mainInterface.setVisible(true);
         }
         startClock();
-        ServerComunicator.despertar();
+        ServerComunicator.wakeup();
     }
 
     public static void checkComputers() throws SocketException, IOException {
         for(ServerComputer computer: conectedComputers){
+            computer.setPowerState(ServerComputer.POWERED_OFF_STATE);
             Request request = new Request(Request.CONECTION);
             comunication.Comunicator.sendObject(request, computer.getIP());
         }
