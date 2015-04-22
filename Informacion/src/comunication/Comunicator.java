@@ -36,6 +36,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.BindException;
 import java.net.ConnectException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -44,6 +45,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -53,9 +55,16 @@ public abstract class Comunicator extends Thread {
 
     protected static int port;
     protected static ServerSocket serverSocket;
+    private static final int MAX_PORT_NUMBER = 65535;
+    private static final int MIN_PORT_NUMBER = 0;
 
-    public Object[] listen() throws SocketException, IOException {
+    public Object[] listen() throws SocketException, IOException, InterruptedException {
         System.out.println(LanguagesController.getWord("ListenerMessage"));
+        int tries = 0;
+        while (!portIsAvailable() && tries < 10){
+            tries ++;
+            sleep(10000);
+        }
         Socket socket = serverSocket.accept();
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -94,6 +103,7 @@ public abstract class Comunicator extends Thread {
             while (true) {
                 try {
                     openChannel();
+                    serverSocket.setReuseAddress(true);
                 } catch (SocketException ex) {
                     try {
                         Thread.sleep(100);
@@ -103,10 +113,11 @@ public abstract class Comunicator extends Thread {
                 }
             }
         } catch (IOException ex) {
-            if(ex instanceof BindException){
+            if (ex instanceof BindException) {
                 logs.LogCreator.addToLog(logs.LogCreator.ERROR, "El puerto ya está ocupado.");
+                JOptionPane.showMessageDialog(null, LanguagesController.getWord("The port is busy"), LanguagesController.getWord("Error"), JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
                 System.err.println(Arrays.toString(ex.getStackTrace()));
-//                Logger.getLogger(Comunicator.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -114,7 +125,7 @@ public abstract class Comunicator extends Thread {
     protected abstract void openChannel() throws SocketException;
 
     public static void sendObject(SendableObject o, String ipDestino) throws UnknownHostException, SocketException, IOException, ConnectException {
-        if(!isReachable(ipDestino)){
+        if (!isReachable(ipDestino)) {
             logs.LogCreator.addToLog(logs.LogCreator.ERROR, "Comunicator: IP inalcanzable");
             return;
         }
@@ -130,6 +141,43 @@ public abstract class Comunicator extends Thread {
 
     public static boolean isReachable(String ip) throws UnknownHostException, IOException {
         return InetAddress.getByName(ip).isReachable(100);
+    }
+
+    /**
+     * Checks to see if a specific port is portIsAvailable.
+     *
+     * @param port the port to check for availability
+     * @return true if the port is portIsAvailable
+     */
+    public static boolean portIsAvailable() {
+        if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
+            throw new IllegalArgumentException("Invalid start port: " + port);
+        }
+
+        ServerSocket ss = null;
+        DatagramSocket ds = null;
+        try {
+            ss = new ServerSocket(port);
+            ss.setReuseAddress(true);
+            ds = new DatagramSocket(port);
+            ds.setReuseAddress(true);
+            return true;
+        } catch (IOException e) {
+        } finally {
+            if (ds != null) {
+                ds.close();
+            }
+
+            if (ss != null) {
+                try {
+                    ss.close();
+                } catch (IOException e) {
+                    /* should not be thrown */
+                }
+            }
+        }
+
+        return false;
     }
 
 }

@@ -40,7 +40,7 @@ public class Row {
         this.isHorizontal = isHorizontal;
     }
 
-    public Computer getComputer(int computerNumber) {
+    public ServerComputer getComputer(int computerNumber) {
         return computers.get(computerNumber);
     }
 

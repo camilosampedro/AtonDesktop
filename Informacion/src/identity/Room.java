@@ -59,7 +59,7 @@ public class Room {
         return name;
     }
 
-    public Computer getComputer(int computerNumber) throws NotFound {
+    public ServerComputer getComputer(int computerNumber) throws NotFound {
         Row row = this.findComputerRow(computerNumber);
         if (row == null) {
             throw new exception.NotFound(exception.NotFound.COMPUTER, "Room.getComputer()");
@@ -155,5 +155,17 @@ public class Room {
 
     public void addRow(Row row) {
         rows.add(row);
+    }
+
+    public int getComputerCount() {
+        int computerCount = 0;
+        for (Row row : rows) {
+            computerCount += row.getComputers().size();
+        }
+        return computerCount;
+    }
+
+    public int getRowNumber(Row rowToFind) {
+        return rows.indexOf(rowToFind);
     }
 }

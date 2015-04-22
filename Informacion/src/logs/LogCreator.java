@@ -27,6 +27,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,11 +43,13 @@ public class LogCreator {
 
     protected static File archivoLog;
     public static final byte INFORMACION = 0;
-    public static final byte ADVERTENCIA = 1;
+    public static final byte WARNING = 1;
     public static final byte ERROR = 2;
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public static void asignarArchivoLog(String ruta) {
         archivoLog = new File(ruta);
+        agregarALog("==== Inicio de ejecución: ====");
     }
 
     public static void addToLog(byte tipo, String mensaje) {
@@ -52,7 +58,7 @@ public class LogCreator {
                 agregarALog("   [INFO] " + mensaje);
                 System.out.println("   [INFO] " + mensaje);
                 break;
-            case ADVERTENCIA:
+            case WARNING:
                 agregarALog("  +[WARN] " + mensaje);
                 System.out.println("  +[WARN] " + mensaje);
                 break;
@@ -75,7 +81,9 @@ public class LogCreator {
             }
             fw = new FileWriter(archivoLog.getAbsoluteFile());
             try (BufferedWriter bw = new BufferedWriter(fw)) {
-                bw.write(mensaje);
+                Date date = new Date();
+                PrintWriter out = new PrintWriter(bw);
+                out.println("[ " + dateFormat.format(date) + "] " + mensaje);
             }
         } catch (IOException ex) {
             System.err.println("Ocurrió un error al intentar crear el log");

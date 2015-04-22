@@ -23,7 +23,6 @@
  */
 package identity;
 
-import comunication.SendableObject;
 import execution.Execution;
 import execution.Function;
 import execution.Order;
@@ -55,7 +54,6 @@ public class ClientUser extends User {
      * sistema.
      */
     protected boolean isBanned;
-    private String group;
 
     /**
      * Constructor de usuario vacío.
@@ -211,7 +209,7 @@ public class ClientUser extends User {
 
     @Override
     public String getBody() {
-        return BODYSTART + this.getUserName() + SEPARATOR + this.getGrupo() + BODYEND;
+        return BODYSTART + this.getUserName() + BODYEND;
     }
 
     /**
@@ -219,15 +217,13 @@ public class ClientUser extends User {
      * @return
      */
     public static ClientUser buildObject(String informacion) {
-        int i = informacion.indexOf(BODYSTART) + BODYSTART.length();
+        int i = informacion.indexOf(BODYSTART);
+        i +=  BODYSTART.length();
         int j = informacion.indexOf(BODYEND);
-        int k = informacion.indexOf(SEPARATOR);
-        String usuario = informacion.substring(i, k);
-        String grupon = informacion.substring(k, j);
+        String usuario = informacion.substring(i, j);
         ClientUser usuarion = new ClientUser();
         usuarion.setNombreDeUsuario(usuario);
-        usuarion.setGrupo(grupon);
-        return new ClientUser();
+        return usuarion;
     }
 
 // </editor-fold>
@@ -238,20 +234,6 @@ public class ClientUser extends User {
      */
     public void setNombreDeUsuario(String nombreDeUsuario) {
         this.username = nombreDeUsuario;
-    }
-
-    /**
-     * @return the grupo
-     */
-    public String getGrupo() {
-        return group;
-    }
-
-    /**
-     * @param grupo the grupo to set
-     */
-    public void setGrupo(String grupo) {
-        this.group = grupo;
     }
 
 }

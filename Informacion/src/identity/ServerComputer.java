@@ -52,9 +52,8 @@ public class ServerComputer extends Computer {
     public static final String ACTUAL_ORDER_PROPERTY = "actual order";
     public static final String USE_STATE_PROPERTY = "use state";
     public static final String POWER_STATE_PROPERTY = "power state";
-    
+
     private final PropertyChangeSupport propertyChangeSupport;
-    private boolean useState;
     private boolean powerState;
     private int computerNumber;
     private String ip;
@@ -101,8 +100,6 @@ public class ServerComputer extends Computer {
         this.actualOrder = actualOrder;
     }
 
-    
-
     public ServerComputer(Room container) {
         this.results = new ArrayList();
         this.users = new ArrayList();
@@ -110,14 +107,13 @@ public class ServerComputer extends Computer {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
-    public ServerComputer(String ip, String mac, int numeroEquipo, boolean estadoPoder, boolean estadoUso, Room sala) {
+    public ServerComputer(String ip, String mac, int numeroEquipo, boolean estadoPoder, Room sala) {
         this.results = new ArrayList();
         this.users = new ArrayList();
         this.ip = ip;
         this.mac = mac;
         this.computerNumber = numeroEquipo;
         this.powerState = estadoPoder;
-        this.useState = estadoUso;
         this.parentRoom = sala;
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
@@ -144,7 +140,11 @@ public class ServerComputer extends Computer {
 
     @Override
     public void addUser(User user) {
+        boolean oldValue = isUsed();
         users.add(user);
+        if (isUsed() != oldValue) {
+            propertyChangeSupport.firePropertyChange(USE_STATE_PROPERTY, oldValue, isUsed());
+        }
     }
 
     @Override
@@ -165,16 +165,7 @@ public class ServerComputer extends Computer {
      * @return the useState
      */
     public boolean isUsed() {
-        return useState;
-    }
-
-    /**
-     * @param useState the useState to set
-     */
-    public void setUseState(boolean useState) {
-        boolean oldValue = this.useState;
-        this.useState = useState;
-        propertyChangeSupport.firePropertyChange(USE_STATE_PROPERTY, oldValue, this.useState);
+        return !users.isEmpty();
     }
 
     /**
@@ -228,7 +219,7 @@ public class ServerComputer extends Computer {
     @Override
     public String getBody() {
         return BODYSTART + ip + SEPARATOR + mac + SEPARATOR + computerNumber
-                + SEPARATOR + powerState + SEPARATOR + useState + SEPARATOR
+                + SEPARATOR + powerState
                 + parentRoom.getName() + SEPARATOR + parentRoom.isHorizontal
                 + SEPARATOR + parentRoom.roomIPSufix + BODYEND;
     }
@@ -239,12 +230,19 @@ public class ServerComputer extends Computer {
         String info = informacion.substring(i, j);
         StringTokenizer tokens = new StringTokenizer(info, SEPARATOR);
         //Probar
-        return new ServerComputer(tokens.nextToken(), tokens.nextToken(), Integer.parseInt(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), new Room(tokens.nextToken(), Boolean.parseBoolean(tokens.nextToken()), Integer.parseInt(tokens.nextToken())));
+        return new ServerComputer(tokens.nextToken(), tokens.nextToken(), Integer.parseInt(tokens.nextToken()), Boolean.parseBoolean(tokens.nextToken()), new Room(tokens.nextToken(), Boolean.parseBoolean(tokens.nextToken()), Integer.parseInt(tokens.nextToken())));
     }
 
     public void copyComputer(ClientComputer computer) {
-        this.useState = computer.onUse;
+        boolean oldPowerState = this.powerState;
+        this.powerState = POWERED_ON_STATE;
+        propertyChangeSupport.firePropertyChange(POWER_STATE_PROPERTY, oldPowerState, this.mac);
+        String oldValue = this.mac;
         this.mac = computer.mac;
+        propertyChangeSupport.firePropertyChange(MAC_PROPERTY, oldValue, this.mac);
+        oldValue = this.ip;
+        this.ip = computer.ip;
+        propertyChangeSupport.firePropertyChange(IP_PROPERTY, oldValue, this.mac);
     }
 
     public void setHostname(String hostname) {
