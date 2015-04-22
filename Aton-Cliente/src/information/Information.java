@@ -38,6 +38,7 @@ public class Information {
 
     private static ClientUser actualUser;
     private static ClientComputer actualComputer;
+    private static final String logFile = "logFile.log";
 
     /**
      * @return the usuario
@@ -69,10 +70,12 @@ public class Information {
 
     public static void initialize(String language) throws IOException, ClassNotFoundException {   
         LanguagesController.initializeLanguage(language);
-        if (!ClientUser.isRoot()) {
-            System.err.println(LanguagesController.getWord("RootError"));
-            System.exit(1);
-        }
+        
+//        if (!ClientUser.isRoot()) {
+//            System.err.println(LanguagesController.getWord("RootError"));
+//            System.exit(1);
+//        }
+        logs.LogCreator.asignarArchivoLog(logFile);
         initializeActualComputer();
         ClientComunicator.initialize(LanguagesController.getWord("serverIP"), 5978);
         ClientComunicator.wakeUp();

@@ -28,6 +28,7 @@ import execution.Order;
 import execution.Result;
 import identity.ClientUser;
 import information.Information;
+import international.LanguagesController;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -111,10 +112,14 @@ public class ClientComunicator extends Comunicator {
      */
     @Override
     protected void openChannel() throws SocketException {
-        Object[] receivedObject = null;
+        Object[] receivedObject;
         try {
             receivedObject = listen();
             InetAddress direccion = (InetAddress) receivedObject[0];
+            if (!direccion.getHostAddress().equals(serverIP)){
+                logs.LogCreator.addToLog(logs.LogCreator.WARNING, LanguagesController.getWord("Message is not from server"));
+                return;
+            }
             if (receivedObject[1] instanceof Order) {
                 Processor.processOrder(direccion.getHostAddress(), (Order) receivedObject[1]);
                 return;
@@ -123,6 +128,8 @@ public class ClientComunicator extends Comunicator {
                 Processor.processRequest(direccion.getHostAddress(), (Request) receivedObject[1]);
             }
         } catch (IOException ex) {
+            Logger.getLogger(ClientComunicator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
             Logger.getLogger(ClientComunicator.class.getName()).log(Level.SEVERE, null, ex);
         }
 
